@@ -812,7 +812,6 @@ const calculateCycleSGPA = (cycle) => {
         >
           ← Back
         </button>
-        <h2 className="text-3xl font-bold text-gray-900">Select Cycle</h2>
         <div className="w-32"></div>
       </div>
       
