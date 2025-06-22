@@ -1,70 +1,101 @@
-# Getting Started with Create React App
+# Academic-Calculator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based academic calculator designed to help RVCE students compute CIE scores, SEE requirements, final grades, SGPA, and CGPA with ease.
 
-## Available Scripts
+# Academic Calculator (React)
 
-In the project directory, you can run:
+A clean and responsive React app to compute CIE, SEE requirements, grades, SGPA, and CGPA for Physics and Chemistry cycles, tailored for RVCE's academic system.
 
-### `npm start`
+## Table of Contents
+- [Description](#description)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Description
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This academic calculator is designed for students of RV College of Engineering (RVCE). It provides tools to:
+- Finalize CIE scores from quizzes, tests, and ELs.
+- Estimate required SEE marks for each subject based on current CIE.
+- Predict final grades using CIE and SEE.
+- Compute SGPA for Physics and Chemistry cycles.
+- Calculate overall CGPA across both cycles.
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- CIE Finalization with rounded results.
+- SEE Requirement Estimator (with grade-level mapping and copy buttons).
+- Grade calculator using CIE and SEE marks.
+- SGPA/CGPA calculator using subject-wise grades or direct SGPA entry.
+- Clipboard copy for all results.
+- Responsive UI with Tailwind CSS and Lucide icons.
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
+2. Clone this repository:
+   ```bash
+   git clone https://github.com/YourUsername/Academic-Calculator.git
+   ```
+3. Navigate to the project directory:
+   ```bash
+   cd Academic-Calculator
+   ```
+4. Install dependencies:
+   ```bash
+   npm install
+   ```
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Choose your mode (CIE Finalization, Final Grade, or Final CGPA).
+- Select your cycle (Physics or Chemistry).
+- Enter relevant scores or grades.
+- Copy results instantly with one click.
+- Use the SEE Requirements feature to find the minimum SEE marks needed to pass or hit a target grade.
 
-### `npm run eject`
+## Deployment
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+To build for production:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+You can deploy the contents of the `dist/` folder to services like:
+- [Netlify](https://www.netlify.com/)
+- [Vercel](https://vercel.com/)
+- [GitHub Pages](https://pages.github.com/)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Contributing
 
-## Learn More
+Contributions are welcome!
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature-new-feature`
+3. Make your changes and commit them: `git commit -am 'Add new feature'`
+4. Push to the branch: `git push origin feature-new-feature`
+5. Open a pull request.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Please follow consistent coding styles and include clear commit messages.
 
-### Code Splitting
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This project is licensed under no Licesnse currently/
 
-### Analyzing the Bundle Size
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+If you have questions, suggestions, or want to report bugs, feel free to reach out:
 
-### Making a Progressive Web App
+- Email: vivaan.hooda@gmail.com
+- GitHub: [https://github.com/VivaanHooda](https://github.com/VivaanHooda)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Project Link: [https://github.com/VivaanHooda/Academic-Calculator](https://github.com/VivaanHooda/Academic-Calculator)
