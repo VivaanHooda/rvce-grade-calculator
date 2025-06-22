@@ -1123,7 +1123,7 @@ const calculateCycleSGPA = (cycle) => {
           <div className="space-y-2">
             {/* GitHub Button */}
             <a 
-              href="https://github.com/VivaanHooda" 
+              href="https://github.com/VivaanHooda/rvce-grade-calculator" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
