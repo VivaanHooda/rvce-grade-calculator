@@ -810,9 +810,9 @@ const calculateCycleSGPA = (cycle) => {
           onClick={() => setCurrentMode('')}
           className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
         >
-          ← Back to Modes
+          ← Back
         </button>
-        <h2 className="text-3xl font-bold text-gray-900">Select Your Cycle</h2>
+        <h2 className="text-3xl font-bold text-gray-900">Select Cycle</h2>
         <div className="w-32"></div>
       </div>
       
@@ -875,7 +875,7 @@ const calculateCycleSGPA = (cycle) => {
           onClick={() => setCurrentMode('')}
           className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
         >
-          ← Back to Modes
+          ← Back
         </button>
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Final GPA Calculator</h2>
@@ -1046,7 +1046,7 @@ const calculateCycleSGPA = (cycle) => {
             }}
             className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
           >
-            ← Back to Cycles
+            ← Back
           </button>
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
