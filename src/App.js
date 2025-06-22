@@ -877,8 +877,6 @@ const calculateCycleSGPA = (cycle) => {
           ←
         </button>
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Final GPA Calculator</h2>
-          <p className="text-gray-600 text-lg">Select grades for all subjects to calculate your overall GPA</p>
         </div>
         <div className="w-32"></div>
       </div>
@@ -1049,10 +1047,9 @@ const calculateCycleSGPA = (cycle) => {
           </button>
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              {currentCycle === 'physics' ? '⚡ Physics Cycle' : '🧪 Chemistry Cycle'}
             </h2>
             <p className="text-gray-600 text-lg">
-              {currentMode === 'cie-final' ? 'CIE Finalization' : 'Final Grade Calculator'}
+              
             </p>
           </div>
           <div className="w-32"></div>
