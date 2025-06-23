@@ -81,7 +81,7 @@ Contributions are welcome!
 
 1. Fork the repository.
 2. Create a new branch: `git checkout -b feature-new-feature`
-3. Make your changes and commit them: `git commit -am 'Add new feature'`
+3. Make your changes and commit them: `git commit -m 'Add new feature'`
 4. Push to the branch: `git push origin feature-new-feature`
 5. Open a pull request.
 
@@ -89,7 +89,7 @@ Please follow consistent coding styles and include clear commit messages.
 
 ## License
 
-This project is licensed under no Licesnse currently/
+This project is licensed under no License currently
 
 ## Contact
 
@@ -98,4 +98,4 @@ If you have questions, suggestions, or want to report bugs, feel free to reach o
 - Email: vivaan.hooda@gmail.com
 - GitHub: [https://github.com/VivaanHooda](https://github.com/VivaanHooda)
 
-Project Link: [https://github.com/VivaanHooda/Academic-Calculator](https://github.com/VivaanHooda/Academic-Calculator)
+Project Link: [https://github.com/VivaanHooda/Academic-Calculator](https://github.com/VivaanHooda/rvce-grade-calculator)
