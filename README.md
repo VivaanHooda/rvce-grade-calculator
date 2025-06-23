@@ -98,4 +98,4 @@ If you have questions, suggestions, or want to report bugs, feel free to reach o
 - Email: vivaan.hooda@gmail.com
 - GitHub: [https://github.com/VivaanHooda](https://github.com/VivaanHooda)
 
-Project Link: [https://github.com/VivaanHooda/Academic-Calculator](https://github.com/VivaanHooda/rvce-grade-calculator)
+Project Link: [https://github.com/VivaanHooda/rvce-grade-calculator](https://github.com/VivaanHooda/rvce-grade-calculator)
