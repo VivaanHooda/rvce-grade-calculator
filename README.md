@@ -43,7 +43,7 @@ This academic calculator is designed for students of RV College of Engineering (
    ```
 3. Navigate to the project directory:
    ```bash
-   cd Academic-Calculator
+   cd rvce-grade-calculator
    ```
 4. Install dependencies:
    ```bash
