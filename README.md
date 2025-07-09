@@ -39,7 +39,7 @@ This academic calculator is designed for students of RV College of Engineering (
 1. Make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
 2. Clone this repository:
    ```bash
-   git clone https://github.com/YourUsername/Academic-Calculator.git
+   git clone https://github.com/VivaanHooda/rvce-grade-calculator
    ```
 3. Navigate to the project directory:
    ```bash
