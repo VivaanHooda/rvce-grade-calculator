@@ -1491,7 +1491,7 @@ const calculateCycleSGPA = (cycle) => {
                 </a>
                 {/* Gmail Button */}
                 <a 
-                  href="mailto:vivaanhooda.is24@rvce.edu.in"
+                  href="mailto:vivaan.hooda@gmail.com,vidishadewan@hotmail.com"
                   className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                 >
                   <svg className="w-5 h-5 text-red-500 group-hover:text-red-600" fill="currentColor" viewBox="0 0 20 20">
