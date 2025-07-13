@@ -1,47 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Calculator, BookOpen, Award, BarChart3, ChevronRight, Lock, Unlock, X, Copy, Info, Github, ChevronLeft } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Calculator, BookOpen, Award, BarChart3, ChevronRight, Lock, Unlock, X, Copy, Info, Github } from 'lucide-react';
 
 // Module-level variable to hold form data - this prevents focus loss
 let updatedFormData = {};
 let updatedSgpaValues = {};
-
-// Local storage keys
-const STORAGE_KEYS = {
-  FORM_DATA: 'rvce_calculator_form_data',
-  SGPA_VALUES: 'rvce_calculator_sgpa_values',
-  FINAL_CGPA_GRADES: 'rvce_calculator_final_cgpa_grades',
-  CURRENT_MODE: 'rvce_calculator_current_mode',
-  CURRENT_CYCLE: 'rvce_calculator_current_cycle'
-};
-
-// Helper functions for localStorage
-const saveToStorage = (key, data) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (error) {
-    console.warn('Failed to save to localStorage:', error);
-  }
-};
-
-const loadFromStorage = (key, defaultValue = {}) => {
-  try {
-    const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : defaultValue;
-  } catch (error) {
-    console.warn('Failed to load from localStorage:', error);
-    return defaultValue;
-  }
-};
-
-const clearAllStorage = () => {
-  try {
-    Object.values(STORAGE_KEYS).forEach(key => {
-      localStorage.removeItem(key);
-    });
-  } catch (error) {
-    console.warn('Failed to clear localStorage:', error);
-  }
-};
 
 // SEE Requirements Popup Component
 const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName }) => {
@@ -143,7 +105,7 @@ const gradeAt35Item = {
                 <div>
                   <div className="font-semibold text-gray-900">Grade {item.letter}</div>
                     <div className="text-sm text-gray-600">
-                        SEE: {item.seeRequired > 100 ? 'Unachievable' : `${item.seeRequired.toFixed(1)} marks`}
+                        SEE: {item.seeRequired > 100 ? 'Unachievable' : `${item.seeRequired.toFixed(1)}`}
                     </div>
                   </div>
               </div>
@@ -295,177 +257,16 @@ const SGPAResultsPopup = ({ isOpen, onClose, sgpa, cycleName }) => {
 const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrades, getGradeLetter, onShowSEERequirements }) => {
   const data = formData[subject.id] || {};
   const result = subjectGrades[subject.id];
-  const [validationMessage, setValidationMessage] = useState({ show: false, field: '', message: '' });
-  const [inputValues, setInputValues] = useState(() => {
-    // Initialize with existing data from localStorage or props
-    const existingData = updatedFormData[subject.id] || data;
-    return {
-      q1: existingData.q1 || '',
-      q2: existingData.q2 || '',
-      t1: existingData.t1 || '',
-      t2: existingData.t2 || '',
-      matlab: existingData.matlab || '',
-      el: existingData.el || '',
-      lab: existingData.lab || '',
-      see: existingData.see || ''
-    };
-  });
-
-  // Refs for keyboard navigation (one for each possible field)
-  const refs = {
-    q1: useRef(),
-    q2: useRef(),
-    t1: useRef(),
-    t2: useRef(),
-    matlab: useRef(),
-    el: useRef(),
-    lab: useRef(),
-    see: useRef()
-  };
-  // Order for navigation
-  let navOrder = ['q1', 'q2', 't1', 't2'];
-  if (subject.type === 'math') navOrder.push('matlab', 'el');
-  if (subject.type === 'lab') navOrder.push('lab', 'el');
-  if (subject.type === 'regular') navOrder.push('el');
-  if (currentMode === 'final-grade') navOrder.push('see');
-  // Remove duplicates
-  navOrder = navOrder.filter((v, i, arr) => arr.indexOf(v) === i);
-
-  // Keyboard navigation handler
-  const handleKeyDown = (e, field) => {
-    const idx = navOrder.indexOf(field);
-    const colCount = 2;
-    if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-      e.preventDefault();
-      let nextIdx = idx;
-      if (e.key === 'ArrowRight') nextIdx = (idx + 1) % navOrder.length;
-      if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + navOrder.length) % navOrder.length;
-      if (e.key === 'ArrowDown') nextIdx = (idx + colCount) < navOrder.length ? idx + colCount : idx;
-      if (e.key === 'ArrowUp') nextIdx = (idx - colCount) >= 0 ? idx - colCount : idx;
-      if (nextIdx !== idx && refs[navOrder[nextIdx]] && refs[navOrder[nextIdx]].current) {
-        refs[navOrder[nextIdx]].current.focus();
-      }
-    }
-  };
 
   const handleInputChange = (field, value) => {
-    // Validate input - only allow numbers, decimal points, and empty string
-    const numericRegex = /^[0-9]*\.?[0-9]*$/;
-    
-    // Allow empty string or valid numeric input
-    if (value === '' || numericRegex.test(value)) {
-      // Check maximum value limits
-      const numValue = parseFloat(value) || 0;
-      let maxValue = 0;
-      let isValidRange = true;
-      
-      // Define maximum values for each field
-      switch (field) {
-        case 'q1':
-        case 'q2':
-          maxValue = 10; // Quiz max: 10 marks
-          break;
-        case 't1':
-        case 't2':
-          maxValue = 50; // Test max: 50 marks
-          break;
-        case 'matlab':
-          maxValue = 20; // MATLAB max: 20 marks
-          break;
-        case 'lab':
-          maxValue = 30; // Lab max: 30 marks
-          break;
-        case 'el':
-          // EL max depends on subject type
-          if (subject.type === 'math') {
-            maxValue = 20; // Math subjects: 20 marks
-          } else if (subject.type === 'lab') {
-            maxValue = 30; // Lab subjects: 30 marks
-          } else {
-            maxValue = 40; // Regular subjects: 40 marks
-          }
-          break;
-        case 'see':
-          maxValue = 100; // SEE max: 100 marks
-          break;
-        default:
-          maxValue = 100; // Default max
-      }
-      
-      // Check if value exceeds maximum
-      if (numValue > maxValue) {
-        isValidRange = false;
-        setValidationMessage({ 
-          show: true, 
-          field: field, 
-          message: `Maximum value allowed is ${maxValue}` 
-        });
-        
-        // Auto-hide after 3 seconds
-        setTimeout(() => {
-          setValidationMessage(prev => {
-            if (prev.field === field) {
-              return { show: false, field: '', message: '' };
-            }
-            return prev;
-          });
-        }, 3000);
-      }
-      
-      // Only update if value is within range
-      if (isValidRange) {
-        // Update both local state and module-level variable
-        setInputValues(prev => ({ ...prev, [field]: value }));
-        
+    // Update the module-level variable instead of using setState immediately
     if (!updatedFormData[subject.id]) {
       updatedFormData[subject.id] = {};
     }
     updatedFormData[subject.id][field] = value;
-        
-        // Save to localStorage
-        saveToStorage(STORAGE_KEYS.FORM_DATA, updatedFormData);
-        
-        // Hide validation message if it was showing for this field
-        if (validationMessage.show && validationMessage.field === field) {
-          setValidationMessage({ show: false, field: '', message: '' });
-        }
-      }
-    } else {
-      // Show validation message for invalid input
-      setValidationMessage({ 
-        show: true, 
-        field: field, 
-        message: 'Enter numeric Values Only' 
-      });
-      
-      // Auto-hide after 3 seconds
-      setTimeout(() => {
-        setValidationMessage(prev => {
-          if (prev.field === field) {
-            return { show: false, field: '', message: '' };
-          }
-          return prev;
-        });
-      }, 3000);
-    }
   };
 
   const hasCIEResult = result && result.type === 'cie';
-
-  // Update input values when localStorage data changes
-  useEffect(() => {
-    const existingData = updatedFormData[subject.id] || data;
-    setInputValues({
-      q1: existingData.q1 || '',
-      q2: existingData.q2 || '',
-      t1: existingData.t1 || '',
-      t2: existingData.t2 || '',
-      matlab: existingData.matlab || '',
-      el: existingData.el || '',
-      lab: existingData.lab || '',
-      see: existingData.see || ''
-    });
-  }, [updatedFormData, subject.id, data]);
 
   return (
     <div className="bg-white border border-gray-200 rounded-3xl p-6 space-y-6 shadow-sm hover:shadow-md transition-shadow">
@@ -477,191 +278,127 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           </span>
         </h3>
       </div>
+
       <div className="grid grid-cols-2 gap-4">
-        <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 1 (Max: 10)</label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 1</label>
           <input
             type="text"
-            value={inputValues.q1}
+            defaultValue={data.q1 || ''}
             onChange={(e) => handleInputChange('q1', e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
             placeholder=""
-            ref={refs.q1}
-            onKeyDown={(e) => handleKeyDown(e, 'q1')}
           />
-          {validationMessage.show && validationMessage.field === 'q1' && (
-            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
         </div>
-        <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 2 (Max: 10)</label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 2</label>
           <input
             type="text"
-            value={inputValues.q2}
+            defaultValue={data.q2 || ''}
             onChange={(e) => handleInputChange('q2', e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
             placeholder=""
-            ref={refs.q2}
-            onKeyDown={(e) => handleKeyDown(e, 'q2')}
           />
-          {validationMessage.show && validationMessage.field === 'q2' && (
-            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
         </div>
-        <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Test 1 (Max: 50)</label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Test 1</label>
           <input
             type="text"
-            value={inputValues.t1}
+            defaultValue={data.t1 || ''}
             onChange={(e) => handleInputChange('t1', e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
             placeholder=""
-            ref={refs.t1}
-            onKeyDown={(e) => handleKeyDown(e, 't1')}
           />
-          {validationMessage.show && validationMessage.field === 't1' && (
-            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
         </div>
-        <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Test 2 (Max: 50)</label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Test 2</label>
           <input
             type="text"
-            value={inputValues.t2}
+            defaultValue={data.t2 || ''}
             onChange={(e) => handleInputChange('t2', e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
             placeholder=""
-            ref={refs.t2}
-            onKeyDown={(e) => handleKeyDown(e, 't2')}
           />
-          {validationMessage.show && validationMessage.field === 't2' && (
-            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
         </div>
       </div>
+
       {/* Subject-specific fields */}
       {subject.type === 'math' && (
         <div className="grid grid-cols-2 gap-4">
-          <div className="relative">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">MATLAB (Max: 20)</label>
             <input
               type="text"
-              value={inputValues.matlab}
+              defaultValue={data.matlab || ''}
               onChange={(e) => handleInputChange('matlab', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
               placeholder=""
-              ref={refs.matlab}
-              onKeyDown={(e) => handleKeyDown(e, 'matlab')}
             />
-            {validationMessage.show && validationMessage.field === 'matlab' && (
-              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-                {validationMessage.message}
-              </div>
-            )}
           </div>
-          <div className="relative">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 20)</label>
             <input
               type="text"
-              value={inputValues.el}
+              defaultValue={data.el || ''}
               onChange={(e) => handleInputChange('el', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
               placeholder=""
-              ref={refs.el}
-              onKeyDown={(e) => handleKeyDown(e, 'el')}
             />
-            {validationMessage.show && validationMessage.field === 'el' && (
-              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-                {validationMessage.message}
-              </div>
-            )}
           </div>
         </div>
       )}
+
       {subject.type === 'lab' && (
         <div className="grid grid-cols-2 gap-4">
-          <div className="relative">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Lab Internals (Max: 30)</label>
             <input
               type="text"
-              value={inputValues.lab}
+              defaultValue={data.lab || ''}
               onChange={(e) => handleInputChange('lab', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
               placeholder=""
-              ref={refs.lab}
-              onKeyDown={(e) => handleKeyDown(e, 'lab')}
             />
-            {validationMessage.show && validationMessage.field === 'lab' && (
-              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-                {validationMessage.message}
-              </div>
-            )}
           </div>
-          <div className="relative">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 30)</label>
             <input
               type="text"
-              value={inputValues.el}
+              defaultValue={data.el || ''}
               onChange={(e) => handleInputChange('el', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
               placeholder=""
-              ref={refs.el}
-              onKeyDown={(e) => handleKeyDown(e, 'el')}
             />
-            {validationMessage.show && validationMessage.field === 'el' && (
-              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-                {validationMessage.message}
-              </div>
-            )}
           </div>
         </div>
       )}
+
       {subject.type === 'regular' && (
-        <div className="relative">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 40)</label>
           <input
             type="text"
-            value={inputValues.el}
+            defaultValue={data.el || ''}
             onChange={(e) => handleInputChange('el', e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
             placeholder=""
-            ref={refs.el}
-            onKeyDown={(e) => handleKeyDown(e, 'el')}
           />
-          {validationMessage.show && validationMessage.field === 'el' && (
-            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
         </div>
       )}
+
       {currentMode === 'final-grade' && (
-        <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">SEE Marks (Max: 100)</label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">SEE Marks</label>
           <input
             type="text"
-            value={inputValues.see}
+            defaultValue={data.see || ''}
             onChange={(e) => handleInputChange('see', e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
             placeholder="0"
-            ref={refs.see}
-            onKeyDown={(e) => handleKeyDown(e, 'see')}
           />
-          {validationMessage.show && validationMessage.field === 'see' && (
-            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
         </div>
       )}
+
       <div className="space-y-4">
         <button
           onClick={() => onCalculate(subject)}
@@ -733,8 +470,6 @@ const CGPACalculator = () => {
   const [sgpaPopup, setSgpaPopup] = useState({ isOpen: false, sgpa: 0, cycleName: '' });
   const [showCreatorInfo, setShowCreatorInfo] = useState(false);
   const [showBugOptions, setShowBugOptions] = useState(false);
-  const [sgpaValidationMessage, setSgpaValidationMessage] = useState({ show: false, cycle: '', message: '' });
-  const [sgpaInputValues, setSgpaInputValues] = useState({ physics: '', chemistry: '' });
 
   const subjectCredit = {
     'math': 4, 'math-c': 4, 'phy': 4, 'chem': 4,
@@ -990,14 +725,7 @@ const handleSgpaToggle = (cycle) => {
 };
 
 const handleSgpaValueChange = (cycle, value) => {
-  // Simple assignment like in original
   updatedSgpaValues[cycle] = value;
-  
-  // Update state for controlled component
-  setSgpaInputValues(prev => ({ ...prev, [cycle]: value }));
-  
-  // Save to localStorage (your new feature)
-  saveToStorage(STORAGE_KEYS.SGPA_VALUES, updatedSgpaValues);
 };
 
 const calculateCycleSGPA = (cycle) => {
@@ -1019,69 +747,9 @@ const calculateCycleSGPA = (cycle) => {
   // Initialize updatedFormData when component mounts or changes cycles
   // Initialize updatedFormData when component mounts or changes cycles
   useEffect(() => {
-    updatedFormData = loadFromStorage(STORAGE_KEYS.FORM_DATA, {});
-    updatedSgpaValues = loadFromStorage(STORAGE_KEYS.SGPA_VALUES, { physics: '', chemistry: '' });
-    setCurrentMode(loadFromStorage(STORAGE_KEYS.CURRENT_MODE, ''));
-    setCurrentCycle(loadFromStorage(STORAGE_KEYS.CURRENT_CYCLE, ''));
-    setFinalCGPAGrades(loadFromStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { physics: {}, chemistry: {} }));
-    setSgpaInputValues(loadFromStorage(STORAGE_KEYS.SGPA_VALUES, { physics: '', chemistry: '' }));
-    setFormData(loadFromStorage(STORAGE_KEYS.FORM_DATA, {}));
-  }, []);
-
-  useEffect(() => {
-    saveToStorage(STORAGE_KEYS.FORM_DATA, updatedFormData);
-    saveToStorage(STORAGE_KEYS.SGPA_VALUES, updatedSgpaValues);
-    saveToStorage(STORAGE_KEYS.CURRENT_MODE, currentMode);
-    saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, currentCycle);
-    saveToStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, finalCGPAGrades);
-  }, [currentMode, currentCycle, updatedFormData, updatedSgpaValues, finalCGPAGrades]);
-
-  // Reset Marks function
-  const handleResetMarks = () => {
-    // Clear all localStorage
-    clearAllStorage();
-    
-    // Reset all state
-    setCurrentMode('');
-    setCurrentCycle('');
-    setSubjectGrades({});
-    setFormData({});
-    setFinalCGPAGrades({ physics: {}, chemistry: {} });
-    setSgpaToggle({ physics: false, chemistry: false });
-    setSgpaInputValues({ physics: '', chemistry: '' });
-    setSgpaValidationMessage({ show: false, cycle: '', message: '' });
-    
-    // Reset module-level variables
-    updatedFormData = {};
+    updatedFormData = { ...formData };
     updatedSgpaValues = { physics: '', chemistry: '' };
-
-  };
-
-  const handleResetCIEFinalisationMarks = () => {
-    saveToStorage(STORAGE_KEYS.FORM_DATA, {});
-    setFormData({});
-    setSubjectGrades({});
-    updatedFormData = {};
-  };
-
-  const handleResetFinalGPACalcMarks = () => {
-    saveToStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { physics: {}, chemistry: {} });
-    saveToStorage(STORAGE_KEYS.SGPA_VALUES, { physics: '', chemistry: '' });
-    setFinalCGPAGrades({ physics: {}, chemistry: {} });
-    setSgpaToggle({ physics: false, chemistry: false });
-    setSgpaInputValues({ physics: '', chemistry: '' });
-    updatedSgpaValues = { physics: '', chemistry: '' };
-  };
-
-  const handleSetCurrentMode = (mode) => {
-    setCurrentMode(mode);
-    saveToStorage(STORAGE_KEYS.CURRENT_MODE, mode);
-  };
-
-  const handleSetCurrentCycle = (cycle) => {
-    setCurrentCycle(cycle);
-    saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, cycle);
-  };
+  }, [formData, currentCycle]);
 
   const ModeSelection = () => (
   <div className="space-y-8">
@@ -1113,7 +781,7 @@ const calculateCycleSGPA = (cycle) => {
       {modes.map((mode) => (
         <button
           key={mode.id}
-          onClick={() => handleSetCurrentMode(mode.id)}
+          onClick={() => setCurrentMode(mode.id)}
           className="group relative bg-white border border-gray-200 rounded-3xl p-8 hover:border-gray-300 hover:shadow-xl transition-all duration-300 text-left transform hover:-translate-y-1"
         >
           <div className="flex items-center justify-between">
@@ -1139,12 +807,10 @@ const calculateCycleSGPA = (cycle) => {
     <div className="space-y-8">
       <div className="flex items-center justify-between mb-8">
         <button
-          onClick={() => handleSetCurrentMode('')}
-          className="flex items-center group"
-          title="Back"
+          onClick={() => setCurrentMode('')}
+          className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
         >
-          <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
-          <span className="ml-2 text-gray-400 group-hover:text-gray-600 transition-colors font-medium">Back</span>
+          ←
         </button>
         <div className="w-32"></div>
       </div>
@@ -1153,7 +819,7 @@ const calculateCycleSGPA = (cycle) => {
         {cycles.map((cycle) => (
           <button
             key={cycle.id}
-            onClick={() => handleSetCurrentCycle(cycle.id)}
+            onClick={() => setCurrentCycle(cycle.id)}
             className="bg-white border border-gray-200 rounded-3xl p-8 hover:border-blue-300 hover:shadow-xl transition-all duration-300 text-center group transform hover:-translate-y-1"
           >
             <div className="text-5xl mb-4">{cycle.emoji}</div>
@@ -1163,199 +829,204 @@ const calculateCycleSGPA = (cycle) => {
           </button>
         ))}
       </div>
-
     </div>
   );
 
   const FinalCGPAView = () => {
-    const handleGradeChange = (cycle, subjectId, grade) => {
-      setFinalCGPAGrades(prev => ({
-        ...prev,
-        [cycle]: {
-          ...prev[cycle],
-          [subjectId]: grade === '' ? undefined : parseInt(grade)
-        }
-      }));
-    };
+  const handleGradeChange = (cycle, subjectId, grade) => {
+    setFinalCGPAGrades(prev => ({
+      ...prev,
+      [cycle]: {
+        ...prev[cycle],
+        [subjectId]: grade === '' ? undefined : parseInt(grade)
+      }
+    }));
+  };
 
-    const renderSubjectCard = (subject, cycle) => (
-      <div key={subject.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
-        <div className="flex-1">
-          <span className="font-medium text-gray-900 block">{subject.name}</span>
-          <span className="text-sm text-gray-600">{subject.Credit} Credit</span>
-        </div>
-        <select
-          value={finalCGPAGrades[cycle][subject.id] || ''}
-          onChange={(e) => handleGradeChange(cycle, subject.id, e.target.value)}
-          disabled={sgpaToggle[cycle]}
-          className={`ml-4 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-            sgpaToggle[cycle] ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white'
-          }`}
-        >
-          <option value="">Select Grade</option>
-          {gradeOptions.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+  const renderSubjectCard = (subject, cycle) => (
+    <div key={subject.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
+      <div className="flex-1">
+        <span className="font-medium text-gray-900 block">{subject.name}</span>
+        <span className="text-sm text-gray-600">{subject.Credit} Credit</span>
       </div>
-    );
+      <select
+        value={finalCGPAGrades[cycle][subject.id] || ''}
+        onChange={(e) => handleGradeChange(cycle, subject.id, e.target.value)}
+        disabled={sgpaToggle[cycle]}
+        className={`ml-4 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+          sgpaToggle[cycle] ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white'
+        }`}
+      >
+        <option value="">Select Grade</option>
+        {gradeOptions.map(option => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 
-    return (
-      <div className="space-y-8">
-        <div className="flex items-center justify-between mb-8">
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between mb-8">
         <button
-          onClick={() => handleSetCurrentMode('')}
-          className="flex items-center group"
-          title="Back"
+          onClick={() => setCurrentMode('')}
+          className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
         >
-          <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
-          <span className="ml-2 text-gray-400 group-hover:text-gray-600 transition-colors font-medium">Back</span>
+          ←
         </button>
+        <div className="text-center">
+        </div>
         <div className="w-32"></div>
       </div>
 
-        <div className="grid gap-8 md:grid-cols-2">
-          {/* Physics Cycle */}
-          <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                ⚡ Physics Cycle
-              </h3>
-              <span className="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                20 Credit
-              </span>
-            </div>
-            <div className="space-y-3">
-              {physicsSubjectsCGPA.map((subject) => renderSubjectCard(subject, 'physics'))}
-            </div>
-            {/* Compute SGPA Button */}
-            <button
-              onClick={() => handleSGPACompute('physics')}
-              disabled={sgpaToggle.physics}
-              className={`w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all ${
-                sgpaToggle.physics 
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
-              }`}
-            >
-              Compute SGPA
-            </button>
-            {/* OR Divider */}
-            <div className="flex items-center my-4">
-              <div className="flex-1 border-t border-gray-300"></div>
-              <span className="px-3 text-gray-500 text-sm font-medium">OR</span>
-              <div className="flex-1 border-t border-gray-300"></div>
-            </div>
-            {/* SGPA Input Section */}
-            <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-blue-900 font-medium">Enter SGPA for Physics Cycle</span>
-                <button
-                  onClick={() => handleSgpaToggle('physics')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    sgpaToggle.physics ? 'bg-blue-600' : 'bg-gray-200'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      sgpaToggle.physics ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-              {sgpaToggle.physics && (
-                <input
-                  type="number"
-                  min="0"
-                  max="10"
-                  step="0.01"
-                  defaultValue={updatedSgpaValues.physics || ''}
-                  onChange={(e) => handleSgpaValueChange('physics', e.target.value)}
-                  placeholder="Enter SGPA :"
-                  className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              )}
-            </div>
+      <div className="grid gap-8 md:grid-cols-2">
+        {/* Physics Cycle */}
+        <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+              ⚡ Physics Cycle
+            </h3>
+            <span className="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+              20 Credit
+            </span>
           </div>
-
-          {/* Chemistry Cycle */}
-          <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                🧪 Chemistry Cycle
-              </h3>
-              <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
-                20 Credit
-              </span>
-            </div>
-            <div className="space-y-3">
-              {chemistrySubjectsCGPA.map((subject) => renderSubjectCard(subject, 'chemistry'))}
-            </div>
-            {/* Compute SGPA Button */}
-            <button
-              onClick={() => handleSGPACompute('chemistry')}
-              disabled={sgpaToggle.chemistry}
-              className={`w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all ${
-                sgpaToggle.chemistry 
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                  : 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
-              }`}
-            >
-              Compute SGPA
-            </button>
-            {/* OR Divider */}
-            <div className="flex items-center my-4">
-              <div className="flex-1 border-t border-gray-300"></div>
-              <span className="px-3 text-gray-500 text-sm font-medium">OR</span>
-              <div className="flex-1 border-t border-gray-300"></div>
-            </div>
-            {/* SGPA Input Section */}
-            <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-green-900 font-medium">Enter SGPA for Chemistry Cycle</span>
-                <button
-                  onClick={() => handleSgpaToggle('chemistry')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
-                    sgpaToggle.chemistry ? 'bg-green-600' : 'bg-gray-200'
+          <div className="space-y-3">
+            {physicsSubjectsCGPA.map((subject) => renderSubjectCard(subject, 'physics'))}
+          </div>
+          
+          {/* Compute SGPA Button */}
+          <button
+            onClick={() => handleSGPACompute('physics')}
+            disabled={sgpaToggle.physics}
+            className={`w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all ${
+              sgpaToggle.physics 
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+            }`}
+          >
+            Compute SGPA
+          </button>
+          
+          {/* OR Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <span className="px-3 text-gray-500 text-sm font-medium">OR</span>
+            <div className="flex-1 border-t border-gray-300"></div>
+          </div>
+          
+          {/* SGPA Input Section */}
+          <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-blue-900 font-medium">Enter SGPA for Physics Cycle</span>
+              <button
+                onClick={() => handleSgpaToggle('physics')}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  sgpaToggle.physics ? 'bg-blue-600' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    sgpaToggle.physics ? 'translate-x-6' : 'translate-x-1'
                   }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      sgpaToggle.chemistry ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-              {sgpaToggle.chemistry && (
-                <input
-                  type="number"
-                  min="0"
-                  max="10"
-                  step="0.01"
-                  defaultValue={updatedSgpaValues.chemistry || ''}
-                  onChange={(e) => handleSgpaValueChange('chemistry', e.target.value)}
-                  placeholder="Enter SGPA :"
-                  className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
-              )}
+              </button>
             </div>
+            {sgpaToggle.physics && (
+              <input
+                type="number"
+                min="0"
+                max="10"
+                step="0.01"
+                defaultValue={updatedSgpaValues.physics || ''}
+                onChange={(e) => handleSgpaValueChange('physics', e.target.value)}
+                placeholder="Enter SGPA :"
+                className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            )}
           </div>
         </div>
 
-        {/* Compute CGPA Button */}
-        <div className="text-center">
+        {/* Chemistry Cycle */}
+        <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+              🧪 Chemistry Cycle
+            </h3>
+            <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+              20 Credit
+            </span>
+          </div>
+          <div className="space-y-3">
+            {chemistrySubjectsCGPA.map((subject) => renderSubjectCard(subject, 'chemistry'))}
+          </div>
+          
+          {/* Compute SGPA Button */}
           <button
-            onClick={handleFinalCGPACompute}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+            onClick={() => handleSGPACompute('chemistry')}
+            disabled={sgpaToggle.chemistry}
+            className={`w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all ${
+              sgpaToggle.chemistry 
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                : 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+            }`}
           >
-            Compute CGPA
+            Compute SGPA
           </button>
+          
+          {/* OR Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <span className="px-3 text-gray-500 text-sm font-medium">OR</span>
+            <div className="flex-1 border-t border-gray-300"></div>
+          </div>
+          
+          {/* SGPA Input Section */}
+          <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-green-900 font-medium">Enter SGPA for Chemistry Cycle</span>
+              <button
+                onClick={() => handleSgpaToggle('chemistry')}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+                  sgpaToggle.chemistry ? 'bg-green-600' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    sgpaToggle.chemistry ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+            {sgpaToggle.chemistry && (
+              <input
+                type="number"
+                min="0"
+                max="10"
+                step="0.01"
+                defaultValue={updatedSgpaValues.chemistry || ''}
+                onChange={(e) => handleSgpaValueChange('chemistry', e.target.value)}
+                placeholder="Enter SGPA :"
+                className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            )}
+          </div>
         </div>
       </div>
-    );
-  };
+
+      {/* Compute CGPA Button */}
+      <div className="text-center">
+        <button
+          onClick={handleFinalCGPACompute}
+          className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+        >
+          Compute CGPA
+        </button>
+      </div>
+    </div>
+  );
+};
 
   const SubjectsView = () => {
     const subjects = getSubjects();
@@ -1365,15 +1036,14 @@ const calculateCycleSGPA = (cycle) => {
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => {
-              handleSetCurrentCycle(''); // Only clear currentCycle
-              saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, '');
-              // Do NOT clear formData, subjectGrades, or updatedFormData here!
+              setCurrentCycle('');
+              setSubjectGrades({});
+              setFormData({});
+              updatedFormData = {}; // Reset module variable
             }}
-            className="flex items-center group"
-            title="Back"
+            className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
           >
-            <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
-            <span className="ml-2 text-gray-400 group-hover:text-gray-600 transition-colors font-medium">Back</span>
+            ←
           </button>
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -1422,102 +1092,70 @@ const calculateCycleSGPA = (cycle) => {
             ))}
           </div>
         </div>
-
-        {/* Reset Marks Button */}
-        <button
-          onClick={handleResetCIEFinalisationMarks}
-          className="fixed top-6 right-6 bg-white hover:bg-grey text-black px-3 py-2 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2 text-sm border border-gray-200"
-          title="Reset all marks and clear saved data"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-          Reset Marks
-        </button>
       </div>
     );
   };
   
-  const BugReportButton = () => {
-    const [showBugOptions, setShowBugOptions] = useState(false);
-    let bugOptionsTimeout = null;
+  const BugReportButton = () => (
+  <div className="fixed bottom-6 right-6 z-40">
+    <div 
+      className="relative"
+      onMouseEnter={() => setShowBugOptions(true)}
+      onMouseLeave={() => setShowBugOptions(false)}
+    >
+      {/* Main Bug Report Button */}
+      <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm font-medium">
+        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+        </svg>
+        Report Bugs / Contribute
+      </button>
 
-    // Helper to clear any pending timeout
-    const clearBugOptionsTimeout = () => {
-      if (bugOptionsTimeout) {
-        clearTimeout(bugOptionsTimeout);
-        bugOptionsTimeout = null;
-      }
-    };
-
-    // Show popup immediately on mouse enter
-    const handleMouseEnter = () => {
-      clearBugOptionsTimeout();
-      setShowBugOptions(true);
-    };
-
-    // Hide popup with a slight delay to allow moving between button and popup
-    const handleMouseLeave = () => {
-      clearBugOptionsTimeout();
-      bugOptionsTimeout = setTimeout(() => setShowBugOptions(false), 120);
-    };
-
-    return (
-      <div className="fixed bottom-6 right-6 z-40" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-        <div className="relative">
-          {/* Main Bug Report Button */}
-          <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm font-medium">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-            </svg>
-            Report Bugs / Contribute
-          </button>
-
-          {/* Hover Options Bubble */}
-          <div className={`absolute bottom-full right-0 mb-2 transition-all duration-300 ${
-            showBugOptions ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'
-          }`}>
-            <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-3 min-w-[180px]">
-              <div className="space-y-2">
-                {/* GitHub Button */}
-                <a 
-                  href="https://github.com/VivaanHooda/rvce-grade-calculator" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
-                >
-                  <Github className="w-5 h-5 text-gray-700 group-hover:text-black" />
-                  <span className="text-gray-700 group-hover:text-black font-medium">GitHub</span>
-                </a>
-                {/* Gmail Button */}
-                <a 
-                  href="mailto:vivaanhooda.is24@rvce.edu.in"
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
-                >
-                  <svg className="w-5 h-5 text-red-500 group-hover:text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
-                  <span className="text-gray-700 group-hover:text-black font-medium">Gmail</span>
-                </a>
-              </div>
-              {/* Bubble Arrow */}
-              <div className="absolute bottom-0 right-4 transform translate-y-full">
-                <div className="w-3 h-3 bg-white border-r border-b border-gray-200 transform rotate-45"></div>
-              </div>
-            </div>
+      {/* Hover Options Bubble */}
+      <div className={`absolute bottom-full right-0 mb-2 transition-all duration-300 ${
+        showBugOptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+      }`}>
+        <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-3 min-w-[180px]">
+          <div className="space-y-2">
+            {/* GitHub Button */}
+            <a 
+              href="https://github.com/VivaanHooda/rvce-grade-calculator" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
+            >
+              <Github className="w-5 h-5 text-gray-700 group-hover:text-black" />
+              <span className="text-gray-700 group-hover:text-black font-medium">GitHub</span>
+            </a>
+            
+            {/* Gmail Button */}
+            <a 
+              href="mailto:vivaanhooda.is24@rvce.edu.in"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
+            >
+              <svg className="w-5 h-5 text-red-500 group-hover:text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+              </svg>
+              <span className="text-gray-700 group-hover:text-black font-medium">Gmail</span>
+            </a>
+          </div>
+          
+          {/* Bubble Arrow */}
+          <div className="absolute bottom-0 right-4 transform translate-y-full">
+            <div className="w-3 h-3 bg-white border-r border-b border-gray-200 transform rotate-45"></div>
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  </div>
+);
 
 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-6 py-12 max-w-7xl">
-        {/* Main navigation logic for restoring state on reload */}
         {!currentMode && <ModeSelection />}
         {currentMode === 'final-cgpa' && <FinalCGPAView />}
         {currentMode && currentMode !== 'final-cgpa' && !currentCycle && <CycleSelection />}
