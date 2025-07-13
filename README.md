@@ -95,7 +95,12 @@ This project is licensed under no License currently
 
 If you have questions, suggestions, or want to report bugs, feel free to reach out:
 
-- Email: vivaan.hooda@gmail.com
-- GitHub: [https://github.com/VivaanHooda](https://github.com/VivaanHooda)
+- **Vivaan Hooda**
+  - Email: vivaan.hooda@gmail.com  
+  - GitHub: [https://github.com/VivaanHooda](https://github.com/VivaanHooda)
+
+- **Vidisha Dewan**
+  - Email: vidishadewan@hotmail.com  
+  - GitHub: [https://github.com/Vidisha231106](https://github.com/Vidisha231106)
 
 Project Link: [https://github.com/VivaanHooda/rvce-grade-calculator](https://github.com/VivaanHooda/rvce-grade-calculator)
