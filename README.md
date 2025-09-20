@@ -70,11 +70,6 @@ To build for production:
 npm run build
 ```
 
-You can deploy the contents of the `dist/` folder to services like:
-- [Netlify](https://www.netlify.com/)
-- [Vercel](https://vercel.com/)
-- [GitHub Pages](https://pages.github.com/)
-
 ## Contributing
 
 Contributions are welcome!
@@ -99,8 +94,5 @@ If you have questions, suggestions, or want to report bugs, feel free to reach o
   - Email: vivaan.hooda@gmail.com  
   - GitHub: [https://github.com/VivaanHooda](https://github.com/VivaanHooda)
 
-- **Vidisha Dewan**
-  - Email: vidishadewan@hotmail.com  
-  - GitHub: [https://github.com/Vidisha231106](https://github.com/Vidisha231106)
 
 Project Link: [https://github.com/VivaanHooda/rvce-grade-calculator](https://github.com/VivaanHooda/rvce-grade-calculator)
