@@ -1,16 +1,98 @@
-# React + Vite
+# Academic-Calculator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based academic calculator designed to help RVCE students compute CIE scores, SEE requirements, final grades, SGPA, and CGPA with ease.
 
-Currently, two official plugins are available:
+# Academic Calculator (React)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A clean and responsive React app to compute CIE, SEE requirements, grades, SGPA, and CGPA for Physics and Chemistry cycles, tailored for RVCE's academic system.
 
-## React Compiler
+## Table of Contents
+- [Description](#description)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Description
 
-## Expanding the ESLint configuration
+This academic calculator is designed for students of RV College of Engineering (RVCE). It provides tools to:
+- Finalize CIE scores from quizzes, tests, and ELs.
+- Estimate required SEE marks for each subject based on current CIE.
+- Predict final grades using CIE and SEE.
+- Compute SGPA for Physics and Chemistry cycles.
+- Calculate overall CGPA across both cycles.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+- CIE Finalization with rounded results.
+- SEE Requirement Estimator (with grade-level mapping and copy buttons).
+- Grade calculator using CIE and SEE marks.
+- SGPA/CGPA calculator using subject-wise grades or direct SGPA entry.
+- Clipboard copy for all results.
+- Responsive UI with Tailwind CSS and Lucide icons.
+
+## Installation
+
+1. Make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
+2. Clone this repository:
+   ```bash
+   git clone https://github.com/VivaanHooda/rvce-grade-calculator
+   ```
+3. Navigate to the project directory:
+   ```bash
+   cd rvce-grade-calculator
+   ```
+4. Install dependencies:
+   ```bash
+   npm install
+   ```
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+
+- Choose your mode (CIE Finalization, Final Grade, or Final CGPA).
+- Select your cycle (Physics or Chemistry).
+- Enter relevant scores or grades.
+- Copy results instantly with one click.
+- Use the SEE Requirements feature to find the minimum SEE marks needed to pass or hit a target grade.
+
+## Deployment
+
+To build for production:
+
+```bash
+npm run build
+```
+
+## Contributing
+
+Contributions are welcome!
+
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature-new-feature`
+3. Make your changes and commit them: `git commit -m 'Add new feature'`
+4. Push to the branch: `git push origin feature-new-feature`
+5. Open a pull request.
+
+Please follow consistent coding styles and include clear commit messages.
+
+## License
+
+This project is licensed under no License currently
+
+## Contact
+
+If you have questions, suggestions, or want to report bugs, feel free to reach out:
+
+- **Vivaan Hooda**
+  - Email: vivaan.hooda@gmail.com  
+  - GitHub: [https://github.com/VivaanHooda](https://github.com/VivaanHooda)
+
+
+Project Link: [https://github.com/VivaanHooda/rvce-grade-calculator](https://github.com/VivaanHooda/rvce-grade-calculator)
