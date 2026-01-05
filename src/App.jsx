@@ -484,7 +484,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
             type="text"
             value={inputValues.q1}
             onChange={(e) => handleInputChange('q1', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
             placeholder=""
             ref={refs.q1}
             onKeyDown={(e) => handleKeyDown(e, 'q1')}
@@ -501,7 +501,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
             type="text"
             value={inputValues.q2}
             onChange={(e) => handleInputChange('q2', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
             placeholder=""
             ref={refs.q2}
             onKeyDown={(e) => handleKeyDown(e, 'q2')}
@@ -518,7 +518,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
             type="text"
             value={inputValues.t1}
             onChange={(e) => handleInputChange('t1', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
             placeholder=""
             ref={refs.t1}
             onKeyDown={(e) => handleKeyDown(e, 't1')}
@@ -535,7 +535,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
             type="text"
             value={inputValues.t2}
             onChange={(e) => handleInputChange('t2', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
             placeholder=""
             ref={refs.t2}
             onKeyDown={(e) => handleKeyDown(e, 't2')}
@@ -556,7 +556,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
               type="text"
               value={inputValues.matlab}
               onChange={(e) => handleInputChange('matlab', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
               placeholder=""
               ref={refs.matlab}
               onKeyDown={(e) => handleKeyDown(e, 'matlab')}
@@ -573,7 +573,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
               type="text"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
               placeholder=""
               ref={refs.el}
               onKeyDown={(e) => handleKeyDown(e, 'el')}
@@ -594,7 +594,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
               type="text"
               value={inputValues.lab}
               onChange={(e) => handleInputChange('lab', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
               placeholder=""
               ref={refs.lab}
               onKeyDown={(e) => handleKeyDown(e, 'lab')}
@@ -611,7 +611,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
               type="text"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
               placeholder=""
               ref={refs.el}
               onKeyDown={(e) => handleKeyDown(e, 'el')}
@@ -631,7 +631,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
             type="text"
             value={inputValues.el}
             onChange={(e) => handleInputChange('el', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
             placeholder=""
             ref={refs.el}
             onKeyDown={(e) => handleKeyDown(e, 'el')}
@@ -650,7 +650,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
             type="text"
             value={inputValues.see}
             onChange={(e) => handleInputChange('see', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg font-medium"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
             placeholder="0"
             ref={refs.see}
             onKeyDown={(e) => handleKeyDown(e, 'see')}
@@ -711,6 +711,29 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
   );
 };
 
+// SGPA Input Component - Uncontrolled to prevent focus loss
+const SGPAInput = ({ cycle, onChange, isPhysics, defaultValue, validationMessage }) => {
+  const borderColor = isPhysics ? 'border-blue-300' : 'border-green-300';
+  const focusRing = isPhysics ? 'focus:ring-blue-500 focus:border-blue-500' : 'focus:ring-green-500 focus:border-green-500';
+  
+  return (
+    <div className="relative">
+      <input
+        type="text"
+        defaultValue={defaultValue}
+        onChange={(e) => onChange(cycle, e.target.value, e.target)}
+        placeholder="Enter SGPA (0-10)"
+        className={`w-full px-3 py-2 border ${borderColor} rounded-lg focus:ring-2 ${focusRing} outline-none bg-white text-gray-900`}
+      />
+      {validationMessage.show && validationMessage.cycle === cycle && (
+        <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+          {validationMessage.message}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const CGPACalculator = () => {
   const [currentMode, setCurrentMode] = useState('');
   const [currentCycle, setCurrentCycle] = useState('');
@@ -725,10 +748,6 @@ const CGPACalculator = () => {
     physics: false,
     chemistry: false
   });
-  /*const [sgpaValues, setSgpaValues] = useState({
-    physics: '',
-    chemistry: ''
-  });*/
   const [cgpaPopup, setCgpaPopup] = useState({ isOpen: false, cgpa: 0 });
   const [sgpaPopup, setSgpaPopup] = useState({ isOpen: false, sgpa: 0, cycleName: '' });
   const [showCreatorInfo, setShowCreatorInfo] = useState(false);
@@ -918,9 +937,8 @@ const calculateFinalCGPA = () => {
   let totalCredit = 0;
   
   // Calculate for Physics cycle
-  // Calculate for Physics cycle
   if (sgpaToggle.physics && updatedSgpaValues.physics) {
-    totalGradePoints += parseFloat(updatedSgpaValues.physics) * 20; // 20 credits for physics cycle
+    totalGradePoints += parseFloat(updatedSgpaValues.physics) * 20;
     totalCredit += 20;
   } else {
     physicsSubjectsCGPA.forEach(subject => {
@@ -933,9 +951,8 @@ const calculateFinalCGPA = () => {
   }
   
   // Calculate for Chemistry cycle
-  // Calculate for Chemistry cycle
   if (sgpaToggle.chemistry && updatedSgpaValues.chemistry) {
-    totalGradePoints += parseFloat(updatedSgpaValues.chemistry) * 20; // 20 credits for chemistry cycle
+    totalGradePoints += parseFloat(updatedSgpaValues.chemistry) * 20;
     totalCredit += 20;
   } else {
     chemistrySubjectsCGPA.forEach(subject => {
@@ -989,15 +1006,89 @@ const handleSgpaToggle = (cycle) => {
   }
 };
 
-const handleSgpaValueChange = (cycle, value) => {
-  // Simple assignment like in original
-  updatedSgpaValues[cycle] = value;
+const handleSgpaValueChange = (cycle, value, inputElement) => {
+  // Validate input - only allow numbers, decimal points, and empty string
+  const numericRegex = /^[0-9]*\.?[0-9]*$/;
   
-  // Update state for controlled component
-  setSgpaInputValues(prev => ({ ...prev, [cycle]: value }));
-  
-  // Save to localStorage (your new feature)
-  saveToStorage(STORAGE_KEYS.SGPA_VALUES, updatedSgpaValues);
+  // Allow empty string or valid numeric input
+  if (value === '' || numericRegex.test(value)) {
+    const numValue = parseFloat(value) || 0;
+    let isValidRange = true;
+    let errorMessage = '';
+    
+    // Check for negative values
+    if (value !== '' && numValue < 0) {
+      isValidRange = false;
+      errorMessage = 'SGPA cannot be negative';
+    }
+    
+    // Check if value exceeds maximum (10)
+    if (value !== '' && numValue > 10) {
+      isValidRange = false;
+      errorMessage = 'Maximum SGPA is 10';
+    }
+    
+    if (!isValidRange) {
+      // Show validation message
+      setSgpaValidationMessage({ 
+        show: true, 
+        cycle: cycle, 
+        message: errorMessage 
+      });
+      
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        setSgpaValidationMessage(prev => {
+          if (prev.cycle === cycle) {
+            return { show: false, cycle: '', message: '' };
+          }
+          return prev;
+        });
+      }, 3000);
+      
+      // Reset input to previous valid value
+      if (inputElement) {
+        inputElement.value = updatedSgpaValues[cycle] || '';
+      }
+      return;
+    }
+    
+    // Only update if value is within range
+    if (isValidRange) {
+      // Update module-level variable only
+      updatedSgpaValues[cycle] = value;
+      
+      // Save to localStorage
+      saveToStorage(STORAGE_KEYS.SGPA_VALUES, updatedSgpaValues);
+      
+      // Hide validation message if it was showing for this cycle
+      if (sgpaValidationMessage.show && sgpaValidationMessage.cycle === cycle) {
+        setSgpaValidationMessage({ show: false, cycle: '', message: '' });
+      }
+    }
+  } else {
+    // Show validation message for invalid input
+    setSgpaValidationMessage({ 
+      show: true, 
+      cycle: cycle, 
+      message: 'Enter numeric values only' 
+    });
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      setSgpaValidationMessage(prev => {
+        if (prev.cycle === cycle) {
+          return { show: false, cycle: '', message: '' };
+        }
+        return prev;
+      });
+    }, 3000);
+    
+    // Reset to previous valid value
+    if (inputElement) {
+      inputElement.value = updatedSgpaValues[cycle] || '';
+    }
+  }
 };
 
 const calculateCycleSGPA = (cycle) => {
@@ -1017,7 +1108,6 @@ const calculateCycleSGPA = (cycle) => {
 };
 
   // Initialize updatedFormData when component mounts or changes cycles
-  // Initialize updatedFormData when component mounts or changes cycles
   useEffect(() => {
     updatedFormData = loadFromStorage(STORAGE_KEYS.FORM_DATA, {});
     updatedSgpaValues = loadFromStorage(STORAGE_KEYS.SGPA_VALUES, { physics: '', chemistry: '' });
@@ -1030,11 +1120,10 @@ const calculateCycleSGPA = (cycle) => {
 
   useEffect(() => {
     saveToStorage(STORAGE_KEYS.FORM_DATA, updatedFormData);
-    saveToStorage(STORAGE_KEYS.SGPA_VALUES, updatedSgpaValues);
     saveToStorage(STORAGE_KEYS.CURRENT_MODE, currentMode);
     saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, currentCycle);
     saveToStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, finalCGPAGrades);
-  }, [currentMode, currentCycle, updatedFormData, updatedSgpaValues, finalCGPAGrades]);
+  }, [currentMode, currentCycle, finalCGPAGrades]);
 
   // Reset Marks function
   const handleResetMarks = () => {
@@ -1131,6 +1220,17 @@ const calculateCycleSGPA = (cycle) => {
         </button>
       ))}
     </div>
+
+    {/* Disclaimer Footer */}
+    <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-gray-200">
+      <div className="flex items-center justify-center gap-1.5">
+        <Info className="w-3.5 h-3.5 text-gray-500" />
+        <p className="text-xs text-gray-500">
+          <span className="font-medium">Disclaimer:</span>
+          {" "}This is not an official source. Creators are not responsible for any discrepancies.
+        </p>
+      </div>
+    </div>
   </div>
 );
   
@@ -1140,11 +1240,9 @@ const calculateCycleSGPA = (cycle) => {
       <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => handleSetCurrentMode('')}
-          className="flex items-center group"
-          title="Back"
+          className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
         >
-          <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
-          <span className="ml-2 text-gray-400 group-hover:text-gray-600 transition-colors font-medium">Back</span>
+          ← Back to Modes
         </button>
         <div className="w-32"></div>
       </div>
@@ -1188,9 +1286,16 @@ const calculateCycleSGPA = (cycle) => {
           value={finalCGPAGrades[cycle][subject.id] || ''}
           onChange={(e) => handleGradeChange(cycle, subject.id, e.target.value)}
           disabled={sgpaToggle[cycle]}
-          className={`ml-4 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-            sgpaToggle[cycle] ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white'
+          className={`ml-4 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white ${
+            sgpaToggle[cycle] ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white cursor-pointer'
           }`}
+          style={{
+            backgroundImage: sgpaToggle[cycle] ? 'none' : `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+            backgroundPosition: 'right 0.5rem center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '1.5em 1.5em',
+            paddingRight: '2.5rem'
+          }}
         >
           <option value="">Select Grade</option>
           {gradeOptions.map(option => (
@@ -1207,11 +1312,9 @@ const calculateCycleSGPA = (cycle) => {
         <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => handleSetCurrentMode('')}
-          className="flex items-center group"
-          title="Back"
+          className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
         >
-          <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
-          <span className="ml-2 text-gray-400 group-hover:text-gray-600 transition-colors font-medium">Back</span>
+          ← Back to Modes
         </button>
         <div className="w-32"></div>
       </div>
@@ -1257,6 +1360,9 @@ const calculateCycleSGPA = (cycle) => {
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     sgpaToggle.physics ? 'bg-blue-600' : 'bg-gray-200'
                   }`}
+                  type="button"
+                  role="switch"
+                  aria-checked={sgpaToggle.physics}
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -1266,15 +1372,13 @@ const calculateCycleSGPA = (cycle) => {
                 </button>
               </div>
               {sgpaToggle.physics && (
-                <input
-                  type="number"
-                  min="0"
-                  max="10"
-                  step="0.01"
+                <SGPAInput
+                  key="physics-sgpa-input"
+                  cycle="physics"
                   defaultValue={updatedSgpaValues.physics || ''}
-                  onChange={(e) => handleSgpaValueChange('physics', e.target.value)}
-                  placeholder="Enter SGPA :"
-                  className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onChange={handleSgpaValueChange}
+                  isPhysics={true}
+                  validationMessage={sgpaValidationMessage}
                 />
               )}
             </div>
@@ -1320,6 +1424,9 @@ const calculateCycleSGPA = (cycle) => {
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
                     sgpaToggle.chemistry ? 'bg-green-600' : 'bg-gray-200'
                   }`}
+                  type="button"
+                  role="switch"
+                  aria-checked={sgpaToggle.chemistry}
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -1329,15 +1436,13 @@ const calculateCycleSGPA = (cycle) => {
                 </button>
               </div>
               {sgpaToggle.chemistry && (
-                <input
-                  type="number"
-                  min="0"
-                  max="10"
-                  step="0.01"
+                <SGPAInput
+                  key="chemistry-sgpa-input"
+                  cycle="chemistry"
                   defaultValue={updatedSgpaValues.chemistry || ''}
-                  onChange={(e) => handleSgpaValueChange('chemistry', e.target.value)}
-                  placeholder="Enter SGPA :"
-                  className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  onChange={handleSgpaValueChange}
+                  isPhysics={false}
+                  validationMessage={sgpaValidationMessage}
                 />
               )}
             </div>
@@ -1369,11 +1474,9 @@ const calculateCycleSGPA = (cycle) => {
               saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, '');
               // Do NOT clear formData, subjectGrades, or updatedFormData here!
             }}
-            className="flex items-center group"
-            title="Back"
+            className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
           >
-            <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
-            <span className="ml-2 text-gray-400 group-hover:text-gray-600 transition-colors font-medium">Back</span>
+            ← Back to Cycles
           </button>
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
