@@ -1160,16 +1160,27 @@ const calculateCycleSGPA = useCallback((semester) => {
   const handleSetCurrentYear = useCallback((year) => {
     setCurrentYear(year);
     setCurrentCluster(''); // Reset cluster when changing year
+    setCurrentSemester(''); // Reset semester
+    setCurrentBranch(''); // Reset branch
+    setCurrentMode(''); // Reset mode
+    setCurrentCycle(''); // Reset cycle
+    saveToStorage(STORAGE_KEYS.CURRENT_MODE, '');
+    saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, '');
   }, []);
 
   const handleSetCurrentCluster = useCallback((cluster) => {
     setCurrentCluster(cluster);
     setCurrentSemester(''); // Reset semester when changing cluster
+    setCurrentBranch(''); // Reset branch
+    setCurrentMode(''); // Reset mode
+    saveToStorage(STORAGE_KEYS.CURRENT_MODE, '');
   }, []);
 
   const handleSetCurrentSemester = useCallback((semester) => {
     setCurrentSemester(semester);
     setCurrentBranch(''); // Reset branch when changing semester
+    setCurrentMode(''); // Reset mode
+    saveToStorage(STORAGE_KEYS.CURRENT_MODE, '');
   }, []);
 
   const handleSetCurrentBranch = useCallback((branch) => {
@@ -1758,7 +1769,17 @@ const calculateCycleSGPA = useCallback((semester) => {
         {currentYear === 'year2' && !currentCluster && <ClusterSelection />}
         {currentYear === 'year2' && currentCluster && !currentSemester && <SemesterSelection />}
         {currentYear === 'year2' && currentCluster && currentSemester && !currentMode && <ModeSelection />}
-        {currentYear && currentMode === 'final-cgpa' && <FinalCGPAView 
+        {currentYear === 'year1' && currentMode === 'final-cgpa' && <FinalCGPAView 
+          finalCGPAGrades={finalCGPAGrades}
+          setFinalCGPAGrades={setFinalCGPAGrades}
+          firstYearCGPA={firstYearCGPA}
+          setFirstYearCGPA={setFirstYearCGPA}
+          handleSetCurrentMode={handleSetCurrentMode}
+          handleSGPACompute={handleSGPACompute}
+          handleFinalCGPACompute={handleFinalCGPACompute}
+          currentBranch={currentBranch}
+        />}
+        {currentYear === 'year2' && currentCluster && currentSemester && currentMode === 'final-cgpa' && currentBranch && <FinalCGPAView 
           finalCGPAGrades={finalCGPAGrades}
           setFinalCGPAGrades={setFinalCGPAGrades}
           firstYearCGPA={firstYearCGPA}
@@ -1770,7 +1791,7 @@ const calculateCycleSGPA = useCallback((semester) => {
         />}
         {currentYear === 'year1' && currentMode && currentMode !== 'final-cgpa' && !currentCycle && <CycleSelection />}
         {currentYear === 'year1' && currentMode && currentMode !== 'final-cgpa' && currentCycle && <SubjectsView />}
-        {currentYear === 'year2' && currentMode && currentMode !== 'final-cgpa' && <SubjectsView />}
+        {currentYear === 'year2' && currentCluster && currentSemester && currentMode && currentMode !== 'final-cgpa' && currentBranch && <SubjectsView />}
       </div>
       
       <SEERequirementsPopup
