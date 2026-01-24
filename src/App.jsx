@@ -154,6 +154,11 @@ const FinalCGPAView = React.memo(({
           >
             Compute SGPA
           </button>
+          
+          {/* Debug info */}
+          <div className="mt-2 text-xs text-gray-500">
+            Selected grades: {Object.keys(finalCGPAGrades.sem3 || {}).length} / {sem3SubjectsCGPA.length}
+          </div>
         </div>
 
         {/* 1st Year CGPA Input */}
@@ -1640,7 +1645,7 @@ const calculateCycleSGPA = useCallback((semester) => {
             }}
             className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
           >
-            ← Back to {currentYear === 'year2' ? 'Calculation Mode' : 'Cycles'}
+            ← Back
           </button>
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
