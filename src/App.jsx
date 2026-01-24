@@ -184,12 +184,24 @@ const FinalCGPAView = React.memo(({
             Total: <span className="font-semibold">61 Credits</span> (40 from 1st Year + 21 from 3rd Sem)
           </p>
         </div>
-        <button
-          onClick={handleFinalCGPACompute}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
-        >
-          Compute CGPA
-        </button>
+        {!firstYearCGPA || parseFloat(firstYearCGPA) === 0 ? (
+          <div className="space-y-2">
+            <button
+              disabled
+              className="bg-gray-400 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg cursor-not-allowed opacity-60"
+            >
+              Compute CGPA
+            </button>
+            <p className="text-red-600 text-sm font-medium">⚠️ Please enter 1st Year CGPA first</p>
+          </div>
+        ) : (
+          <button
+            onClick={handleFinalCGPACompute}
+            className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+          >
+            Compute CGPA
+          </button>
+        )}
       </div>
     </div>
   );
@@ -951,7 +963,9 @@ const closeCGPAPopup = useCallback(() => {
 
 const handleSGPACompute = useCallback((cycle) => {
   const sgpa = calculateCycleSGPA(cycle);
-  const cycleName = cycle === 'physics' ? 'Physics Cycle' : 'Chemistry Cycle';
+  const cycleName = cycle === 'physics' ? 'Physics Cycle' : 
+                    cycle === 'chemistry' ? 'Chemistry Cycle' : 
+                    '3rd Sem SGPA';
   setSgpaPopup({ isOpen: true, sgpa, cycleName });
 }, []);
 
@@ -1072,14 +1086,21 @@ const calculateCycleSGPA = useCallback((semester) => {
   let totalGradePoints = 0;
   let totalCredit = 0;
   
+  console.log('calculateCycleSGPA - semester:', semester);
+  console.log('calculateCycleSGPA - currentBranch:', currentBranch);
+  console.log('calculateCycleSGPA - subjects:', subjects);
+  console.log('calculateCycleSGPA - finalCGPAGrades:', finalCGPAGrades);
+  
   subjects.forEach(subject => {
     const grade = finalCGPAGrades[semester] && finalCGPAGrades[semester][subject.id];
+    console.log(`Subject ${subject.id}: grade = ${grade}, credit = ${subject.Credit}`);
     if (grade !== undefined && grade !== '') {
       totalGradePoints += grade * subject.Credit;
       totalCredit += subject.Credit;
     }
   });
   
+  console.log('Total grade points:', totalGradePoints, 'Total credits:', totalCredit);
   return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
 }, [currentBranch, finalCGPAGrades]);
 
