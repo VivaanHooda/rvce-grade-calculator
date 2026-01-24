@@ -967,12 +967,27 @@ const closeCGPAPopup = useCallback(() => {
 }, []);
 
 const handleSGPACompute = useCallback((cycle) => {
-  const sgpa = calculateCycleSGPA(cycle);
+  // Inline the calculation here to ensure we have the latest state
+  const subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML : 
+                   currentBranch === 'ise' ? sem3SubjectsCGPA_ISE : 
+                   sem3SubjectsCGPA_CSECore;
+  let totalGradePoints = 0;
+  let totalCredit = 0;
+  
+  subjects.forEach(subject => {
+    const grade = finalCGPAGrades[cycle] && finalCGPAGrades[cycle][subject.id];
+    if (grade !== undefined && grade !== '' && grade !== null) {
+      totalGradePoints += Number(grade) * subject.Credit;
+      totalCredit += subject.Credit;
+    }
+  });
+  
+  const sgpa = totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
   const cycleName = cycle === 'physics' ? 'Physics Cycle' : 
                     cycle === 'chemistry' ? 'Chemistry Cycle' : 
                     '3rd Sem SGPA';
   setSgpaPopup({ isOpen: true, sgpa, cycleName });
-}, []);
+}, [currentBranch, finalCGPAGrades]);
 
 const closeSGPAPopup = useCallback(() => {
   setSgpaPopup({ isOpen: false, sgpa: 0, cycleName: '' });
