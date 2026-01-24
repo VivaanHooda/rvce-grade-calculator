@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Calculator, BookOpen, Award, BarChart3, ChevronRight, Lock, Unlock, X, Copy, Info, Github, ChevronLeft } from 'lucide-react';
 
 // Import utilities
@@ -100,7 +100,7 @@ const FinalCGPAView = React.memo(({
         <span className="text-sm text-gray-600">{subject.Credit} Credit</span>
       </div>
       <select
-        value={finalCGPAGrades[semester][subject.id] || ''}
+        value={(finalCGPAGrades[semester] && finalCGPAGrades[semester][subject.id]) || ''}
         onChange={(e) => handleGradeChange(semester, subject.id, e.target.value)}
         className="ml-4 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white cursor-pointer"
         style={{
@@ -701,12 +701,12 @@ const CGPACalculator = () => {
   const [sgpaInputValues, setSgpaInputValues] = useState({ physics: '', chemistry: '' });
   const [branchValidationError, setBranchValidationError] = useState(false);
 
-  const subjectCredit = {
+  const subjectCredit = useMemo(() => ({
     'math': 4, 'math-c': 4, 'phy': 4, 'chem': 4,
     'esc-p': 3, 'esc-c': 3, 'etc': 3, 'core': 3, 'plc': 3
-  };
+  }), []);
 
-  const modes = [
+  const modes = useMemo(() => [
   {
     id: 'cie-final',
     title: 'CIE Finalization & SEE Marks Required',
@@ -728,12 +728,12 @@ const CGPACalculator = () => {
     icon: <Award className="w-6 h-6" />,
     color: 'from-green-500 to-green-600'
   }
-];
+], []);
 
-  const cycles = [
+  const cycles = useMemo(() => [
     { id: 'physics', name: 'Physics Cycle', emoji: '⚡' },
     { id: 'chemistry', name: 'Chemistry Cycle', emoji: '🧪' }
-  ];
+  ], []);
 
   const physicsSubjects = [
     { id: 'math', name: 'Mathematics', Credit: 4, type: 'math' },
@@ -774,7 +774,7 @@ const CGPACalculator = () => {
     { id: 'xx232tx', name: 'Basket Courses - Group A', Credit: 3, type: 'regular' }
   ];
 
-  const getSubjects = () => {
+  const getSubjects = useMemo(() => {
     if (currentYear === 'year2' && currentSemester === 'sem3' && currentBranch === 'cse-core') {
       return year2Sem3CseSubjects;
     }
@@ -785,9 +785,9 @@ const CGPACalculator = () => {
       return year2Sem3IseSubjects;
     }
     return currentCycle === 'physics' ? physicsSubjects : chemistrySubjects;
-  };
+  }, [currentYear, currentSemester, currentBranch, currentCycle]);
 
-  const calculateCIE = (subject, data) => {
+  const calculateCIE = useCallback((subject, data) => {
     const { q1 = 0, q2 = 0, t1 = 0, t2 = 0, matlab = 0, el = 0, lab = 0 } = data;
     
     let cieValue;
@@ -806,9 +806,9 @@ const CGPACalculator = () => {
     
     // Round up to the nearest integer
     return Math.ceil(cieValue);
-  };
+  }, []);
 
-  const calculateFinalGrade = (cieTotal, see = 0, labSee = 0, isDsaLab = false) => {
+  const calculateFinalGrade = useCallback((cieTotal, see = 0, labSee = 0, isDsaLab = false) => {
     // For dsa-lab subjects: CIE (150) + Lab SEE (50) + SEE Exam (100) = 300 total
     // Grading: O=270-300, A+=240-269, A=210-239, B+=180-209, B=150-179, C=120-149, P=100-119, F=<100
     if (isDsaLab) {
@@ -845,16 +845,16 @@ const CGPACalculator = () => {
       const total = (cieTotal + see) / 2;
       return Math.min(10, Math.max(0, Math.floor(total / 10) + 1));
     }
-  };
+  }, []);
 
-  const getGradeLetter = (grade) => {
+  const getGradeLetter = useCallback((grade) => {
     const gradeMap = {
       10: 'O', 9: 'A+', 8: 'A', 7: 'B+', 6: 'B', 5: 'C', 4: 'P', 0: 'F'
     };
     return gradeMap[grade] || 'F';
-  };
+  }, []);
 
-  const calculateSubject = (subject) => {
+  const calculateSubject = useCallback((subject) => {
     // Update state with current module-level data before calculation
     setFormData(prev => ({ ...prev, ...updatedFormData }));
     
@@ -882,9 +882,9 @@ const CGPACalculator = () => {
         [subject.id]: { cieTotal, gradePoint, see, labSee, type: 'final' }
       }));
     }
-  };
+  }, [currentMode, calculateCIE]);
 
-  const showSEERequirements = (subject, cieTotal) => {
+  const showSEERequirements = useCallback((subject, cieTotal) => {
     if (cieTotal !== undefined) {
       setSeePopup({
         isOpen: true,
@@ -892,14 +892,14 @@ const CGPACalculator = () => {
         cieTotal: cieTotal
       });
     }
-  };
+  }, []);
 
-  const closeSEEPopup = () => {
+  const closeSEEPopup = useCallback(() => {
     setSeePopup({ isOpen: false, subject: null, cieTotal: 0 });
-  };
+  }, []);
 
-  const calculateOverallCGPA = () => {
-    const subjects = getSubjects();
+  const calculateOverallCGPA = useCallback(() => {
+    const subjects = getSubjects;
     let totalGradePoints = 0;
     let totalCredit = 0;
     
@@ -912,9 +912,9 @@ const CGPACalculator = () => {
     });
     
     return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : 0;
-  };
+  }, [getSubjects, subjectGrades]);
 
-const calculateFinalCGPA = () => {
+const calculateFinalCGPA = useCallback(() => {
   let totalGradePoints = 0;
   let totalCredit = 0;
   
@@ -930,7 +930,7 @@ const calculateFinalCGPA = () => {
                        currentBranch === 'ise' ? sem3SubjectsCGPA_ISE : 
                        sem3SubjectsCGPA_CSECore;
   sem3Subjects.forEach(subject => {
-    const grade = finalCGPAGrades.sem3[subject.id];
+    const grade = finalCGPAGrades.sem3 && finalCGPAGrades.sem3[subject.id];
     if (grade !== undefined && grade !== '') {
       totalGradePoints += grade * subject.Credit;
       totalCredit += subject.Credit;
@@ -938,26 +938,26 @@ const calculateFinalCGPA = () => {
   });
   
   return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
-};
+}, [firstYearCGPA, currentBranch, finalCGPAGrades]);
 
-const handleFinalCGPACompute = () => {
+const handleFinalCGPACompute = useCallback(() => {
   const cgpa = calculateFinalCGPA();
   setCgpaPopup({ isOpen: true, cgpa });
-};
+}, [calculateFinalCGPA]);
 
-const closeCGPAPopup = () => {
+const closeCGPAPopup = useCallback(() => {
   setCgpaPopup({ isOpen: false, cgpa: 0 });
-};
+}, []);
 
-const handleSGPACompute = (cycle) => {
+const handleSGPACompute = useCallback((cycle) => {
   const sgpa = calculateCycleSGPA(cycle);
   const cycleName = cycle === 'physics' ? 'Physics Cycle' : 'Chemistry Cycle';
   setSgpaPopup({ isOpen: true, sgpa, cycleName });
-};
+}, []);
 
-const closeSGPAPopup = () => {
+const closeSGPAPopup = useCallback(() => {
   setSgpaPopup({ isOpen: false, sgpa: 0, cycleName: '' });
-};
+}, []);
 
 const handleSgpaToggle = (semester) => {
   setSgpaToggle(prev => ({
@@ -1064,7 +1064,7 @@ const handleSgpaValueChange = (semester, value, inputElement) => {
   }
 };
 
-const calculateCycleSGPA = (semester) => {
+const calculateCycleSGPA = useCallback((semester) => {
   // Get the correct subjects array based on branch
   const subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML : 
                    currentBranch === 'ise' ? sem3SubjectsCGPA_ISE : 
@@ -1073,7 +1073,7 @@ const calculateCycleSGPA = (semester) => {
   let totalCredit = 0;
   
   subjects.forEach(subject => {
-    const grade = finalCGPAGrades[semester][subject.id];
+    const grade = finalCGPAGrades[semester] && finalCGPAGrades[semester][subject.id];
     if (grade !== undefined && grade !== '') {
       totalGradePoints += grade * subject.Credit;
       totalCredit += subject.Credit;
@@ -1081,7 +1081,7 @@ const calculateCycleSGPA = (semester) => {
   });
   
   return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
-};
+}, [currentBranch, finalCGPAGrades]);
 
   // Initialize updatedFormData when component mounts or changes cycles
   useEffect(() => {
@@ -1089,22 +1089,36 @@ const calculateCycleSGPA = (semester) => {
     updatedSgpaValues = loadFromStorage(STORAGE_KEYS.SGPA_VALUES, { sem3: '' });
     setCurrentMode(loadFromStorage(STORAGE_KEYS.CURRENT_MODE, ''));
     setCurrentCycle(loadFromStorage(STORAGE_KEYS.CURRENT_CYCLE, ''));
-    setFinalCGPAGrades(loadFromStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { sem3: {} }));
+    const loadedGrades = loadFromStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { sem3: {} });
+    // Ensure sem3 property always exists
+    setFinalCGPAGrades({ sem3: {}, ...loadedGrades });
     setSgpaInputValues(loadFromStorage(STORAGE_KEYS.SGPA_VALUES, { sem3: '' }));
     setFormData(loadFromStorage(STORAGE_KEYS.FORM_DATA, {}));
     setFirstYearCGPA(loadFromStorage(STORAGE_KEYS.FIRST_YEAR_CGPA, ''));
   }, []);
 
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.FORM_DATA, updatedFormData);
+    saveToStorage(STORAGE_KEYS.FORM_DATA, formData);
+  }, [formData]);
+
+  useEffect(() => {
     saveToStorage(STORAGE_KEYS.CURRENT_MODE, currentMode);
+  }, [currentMode]);
+
+  useEffect(() => {
     saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, currentCycle);
+  }, [currentCycle]);
+
+  useEffect(() => {
     saveToStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, finalCGPAGrades);
+  }, [finalCGPAGrades]);
+
+  useEffect(() => {
     saveToStorage(STORAGE_KEYS.FIRST_YEAR_CGPA, firstYearCGPA);
-  }, [currentMode, currentCycle, finalCGPAGrades, firstYearCGPA]);
+  }, [firstYearCGPA]);
 
   // Reset Marks function
-  const handleResetMarks = () => {
+  const handleResetMarks = useCallback(() => {
     // Clear all localStorage
     clearAllStorage();
     
@@ -1123,16 +1137,16 @@ const calculateCycleSGPA = (semester) => {
     updatedFormData = {};
     updatedSgpaValues = { sem3: '' };
 
-  };
+  }, []);
 
-  const handleResetCIEFinalisationMarks = () => {
+  const handleResetCIEFinalisationMarks = useCallback(() => {
     saveToStorage(STORAGE_KEYS.FORM_DATA, {});
     setFormData({});
     setSubjectGrades({});
     updatedFormData = {};
-  };
+  }, []);
 
-  const handleResetFinalGPACalcMarks = () => {
+  const handleResetFinalGPACalcMarks = useCallback(() => {
     saveToStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { sem3: {} });
     saveToStorage(STORAGE_KEYS.SGPA_VALUES, { sem3: '' });
     saveToStorage(STORAGE_KEYS.FIRST_YEAR_CGPA, '');
@@ -1141,31 +1155,31 @@ const calculateCycleSGPA = (semester) => {
     setSgpaInputValues({ sem3: '' });
     setFirstYearCGPA('');
     updatedSgpaValues = { sem3: '' };
-  };
+  }, []);
 
-  const handleSetCurrentYear = (year) => {
+  const handleSetCurrentYear = useCallback((year) => {
     setCurrentYear(year);
     setCurrentCluster(''); // Reset cluster when changing year
-  };
+  }, []);
 
-  const handleSetCurrentCluster = (cluster) => {
+  const handleSetCurrentCluster = useCallback((cluster) => {
     setCurrentCluster(cluster);
     setCurrentSemester(''); // Reset semester when changing cluster
-  };
+  }, []);
 
-  const handleSetCurrentSemester = (semester) => {
+  const handleSetCurrentSemester = useCallback((semester) => {
     setCurrentSemester(semester);
     setCurrentBranch(''); // Reset branch when changing semester
-  };
+  }, []);
 
-  const handleSetCurrentBranch = (branch) => {
+  const handleSetCurrentBranch = useCallback((branch) => {
     setCurrentBranch(branch);
     if (branch) {
       setBranchValidationError(false);
     }
-  };
+  }, []);
 
-  const handleSetCurrentMode = (mode) => {
+  const handleSetCurrentMode = useCallback((mode) => {
     // Check if year2 and no branch selected
     if (currentYear === 'year2' && !currentBranch) {
       setBranchValidationError(true);
@@ -1174,12 +1188,12 @@ const calculateCycleSGPA = (semester) => {
     }
     setCurrentMode(mode);
     saveToStorage(STORAGE_KEYS.CURRENT_MODE, mode);
-  };
+  }, [currentYear, currentBranch]);
 
-  const handleSetCurrentCycle = (cycle) => {
+  const handleSetCurrentCycle = useCallback((cycle) => {
     setCurrentCycle(cycle);
     saveToStorage(STORAGE_KEYS.CURRENT_CYCLE, cycle);
-  };
+  }, []);
 
   const YearSelection = () => (
     <div className="space-y-8">
@@ -1575,7 +1589,7 @@ const calculateCycleSGPA = (semester) => {
   );
 
   const SubjectsView = () => {
-    const subjects = getSubjects();
+    const subjects = getSubjects;
 
     return (
       <div className="space-y-8">
@@ -1607,7 +1621,7 @@ const calculateCycleSGPA = (semester) => {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {subjects.map((subject) => (
+          {getSubjects.map((subject) => (
             <SubjectForm 
               key={subject.id} 
               subject={subject} 
