@@ -80,6 +80,44 @@ const chemistrySubjectsCGPA = [
   { id: 'yoga', name: 'Yoga', Credit: 1, type: 'regular' }
 ];
 
+// ECE Cluster - 3rd Sem subjects for Final SGPA Calculator (with AEC = 21 credits)
+const sem3SubjectsCGPA_ECE = [
+  { id: 'math-sem3', name: 'Mathematics', Credit: 4, type: 'math' },
+  { id: 'basket-sem3', name: 'Basket Course', Credit: 3, type: 'regular' },
+  { id: 'addc-sem3', name: 'ADDC', Credit: 4, type: 'regular' },
+  { id: 'amc-sem3', name: 'Analog Microelectronic Circuits', Credit: 3, type: 'regular' },
+  { id: 'nace-sem3', name: 'Network Analysis and Control Engineering', Credit: 4, type: 'regular' },
+  { id: 'aec-sem3', name: 'AEC', Credit: 2, type: 'regular' }
+]; // Total: 20 credits
+
+const sem3SubjectsCGPA_ETE = [
+  { id: 'math-sem3', name: 'Mathematics', Credit: 4, type: 'math' },
+  { id: 'basket-sem3', name: 'Basket Course', Credit: 3, type: 'regular' },
+  { id: 'addc-sem3', name: 'ADDC', Credit: 4, type: 'regular' },
+  { id: 'lica-sem3', name: 'Linear Integrated Circuits and Applications', Credit: 4, type: 'regular' },
+  { id: 'sp1-sem3', name: 'Signal Processing-I', Credit: 2, type: 'regular' },
+  { id: 'ca-sem3', name: 'Circuit Analysis', Credit: 2, type: 'regular' },
+  { id: 'aec-sem3', name: 'AEC', Credit: 2, type: 'regular' }
+]; // Total: 21 credits
+
+const sem3SubjectsCGPA_EEE = [
+  { id: 'math-sem3', name: 'Mathematics', Credit: 4, type: 'math' },
+  { id: 'basket-sem3', name: 'Basket Course', Credit: 3, type: 'regular' },
+  { id: 'addc-sem3', name: 'ADDC', Credit: 4, type: 'regular' },
+  { id: 'elic-sem3', name: 'Electronics & Linear Integrated Circuits', Credit: 4, type: 'regular' },
+  { id: 'sna-sem3', name: 'Signals and Network Analysis', Credit: 4, type: 'regular' },
+  { id: 'aec-sem3', name: 'AEC', Credit: 2, type: 'regular' }
+]; // Total: 21 credits
+
+const sem3SubjectsCGPA_EIE = [
+  { id: 'math-sem3', name: 'Mathematics', Credit: 4, type: 'math' },
+  { id: 'basket-sem3', name: 'Basket Course', Credit: 3, type: 'regular' },
+  { id: 'addc-sem3', name: 'ADDC', Credit: 4, type: 'regular' },
+  { id: 'lica-sem3', name: 'Linear Integrated Circuits and Applications', Credit: 4, type: 'regular' },
+  { id: 'ce-sem3', name: 'Control Engineering', Credit: 4, type: 'regular' },
+  { id: 'aec-sem3', name: 'AEC', Credit: 2, type: 'regular' }
+]; // Total: 21 credits
+
 // Move FinalCGPAView outside to prevent recreation
 const FinalCGPAView = React.memo(({
   finalCGPAGrades,
@@ -96,7 +134,11 @@ const FinalCGPAView = React.memo(({
   // Get the correct subjects array based on branch (for year2)
   const sem3SubjectsCGPA = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML :
     currentBranch === 'ise' ? sem3SubjectsCGPA_ISE :
-      sem3SubjectsCGPA_CSECore;
+      currentBranch === 'ece' ? sem3SubjectsCGPA_ECE :
+        currentBranch === 'ete' ? sem3SubjectsCGPA_ETE :
+          currentBranch === 'eee' ? sem3SubjectsCGPA_EEE :
+            currentBranch === 'eie' ? sem3SubjectsCGPA_EIE :
+              sem3SubjectsCGPA_CSECore;
 
   // Auto-populate grades from Final Grade Calculator when component mounts
   useEffect(() => {
@@ -393,10 +435,14 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
   if (subject.type === 'math') navOrder.push('matlab', 'el');
   if (subject.type === 'lab') navOrder.push('lab', 'el');
   if (subject.type === 'dsa-lab') navOrder.push('lab', 'el');
+  if (subject.type === 'ece-lab') navOrder.push('lab', 'el');
+  if (subject.type === '50-mark') navOrder.push('el');
   if (subject.type === 'regular') navOrder.push('el');
   if (currentMode === 'final-grade') {
-    if (subject.type === 'dsa-lab') {
+    if (subject.type === 'dsa-lab' || subject.type === 'ece-lab') {
       navOrder.push('labSee', 'see');
+    } else if (subject.type === '50-mark') {
+      navOrder.push('see');
     } else {
       navOrder.push('see');
     }
@@ -521,7 +567,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 1 (Max: 10)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 1 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
           <input
             type="text"
             value={inputValues.q1}
@@ -538,7 +584,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           )}
         </div>
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 2 (Max: 10)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Quiz 2 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
           <input
             type="text"
             value={inputValues.q2}
@@ -555,7 +601,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           )}
         </div>
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Test 1 (Max: 50)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Test 1 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
           <input
             type="text"
             value={inputValues.t1}
@@ -572,7 +618,7 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           )}
         </div>
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Test 2 (Max: 50)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Test 2 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
           <input
             type="text"
             value={inputValues.t2}
@@ -723,6 +769,63 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           </div>
         </div>
       )}
+      {subject.type === 'ece-lab' && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Lab Marks (Max: 50)</label>
+            <input
+              type="text"
+              value={inputValues.lab}
+              onChange={(e) => handleInputChange('lab', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+              placeholder=""
+              ref={refs.lab}
+              onKeyDown={(e) => handleKeyDown(e, 'lab')}
+            />
+            {validationMessage.show && validationMessage.field === 'lab' && (
+              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 40)</label>
+            <input
+              type="text"
+              value={inputValues.el}
+              onChange={(e) => handleInputChange('el', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+              placeholder=""
+              ref={refs.el}
+              onKeyDown={(e) => handleKeyDown(e, 'el')}
+            />
+            {validationMessage.show && validationMessage.field === 'el' && (
+              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {subject.type === '50-mark' && (
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 20)</label>
+          <input
+            type="text"
+            value={inputValues.el}
+            onChange={(e) => handleInputChange('el', e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+            placeholder=""
+            ref={refs.el}
+            onKeyDown={(e) => handleKeyDown(e, 'el')}
+          />
+          {validationMessage.show && validationMessage.field === 'el' && (
+            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+              {validationMessage.message}
+            </div>
+          )}
+        </div>
+      )}
       {currentMode === 'final-grade' && subject.type === 'dsa-lab' && (
         <div className="grid grid-cols-2 gap-4">
           <div className="relative">
@@ -761,7 +864,64 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           </div>
         </div>
       )}
-      {currentMode === 'final-grade' && subject.type !== 'dsa-lab' && (
+      {currentMode === 'final-grade' && subject.type === 'ece-lab' && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Lab SEE (Max: 50)</label>
+            <input
+              type="text"
+              value={inputValues.labSee}
+              onChange={(e) => handleInputChange('labSee', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+              placeholder="0"
+              ref={refs.labSee}
+              onKeyDown={(e) => handleKeyDown(e, 'labSee')}
+            />
+            {validationMessage.show && validationMessage.field === 'labSee' && (
+              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">SEE Exam (Max: 100)</label>
+            <input
+              type="text"
+              value={inputValues.see}
+              onChange={(e) => handleInputChange('see', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+              placeholder="0"
+              ref={refs.see}
+              onKeyDown={(e) => handleKeyDown(e, 'see')}
+            />
+            {validationMessage.show && validationMessage.field === 'see' && (
+              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {currentMode === 'final-grade' && subject.type === '50-mark' && (
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">SEE Marks (Max: 50)</label>
+          <input
+            type="text"
+            value={inputValues.see}
+            onChange={(e) => handleInputChange('see', e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+            placeholder="0"
+            ref={refs.see}
+            onKeyDown={(e) => handleKeyDown(e, 'see')}
+          />
+          {validationMessage.show && validationMessage.field === 'see' && (
+            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+              {validationMessage.message}
+            </div>
+          )}
+        </div>
+      )}
+      {currentMode === 'final-grade' && subject.type !== 'dsa-lab' && subject.type !== 'ece-lab' && subject.type !== '50-mark' && (
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">SEE Marks (Max: 100)</label>
           <input
@@ -810,17 +970,22 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
               <div className="text-3xl font-bold text-gray-900 mb-2">
                 CIE: {result.cieTotal}
               </div>
-              <div className="text-gray-600">out of {subject.type === 'dsa-lab' ? '150' : '100'}</div>
+              <div className="text-gray-600">
+                out of {subject.type === 'dsa-lab' || subject.type === 'ece-lab' ? '150' : subject.type === '50-mark' ? '50' : '100'}
+              </div>
             </div>
           ) : (
             <div className="text-center">
               <div className="text-3xl font-bold text-gray-900 mb-2">
                 Grade: {result.gradePoint} ({getGradeLetter(result.gradePoint)})
               </div>
-              {subject.type === 'dsa-lab' ? (
+              {(subject.type === 'dsa-lab' || subject.type === 'ece-lab') ? (
                 <div className="text-gray-600">
-                  <div>CIE: {result.cieTotal} | Lab SEE: {result.labSee || 0} | SEE: {result.see}</div>
-                  <div className="mt-1 font-semibold">Total: {result.cieTotal + (result.labSee || 0) + result.see}/300</div>
+                  CIE: {result.cieTotal} | Total: {(((result.cieTotal + (result.labSee || 0) + result.see)) / 2).toFixed(2)}/150
+                </div>
+              ) : subject.type === '50-mark' ? (
+                <div className="text-gray-600">
+                  CIE: {result.cieTotal} | Total: {((result.cieTotal + result.see) / 2).toFixed(2)}/50
                 </div>
               ) : (
                 <div className="text-gray-600">
@@ -935,7 +1100,42 @@ const CGPACalculator = () => {
     { id: 'xx232tx', name: 'Basket Courses - Group A', Credit: 3, type: 'regular' }
   ];
 
+  // ECE Cluster - 3rd Sem Subjects (for CIE Finalization and Final Grade Calculator)
+  const year2Sem3EceSubjects = [
+    { id: 'math-ece', name: 'Mathematics', Credit: 4, type: 'math' },
+    { id: 'basket-ece', name: 'Basket Course', Credit: 3, type: 'regular' },
+    { id: 'addc-ece', name: 'ADDC', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'amc-ece', name: 'Analog Microelectronic Circuits', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'nace-ece', name: 'Network Analysis and Control Engineering', Credit: 4, type: 'regular' }
+  ]; // Total: 19 credits
+
+  const year2Sem3EteSubjects = [
+    { id: 'math-ete', name: 'Mathematics', Credit: 4, type: 'math' },
+    { id: 'basket-ete', name: 'Basket Course', Credit: 3, type: 'regular' },
+    { id: 'addc-ete', name: 'ADDC', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'lica-ete', name: 'Linear Integrated Circuits and Applications', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'sp1-ete', name: 'Signal Processing-I', Credit: 2, type: '50-mark' }, // CIE: 50, SEE: 50
+    { id: 'ca-ete', name: 'Circuit Analysis', Credit: 2, type: '50-mark' } // CIE: 50, SEE: 50
+  ]; // Total: 19 credits
+
+  const year2Sem3EeeSubjects = [
+    { id: 'math-eee', name: 'Mathematics', Credit: 4, type: 'math' },
+    { id: 'basket-eee', name: 'Basket Course', Credit: 3, type: 'regular' },
+    { id: 'addc-eee', name: 'ADDC', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'elic-eee', name: 'Electronics & Linear Integrated Circuits', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'sna-eee', name: 'Signals and Network Analysis', Credit: 4, type: 'regular' }
+  ]; // Total: 19 credits
+
+  const year2Sem3EieSubjects = [
+    { id: 'math-eie', name: 'Mathematics', Credit: 4, type: 'math' },
+    { id: 'basket-eie', name: 'Basket Course', Credit: 3, type: 'regular' },
+    { id: 'addc-eie', name: 'ADDC', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'lica-eie', name: 'Linear Integrated Circuits and Applications', Credit: 4, type: 'ece-lab' }, // Theory+Lab (150)
+    { id: 'ce-eie', name: 'Control Engineering', Credit: 4, type: 'regular' }
+  ]; // Total: 19 credits
+
   const getSubjects = useMemo(() => {
+    // CSE Cluster
     if (currentYear === 'year2' && currentSemester === 'sem3' && currentBranch === 'cse-core') {
       return year2Sem3CseSubjects;
     }
@@ -945,6 +1145,22 @@ const CGPACalculator = () => {
     if (currentYear === 'year2' && currentSemester === 'sem3' && currentBranch === 'ise') {
       return year2Sem3IseSubjects;
     }
+
+    // ECE Cluster
+    if (currentYear === 'year2' && currentSemester === 'sem3' && currentBranch === 'ece') {
+      return year2Sem3EceSubjects;
+    }
+    if (currentYear === 'year2' && currentSemester === 'sem3' && currentBranch === 'ete') {
+      return year2Sem3EteSubjects;
+    }
+    if (currentYear === 'year2' && currentSemester === 'sem3' && currentBranch === 'eee') {
+      return year2Sem3EeeSubjects;
+    }
+    if (currentYear === 'year2' && currentSemester === 'sem3' && currentBranch === 'eie') {
+      return year2Sem3EieSubjects;
+    }
+
+    // Year 1
     return currentCycle === 'physics' ? physicsSubjects : chemistrySubjects;
   }, [currentYear, currentSemester, currentBranch, currentCycle]);
 
@@ -961,6 +1177,15 @@ const CGPACalculator = () => {
       // CIE Total: 150 = (test1 + test2) * 0.4 + quiz1 + quiz2 + Lab + EL
       // = (50 + 50) * 0.4 + 10 + 10 + 50 + 40 = 40 + 20 + 50 + 40 = 150
       cieValue = (t1 + t2) * 0.4 + q1 + q2 + lab + el;
+    } else if (subject.type === 'ece-lab') {
+      // ECE Lab courses: Quiz 1, Quiz 2 (10 each), Test 1, Test 2 (50 each), Lab (50), EL (40)
+      // CIE Total: 150 = (test1 + test2) * 0.4 + quiz1 + quiz2 + Lab + EL
+      cieValue = (t1 + t2) * 0.4 + q1 + q2 + lab + el;
+    } else if (subject.type === '50-mark') {
+      // 50-mark courses: Quiz 1, Quiz 2 (5 each = 10 total), Test 1, Test 2 (25 each = 50 total, reduced to 20), EL (20)
+      // CIE Total: 50 = quiz1 + quiz2 + (test1 + test2) * 0.4 + EL
+      // = 5 + 5 + (25 + 25) * 0.4 + 20 = 10 + 20 + 20 = 50
+      cieValue = q1 + q2 + ((t1 + t2) / 50 * 20) + el;
     } else {
       cieValue = (q1 + q2) + ((t1 + t2) / 100 * 40) + el;
     }
@@ -969,10 +1194,10 @@ const CGPACalculator = () => {
     return Math.ceil(cieValue);
   }, []);
 
-  const calculateFinalGrade = useCallback((cieTotal, see = 0, labSee = 0, isDsaLab = false) => {
-    // For dsa-lab subjects: CIE (150) + Lab SEE (50) + SEE Exam (100) = 300 total
+  const calculateFinalGrade = useCallback((cieTotal, see = 0, labSee = 0, subjectType = 'regular') => {
+    // For lab subjects (dsa-lab, ece-lab): CIE (150) + Lab SEE (50) + SEE Exam (100) = 300 total
     // Grading: O=270-300, A+=240-269, A=210-239, B+=180-209, B=150-179, C=120-149, P=100-119, F=<100
-    if (isDsaLab) {
+    if (subjectType === 'dsa-lab' || subjectType === 'ece-lab') {
       const total = cieTotal + labSee + see;
 
       // Check minimum CIE requirement (40% of 150 = 60)
@@ -996,8 +1221,28 @@ const CGPACalculator = () => {
       if (total >= 120) return 5;  // C
       if (total >= 100) return 4;  // P
       return 0; // F
+    } else if (subjectType === '50-mark') {
+      // For 50-mark courses: CIE (50) + SEE (50) = 100 total
+      // Grading: O=90-100, A+=80-89, A=70-79, B+=60-69, B=50-59, C=40-49, P=35- 39, F=<35
+      const total = cieTotal + see;
+
+      // Check minimum CIE requirement (40% of 50 = 20)
+      if (cieTotal < 20) return 0;
+
+      // Check minimum SEE requirement (35% of 50 = 17.5, round up to 18)
+      if (see > 0 && see < 18) return 0;
+
+      // Grade mapping for 100 total
+      if (total >= 90) return 10; // O
+      if (total >= 80) return 9;  // A+
+      if (total >= 70) return 8;  // A
+      if (total >= 60) return 7;  // B+
+      if (total >= 50) return 6;  // B
+      if (total >= 40) return 5;  // C
+      if (total >= 35) return 4;  // P
+      return 0; // F
     } else {
-      // Original calculation for non dsa-lab subjects
+      // Original calculation for regular subjects (100 CIE + 100 SEE = 200 total, average to 100)
       // Check for F grade conditions first
       if (cieTotal < 40 || see < 35) {
         return 0; // F grade
@@ -1036,8 +1281,7 @@ const CGPACalculator = () => {
     } else {
       const see = numericData.see || 0;
       const labSee = numericData.labSee || 0;
-      const isDsaLab = subject.type === 'dsa-lab';
-      const gradePoint = calculateFinalGrade(cieTotal, see, labSee, isDsaLab);
+      const gradePoint = calculateFinalGrade(cieTotal, see, labSee, subject.type);
       setSubjectGrades(prev => ({
         ...prev,
         [subject.id]: { cieTotal, gradePoint, see, labSee, type: 'final' }
@@ -1584,9 +1828,20 @@ const CGPACalculator = () => {
                   }}
                 >
                   <option value="" disabled>Select Branch</option>
-                  <option value="cse-core">CSE (Core+CD+CY)</option>
-                  <option value="cse-aiml">CSE(AIML)</option>
-                  <option value="ise">ISE</option>
+                  {currentCluster === 'cs' ? (
+                    <>
+                      <option value="cse-core">CSE (Core+CD+CY)</option>
+                      <option value="cse-aiml">CSE(AIML)</option>
+                      <option value="ise">ISE</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="ece">ECE</option>
+                      <option value="ete">ETE</option>
+                      <option value="eee">EEE</option>
+                      <option value="eie">EIE</option>
+                    </>
+                  )}
                 </select>
               </div>
             </div>
@@ -1681,21 +1936,24 @@ const CGPACalculator = () => {
           </div>
         </button>
 
-        {/* EC Cluster Button - Disabled */}
-        <div className="relative bg-white border border-gray-200 rounded-3xl p-8 opacity-50 cursor-not-allowed">
+        {/* ECE Cluster Button - Clickable */}
+        <button
+          onClick={() => handleSetCurrentCluster('ece')}
+          className="group relative bg-white border border-gray-200 rounded-3xl p-8 hover:border-gray-300 hover:shadow-xl transition-all duration-300 text-left transform hover:-translate-y-1"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center text-white shadow-lg">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center text-white shadow-lg">
                 <BarChart3 className="w-8 h-8" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">EC Cluster</h3>
-                <p className="text-gray-600">Coming Soon</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">ECE Cluster</h3>
+                <p className="text-gray-600">Electronics & Communication Streams</p>
               </div>
             </div>
-            <Lock className="w-6 h-6 text-gray-400" />
+            <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
           </div>
-        </div>
+        </button>
       </div>
 
       {/* Disclaimer Footer */}
@@ -1726,7 +1984,7 @@ const CGPACalculator = () => {
       <div className="text-center mb-12 max-w-3xl mx-auto space-y-6">
         {/* Header Bubble */}
         <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">CS Cluster</h1>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">{currentCluster === 'cs' ? 'CS Cluster' : 'ECE Cluster'}</h1>
           <p className="text-xl text-gray-600">Select your semester</p>
         </div>
       </div>

@@ -86,7 +86,7 @@ export const calculateSGPA = (subjects, grades) => {
 export const calculateCGPA = (sgpaValues, credits) => {
   const sgpaArray = Object.values(sgpaValues).map(v => parseFloat(v) || 0);
   const creditArray = Object.values(credits);
-  
+
   let totalCredits = 0;
   let weightedSum = 0;
 
@@ -113,26 +113,34 @@ export const getMaxValue = (field, subjectType) => {
   switch (field) {
     case 'q1':
     case 'q2':
-      return 10; // Quiz max: 10 marks
+      // 50-mark courses have quiz max of 5 each
+      if (subjectType === '50-mark') return 5;
+      return 10; // Regular quiz max: 10 marks
     case 't1':
     case 't2':
-      return 50; // Test max: 50 marks
+      // 50-mark courses have test max of 25 each
+      if (subjectType === '50-mark') return 25;
+      return 50; // Regular test max: 50 marks
     case 'matlab':
       return 20; // MATLAB max: 20 marks
     case 'lab':
       // Lab max depends on subject type
-      if (subjectType === 'dsa-lab') return 50; // DSA/OS Lab: 50 marks
+      if (subjectType === 'dsa-lab' || subjectType === 'ece-lab') return 50; // DSA/OS/ECE Lab: 50 marks
       return 30; // Chemistry lab: 30 marks
     case 'el':
       // EL max depends on subject type
       if (subjectType === 'math') return 20;
       if (subjectType === 'lab') return 30;
-      return 40; // Regular subjects and dsa-lab: 40 marks
+      if (subjectType === '50-mark') return 20; // 50-mark courses: 20 marks EL
+      return 40; // Regular subjects, dsa-lab, and ece-lab: 40 marks
     case 'labSee':
-      return 50; // Lab SEE max: 50 marks (for dsa-lab subjects)
+      return 50; // Lab SEE max: 50 marks (for dsa-lab and ece-lab subjects)
     case 'see':
-      return 100; // SEE max: 100 marks
+      // SEE max depends on subject type
+      if (subjectType === '50-mark') return 50; // 50-mark courses: 50 marks SEE
+      return 100; // Regular subjects: 100 marks SEE
     default:
       return 100; // Default max
   }
 };
+
