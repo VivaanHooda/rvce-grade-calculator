@@ -90,12 +90,56 @@ const FinalCGPAView = React.memo(({
   handleSGPACompute,
   handleFinalCGPACompute,
   currentBranch,
-  currentYear
+  currentYear,
+  subjectGrades // Add this to access already-calculated grades
 }) => {
   // Get the correct subjects array based on branch (for year2)
   const sem3SubjectsCGPA = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML :
     currentBranch === 'ise' ? sem3SubjectsCGPA_ISE :
       sem3SubjectsCGPA_CSECore;
+
+  // Auto-populate grades from Final Grade Calculator when component mounts
+  useEffect(() => {
+    if (!subjectGrades || Object.keys(subjectGrades).length === 0) return;
+
+    const newGrades = { ...finalCGPAGrades };
+    let hasChanges = false;
+
+    if (currentYear === 'year1') {
+      // For year1, map physics and chemistry subjects
+      physicsSubjectsCGPA.forEach(subject => {
+        const grade = subjectGrades[subject.id];
+        if (grade && grade.gradePoint !== undefined && (!finalCGPAGrades.physics || !finalCGPAGrades.physics[subject.id])) {
+          if (!newGrades.physics) newGrades.physics = {};
+          newGrades.physics[subject.id] = grade.gradePoint;
+          hasChanges = true;
+        }
+      });
+
+      chemistrySubjectsCGPA.forEach(subject => {
+        const grade = subjectGrades[subject.id];
+        if (grade && grade.gradePoint !== undefined && (!finalCGPAGrades.chemistry || !finalCGPAGrades.chemistry[subject.id])) {
+          if (!newGrades.chemistry) newGrades.chemistry = {};
+          newGrades.chemistry[subject.id] = grade.gradePoint;
+          hasChanges = true;
+        }
+      });
+    } else {
+      // For year2, map sem3 subjects
+      sem3SubjectsCGPA.forEach(subject => {
+        const grade = subjectGrades[subject.id];
+        if (grade && grade.gradePoint !== undefined && (!finalCGPAGrades.sem3 || !finalCGPAGrades.sem3[subject.id])) {
+          if (!newGrades.sem3) newGrades.sem3 = {};
+          newGrades.sem3[subject.id] = grade.gradePoint;
+          hasChanges = true;
+        }
+      });
+    }
+
+    if (hasChanges) {
+      setFinalCGPAGrades(newGrades);
+    }
+  }, [currentYear, currentBranch]); // Only run on mount or when year/branch changes
 
   const handleGradeChange = useCallback((semester, subjectId, grade) => {
     setFinalCGPAGrades(prev => ({
@@ -1946,6 +1990,7 @@ const CGPACalculator = () => {
           handleFinalCGPACompute={handleFinalCGPACompute}
           currentBranch={currentBranch}
           currentYear={currentYear}
+          subjectGrades={subjectGrades}
         />}
         {currentYear === 'year2' && currentCluster && currentSemester && currentMode === 'final-cgpa' && currentBranch && <FinalCGPAView
           finalCGPAGrades={finalCGPAGrades}
@@ -1957,6 +2002,7 @@ const CGPACalculator = () => {
           handleFinalCGPACompute={handleFinalCGPACompute}
           currentBranch={currentBranch}
           currentYear={currentYear}
+          subjectGrades={subjectGrades}
         />}
         {currentYear === 'year1' && currentMode && currentMode !== 'final-cgpa' && !currentCycle && <CycleSelection />}
         {currentYear === 'year1' && currentMode && currentMode !== 'final-cgpa' && currentCycle && <SubjectsView />}
