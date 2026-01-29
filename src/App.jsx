@@ -19,7 +19,7 @@ let updatedSgpaValues = {};
 
 // Grade options constant
 const gradeOptions = [
-  { value: 10, label:'O  (10)' },
+  { value: 10, label: 'O  (10)' },
   { value: 9, label: 'A+ (9)' },
   { value: 8, label: 'A  (8)' },
   { value: 7, label: 'B+ (7)' },
@@ -57,21 +57,46 @@ const sem3SubjectsCGPA_ISE = [
   { id: 'dtl-sem3', name: 'DTL', Credit: 2, type: 'regular' }
 ];
 
+// Physics and Chemistry cycle subjects for 1st year
+const physicsSubjectsCGPA = [
+  { id: 'math', name: 'Mathematics', Credit: 4, type: 'math' },
+  { id: 'phy', name: 'Physics', Credit: 4, type: 'lab' },
+  { id: 'esc-p', name: 'ESC', Credit: 3, type: 'regular' },
+  { id: 'etc', name: 'ETC', Credit: 3, type: 'regular' },
+  { id: 'core', name: 'Core', Credit: 3, type: 'regular' },
+  { id: 'idea-lab', name: 'IDEA Lab', Credit: 1, type: 'regular' },
+  { id: 'comm-eng-p', name: 'Communicative English', Credit: 1, type: 'regular' },
+  { id: 'kannada', name: 'Kannada', Credit: 1, type: 'regular' }
+];
+
+const chemistrySubjectsCGPA = [
+  { id: 'math-c', name: 'Mathematics', Credit: 4, type: 'math' },
+  { id: 'chem', name: 'Chemistry', Credit: 4, type: 'lab' },
+  { id: 'esc-c', name: 'ESC', Credit: 3, type: 'regular' },
+  { id: 'plc', name: 'PLC', Credit: 3, type: 'lab' },
+  { id: 'caeg', name: 'Computer Aided Engineering Graphics', Credit: 3, type: 'regular' },
+  { id: 'comm-eng-c', name: 'Communicative English', Credit: 1, type: 'regular' },
+  { id: 'constitution', name: 'Fundamentals of Indian Constitution', Credit: 1, type: 'regular' },
+  { id: 'yoga', name: 'Yoga', Credit: 1, type: 'regular' }
+];
+
 // Move FinalCGPAView outside to prevent recreation
-const FinalCGPAView = React.memo(({ 
-  finalCGPAGrades, 
-  setFinalCGPAGrades, 
-  firstYearCGPA, 
-  setFirstYearCGPA, 
-  handleSetCurrentMode, 
-  handleSGPACompute, 
+const FinalCGPAView = React.memo(({
+  finalCGPAGrades,
+  setFinalCGPAGrades,
+  firstYearCGPA,
+  setFirstYearCGPA,
+  handleSetCurrentMode,
+  handleSGPACompute,
   handleFinalCGPACompute,
-  currentBranch 
+  currentBranch,
+  currentYear
 }) => {
-  // Get the correct subjects array based on branch
-  const sem3SubjectsCGPA = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML : 
-                           currentBranch === 'ise' ? sem3SubjectsCGPA_ISE : 
-                           sem3SubjectsCGPA_CSECore;
+  // Get the correct subjects array based on branch (for year2)
+  const sem3SubjectsCGPA = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML :
+    currentBranch === 'ise' ? sem3SubjectsCGPA_ISE :
+      sem3SubjectsCGPA_CSECore;
+
   const handleGradeChange = useCallback((semester, subjectId, grade) => {
     setFinalCGPAGrades(prev => ({
       ...prev,
@@ -121,6 +146,80 @@ const FinalCGPAView = React.memo(({
     </div>
   ), [finalCGPAGrades, handleGradeChange]);
 
+  // For Year 1: Show Physics and Chemistry cycles
+  if (currentYear === 'year1') {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-between mb-8">
+          <button
+            onClick={() => handleSetCurrentMode('')}
+            className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
+          >
+            ← Back
+          </button>
+          <div className="w-32"></div>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2">
+          {/* Physics Cycle */}
+          <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                ⚡ Physics Cycle
+              </h3>
+              <span className="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                20 Credits
+              </span>
+            </div>
+            <div className="space-y-3">
+              {physicsSubjectsCGPA.map((subject) => renderSubjectCard(subject, 'physics'))}
+            </div>
+            {/* Compute SGPA Button */}
+            <button
+              onClick={() => handleSGPACompute('physics')}
+              className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              Compute SGPA
+            </button>
+          </div>
+
+          {/* Chemistry Cycle */}
+          <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                🧪 Chemistry Cycle
+              </h3>
+              <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                20 Credits
+              </span>
+            </div>
+            <div className="space-y-3">
+              {chemistrySubjectsCGPA.map((subject) => renderSubjectCard(subject, 'chemistry'))}
+            </div>
+            {/* Compute SGPA Button */}
+            <button
+              onClick={() => handleSGPACompute('chemistry')}
+              className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              Compute SGPA
+            </button>
+          </div>
+        </div>
+
+        {/* Compute CGPA Button */}
+        <div className="text-center">
+          <button
+            onClick={handleFinalCGPACompute}
+            className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+          >
+            Compute CGPA
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // For Year 2: Show 3rd Sem + 1st Year CGPA Input
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between mb-8">
@@ -154,7 +253,7 @@ const FinalCGPAView = React.memo(({
           >
             Compute SGPA
           </button>
-          
+
           {/* Debug info */}
           <div className="mt-2 text-xs text-gray-500">
             Selected grades: {Object.keys(finalCGPAGrades.sem3 || {}).length} / {sem3SubjectsCGPA.length}
@@ -281,25 +380,25 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
   const handleInputChange = (field, value) => {
     // Validate input - only allow numbers, decimal points, and empty string
     const numericRegex = /^[0-9]*\.?[0-9]*$/;
-    
+
     // Allow empty string or valid numeric input
     if (value === '' || numericRegex.test(value)) {
       // Check maximum value limits
       const numValue = parseFloat(value) || 0;
       let isValidRange = true;
-      
+
       // Get maximum value using the utility function for consistency
       const maxValue = getMaxValue(field, subject.type);
-      
+
       // Check if value exceeds maximum
       if (numValue > maxValue) {
         isValidRange = false;
-        setValidationMessage({ 
-          show: true, 
-          field: field, 
-          message: `Maximum value allowed is ${maxValue}` 
+        setValidationMessage({
+          show: true,
+          field: field,
+          message: `Maximum value allowed is ${maxValue}`
         });
-        
+
         // Auto-hide after 3 seconds
         setTimeout(() => {
           setValidationMessage(prev => {
@@ -310,20 +409,20 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           });
         }, 3000);
       }
-      
+
       // Only update if value is within range
       if (isValidRange) {
         // Update both local state and module-level variable
         setInputValues(prev => ({ ...prev, [field]: value }));
-        
-    if (!updatedFormData[subject.id]) {
-      updatedFormData[subject.id] = {};
-    }
-    updatedFormData[subject.id][field] = value;
-        
+
+        if (!updatedFormData[subject.id]) {
+          updatedFormData[subject.id] = {};
+        }
+        updatedFormData[subject.id][field] = value;
+
         // Save to localStorage
         saveToStorage(STORAGE_KEYS.FORM_DATA, updatedFormData);
-        
+
         // Hide validation message if it was showing for this field
         if (validationMessage.show && validationMessage.field === field) {
           setValidationMessage({ show: false, field: '', message: '' });
@@ -331,12 +430,12 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
       }
     } else {
       // Show validation message for invalid input
-      setValidationMessage({ 
-        show: true, 
-        field: field, 
-        message: 'Enter numeric Values Only' 
+      setValidationMessage({
+        show: true,
+        field: field,
+        message: 'Enter numeric Values Only'
       });
-      
+
       // Auto-hide after 3 seconds
       setTimeout(() => {
         setValidationMessage(prev => {
@@ -649,11 +748,10 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           <button
             onClick={() => onShowSEERequirements(subject, result?.cieTotal)}
             disabled={!hasCIEResult}
-            className={`w-full py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
-              hasCIEResult
-                ? 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100'
-                : 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed'
-            }`}
+            className={`w-full py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${hasCIEResult
+              ? 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100'
+              : 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed'
+              }`}
           >
             {hasCIEResult ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
             SEE Marks Required
@@ -666,8 +764,8 @@ const SubjectForm = ({ subject, formData, currentMode, onCalculate, subjectGrade
           {currentMode === 'cie-final' ? (
             <div className="text-center">
               <div className="text-3xl font-bold text-gray-900 mb-2">
-                  CIE: {result.cieTotal}
-                </div>
+                CIE: {result.cieTotal}
+              </div>
               <div className="text-gray-600">out of {subject.type === 'dsa-lab' ? '150' : '100'}</div>
             </div>
           ) : (
@@ -704,7 +802,9 @@ const CGPACalculator = () => {
   const [formData, setFormData] = useState({});
   const [seePopup, setSeePopup] = useState({ isOpen: false, subject: null, cieTotal: 0 });
   const [finalCGPAGrades, setFinalCGPAGrades] = useState({
-  sem3: {}
+    physics: {},
+    chemistry: {},
+    sem3: {}
   });
   const [sgpaToggle, setSgpaToggle] = useState({
     sem3: false
@@ -724,28 +824,28 @@ const CGPACalculator = () => {
   }), []);
 
   const modes = useMemo(() => [
-  {
-    id: 'cie-final',
-    title: 'CIE Finalization & SEE Marks Required',
-    description: 'Calculate your Continuous Internal Evaluation final marks',
-    icon: <Calculator className="w-6 h-6" />,
-    color: 'from-blue-500 to-blue-600'
-  },
-  {
-    id: 'final-grade',
-    title: 'Final Grade Calculator',
-    description: 'Complete grade calculation with predicted SEE marks',
-    icon: <BookOpen className="w-6 h-6" />,
-    color: 'from-purple-500 to-purple-600'
-  },
-  {
-    id: 'final-cgpa',
-    title: 'Final GPA Calculator',
-    description: 'Calculate GPA across both Physics and Chemistry cycles',
-    icon: <Award className="w-6 h-6" />,
-    color: 'from-green-500 to-green-600'
-  }
-], []);
+    {
+      id: 'cie-final',
+      title: 'CIE Finalization & SEE Marks Required',
+      description: 'Calculate your Continuous Internal Evaluation final marks',
+      icon: <Calculator className="w-6 h-6" />,
+      color: 'from-blue-500 to-blue-600'
+    },
+    {
+      id: 'final-grade',
+      title: 'Final Grade Calculator',
+      description: 'Complete grade calculation with predicted SEE marks',
+      icon: <BookOpen className="w-6 h-6" />,
+      color: 'from-purple-500 to-purple-600'
+    },
+    {
+      id: 'final-cgpa',
+      title: 'Final GPA Calculator',
+      description: 'Calculate GPA across both Physics and Chemistry cycles',
+      icon: <Award className="w-6 h-6" />,
+      color: 'from-green-500 to-green-600'
+    }
+  ], []);
 
   const cycles = useMemo(() => [
     { id: 'physics', name: 'Physics Cycle', emoji: '⚡' },
@@ -806,7 +906,7 @@ const CGPACalculator = () => {
 
   const calculateCIE = useCallback((subject, data) => {
     const { q1 = 0, q2 = 0, t1 = 0, t2 = 0, matlab = 0, el = 0, lab = 0 } = data;
-    
+
     let cieValue;
     if (subject.type === 'math') {
       cieValue = (q1 + q2) + ((t1 + t2) / 100 * 40) + matlab + el;
@@ -820,7 +920,7 @@ const CGPACalculator = () => {
     } else {
       cieValue = (q1 + q2) + ((t1 + t2) / 100 * 40) + el;
     }
-    
+
     // Round up to the nearest integer
     return Math.ceil(cieValue);
   }, []);
@@ -830,19 +930,19 @@ const CGPACalculator = () => {
     // Grading: O=270-300, A+=240-269, A=210-239, B+=180-209, B=150-179, C=120-149, P=100-119, F=<100
     if (isDsaLab) {
       const total = cieTotal + labSee + see;
-      
+
       // Check minimum CIE requirement (40% of 150 = 60)
       if (cieTotal < 60) return 0;
-      
+
       // Check minimum total SEE requirement (35% of 150 = 52.5, round up to 53)
       // But only check if at least one SEE component has been entered
       if (labSee > 0 || see > 0) {
         if ((labSee + see) < 53) return 0;
       }
-      
+
       // Check for F grade based on total
       if (total < 100) return 0;
-      
+
       // Grade mapping for 300 total
       if (total >= 270) return 10; // O
       if (total >= 240) return 9;  // A+
@@ -858,7 +958,7 @@ const CGPACalculator = () => {
       if (cieTotal < 40 || see < 35) {
         return 0; // F grade
       }
-      
+
       const total = (cieTotal + see) / 2;
       return Math.min(10, Math.max(0, Math.floor(total / 10) + 1));
     }
@@ -874,16 +974,16 @@ const CGPACalculator = () => {
   const calculateSubject = useCallback((subject) => {
     // Update state with current module-level data before calculation
     setFormData(prev => ({ ...prev, ...updatedFormData }));
-    
+
     const data = updatedFormData[subject.id] || {};
     // Convert string values to numbers for calculation
     const numericData = {};
     Object.keys(data).forEach(key => {
       numericData[key] = parseFloat(data[key]) || 0;
     });
-    
+
     const cieTotal = calculateCIE(subject, numericData);
-    
+
     if (currentMode === 'cie-final') {
       setSubjectGrades(prev => ({
         ...prev,
@@ -919,7 +1019,7 @@ const CGPACalculator = () => {
     const subjects = getSubjects;
     let totalGradePoints = 0;
     let totalCredit = 0;
-    
+
     subjects.forEach(subject => {
       const grade = subjectGrades[subject.id];
       if (grade && grade.gradePoint) {
@@ -927,122 +1027,190 @@ const CGPACalculator = () => {
         totalCredit += subject.Credit;
       }
     });
-    
+
     return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : 0;
   }, [getSubjects, subjectGrades]);
 
-const calculateFinalCGPA = useCallback(() => {
-  let totalGradePoints = 0;
-  let totalCredit = 0;
-  
-  // Add 1st year CGPA contribution (40 credits)
-  if (firstYearCGPA && parseFloat(firstYearCGPA) > 0) {
-    totalGradePoints += parseFloat(firstYearCGPA) * 40;
-    totalCredit += 40;
-  }
-  
-  // Calculate for 3rd Sem (21 credits) - only from grades
-  // Get the correct subjects array based on branch
-  const sem3Subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML : 
-                       currentBranch === 'ise' ? sem3SubjectsCGPA_ISE : 
-                       sem3SubjectsCGPA_CSECore;
-  sem3Subjects.forEach(subject => {
-    const grade = finalCGPAGrades.sem3 && finalCGPAGrades.sem3[subject.id];
-    if (grade !== undefined && grade !== '') {
-      totalGradePoints += grade * subject.Credit;
-      totalCredit += subject.Credit;
-    }
-  });
-  
-  return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
-}, [firstYearCGPA, currentBranch, finalCGPAGrades]);
+  const calculateFinalCGPA = useCallback(() => {
+    let totalGradePoints = 0;
+    let totalCredit = 0;
 
-const handleFinalCGPACompute = useCallback(() => {
-  const cgpa = calculateFinalCGPA();
-  setCgpaPopup({ isOpen: true, cgpa });
-}, [calculateFinalCGPA]);
-
-const closeCGPAPopup = useCallback(() => {
-  setCgpaPopup({ isOpen: false, cgpa: 0 });
-}, []);
-
-const handleSGPACompute = useCallback((cycle) => {
-  // Inline the calculation here to ensure we have the latest state
-  const subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML : 
-                   currentBranch === 'ise' ? sem3SubjectsCGPA_ISE : 
-                   sem3SubjectsCGPA_CSECore;
-  let totalGradePoints = 0;
-  let totalCredit = 0;
-  
-  subjects.forEach(subject => {
-    const grade = finalCGPAGrades[cycle] && finalCGPAGrades[cycle][subject.id];
-    if (grade !== undefined && grade !== '' && grade !== null) {
-      totalGradePoints += Number(grade) * subject.Credit;
-      totalCredit += subject.Credit;
-    }
-  });
-  
-  const sgpa = totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
-  const cycleName = cycle === 'physics' ? 'Physics Cycle' : 
-                    cycle === 'chemistry' ? 'Chemistry Cycle' : 
-                    '3rd Sem SGPA';
-  setSgpaPopup({ isOpen: true, sgpa, cycleName });
-}, [currentBranch, finalCGPAGrades]);
-
-const closeSGPAPopup = useCallback(() => {
-  setSgpaPopup({ isOpen: false, sgpa: 0, cycleName: '' });
-}, []);
-
-const handleSgpaToggle = (semester) => {
-  setSgpaToggle(prev => ({
-    ...prev,
-    [semester]: !prev[semester]
-  }));
-  
-  // Reset grades for this semester when toggle is turned on
-  if (!sgpaToggle[semester]) {
-    setFinalCGPAGrades(prev => ({
-      ...prev,
-      [semester]: {}
-    }));
-  }
-  
-  // Reset SGPA value when toggle is turned off
-  if (sgpaToggle[semester]) {
-    updatedSgpaValues[semester] = '';
-  }
-};
-
-const handleSgpaValueChange = (semester, value, inputElement) => {
-  // Validate input - only allow numbers, decimal points, and empty string
-  const numericRegex = /^[0-9]*\.?[0-9]*$/;
-  
-  // Allow empty string or valid numeric input
-  if (value === '' || numericRegex.test(value)) {
-    const numValue = parseFloat(value) || 0;
-    let isValidRange = true;
-    let errorMessage = '';
-    
-    // Check for negative values
-    if (value !== '' && numValue < 0) {
-      isValidRange = false;
-      errorMessage = 'SGPA cannot be negative';
-    }
-    
-    // Check if value exceeds maximum (10)
-    if (value !== '' && numValue > 10) {
-      isValidRange = false;
-      errorMessage = 'Maximum SGPA is 10';
-    }
-    
-    if (!isValidRange) {
-      // Show validation message
-      setSgpaValidationMessage({ 
-        show: true, 
-        cycle: semester, 
-        message: errorMessage 
+    // For year1: Calculate from Physics and Chemistry cycles (20 credits each = 40 total)
+    if (currentYear === 'year1') {
+      // Calculate for Physics cycle
+      physicsSubjectsCGPA.forEach(subject => {
+        const grade = finalCGPAGrades.physics && finalCGPAGrades.physics[subject.id];
+        if (grade !== undefined && grade !== '') {
+          totalGradePoints += grade * subject.Credit;
+          totalCredit += subject.Credit;
+        }
       });
-      
+
+      // Calculate for Chemistry cycle
+      chemistrySubjectsCGPA.forEach(subject => {
+        const grade = finalCGPAGrades.chemistry && finalCGPAGrades.chemistry[subject.id];
+        if (grade !== undefined && grade !== '') {
+          totalGradePoints += grade * subject.Credit;
+          totalCredit += subject.Credit;
+        }
+      });
+    } else {
+      // For year2: Add 1st year CGPA contribution (40 credits)
+      if (firstYearCGPA && parseFloat(firstYearCGPA) > 0) {
+        totalGradePoints += parseFloat(firstYearCGPA) * 40;
+        totalCredit += 40;
+      }
+
+      // Calculate for 3rd Sem (21 credits) - only from grades
+      // Get the correct subjects array based on branch
+      const sem3Subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML :
+        currentBranch === 'ise' ? sem3SubjectsCGPA_ISE :
+          sem3SubjectsCGPA_CSECore;
+      sem3Subjects.forEach(subject => {
+        const grade = finalCGPAGrades.sem3 && finalCGPAGrades.sem3[subject.id];
+        if (grade !== undefined && grade !== '') {
+          totalGradePoints += grade * subject.Credit;
+          totalCredit += subject.Credit;
+        }
+      });
+    }
+
+    return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
+  }, [firstYearCGPA, currentBranch, finalCGPAGrades, currentYear]);
+
+  const handleFinalCGPACompute = useCallback(() => {
+    const cgpa = calculateFinalCGPA();
+    setCgpaPopup({ isOpen: true, cgpa });
+  }, [calculateFinalCGPA]);
+
+  const closeCGPAPopup = useCallback(() => {
+    setCgpaPopup({ isOpen: false, cgpa: 0 });
+  }, []);
+
+  const handleSGPACompute = useCallback((cycle) => {
+    // Select the correct subjects array based on the cycle
+    let subjects;
+    if (cycle === 'physics') {
+      subjects = physicsSubjectsCGPA;
+    } else if (cycle === 'chemistry') {
+      subjects = chemistrySubjectsCGPA;
+    } else {
+      // For sem3, use branch-specific subjects
+      subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML :
+        currentBranch === 'ise' ? sem3SubjectsCGPA_ISE :
+          sem3SubjectsCGPA_CSECore;
+    }
+
+    let totalGradePoints = 0;
+    let totalCredit = 0;
+
+    subjects.forEach(subject => {
+      const grade = finalCGPAGrades[cycle] && finalCGPAGrades[cycle][subject.id];
+      if (grade !== undefined && grade !== '' && grade !== null) {
+        totalGradePoints += Number(grade) * subject.Credit;
+        totalCredit += subject.Credit;
+      }
+    });
+
+    const sgpa = totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
+    const cycleName = cycle === 'physics' ? 'Physics Cycle' :
+      cycle === 'chemistry' ? 'Chemistry Cycle' :
+        '3rd Sem SGPA';
+    setSgpaPopup({ isOpen: true, sgpa, cycleName });
+  }, [currentBranch, finalCGPAGrades]);
+
+  const closeSGPAPopup = useCallback(() => {
+    setSgpaPopup({ isOpen: false, sgpa: 0, cycleName: '' });
+  }, []);
+
+  const handleSgpaToggle = (semester) => {
+    setSgpaToggle(prev => ({
+      ...prev,
+      [semester]: !prev[semester]
+    }));
+
+    // Reset grades for this semester when toggle is turned on
+    if (!sgpaToggle[semester]) {
+      setFinalCGPAGrades(prev => ({
+        ...prev,
+        [semester]: {}
+      }));
+    }
+
+    // Reset SGPA value when toggle is turned off
+    if (sgpaToggle[semester]) {
+      updatedSgpaValues[semester] = '';
+    }
+  };
+
+  const handleSgpaValueChange = (semester, value, inputElement) => {
+    // Validate input - only allow numbers, decimal points, and empty string
+    const numericRegex = /^[0-9]*\.?[0-9]*$/;
+
+    // Allow empty string or valid numeric input
+    if (value === '' || numericRegex.test(value)) {
+      const numValue = parseFloat(value) || 0;
+      let isValidRange = true;
+      let errorMessage = '';
+
+      // Check for negative values
+      if (value !== '' && numValue < 0) {
+        isValidRange = false;
+        errorMessage = 'SGPA cannot be negative';
+      }
+
+      // Check if value exceeds maximum (10)
+      if (value !== '' && numValue > 10) {
+        isValidRange = false;
+        errorMessage = 'Maximum SGPA is 10';
+      }
+
+      if (!isValidRange) {
+        // Show validation message
+        setSgpaValidationMessage({
+          show: true,
+          cycle: semester,
+          message: errorMessage
+        });
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+          setSgpaValidationMessage(prev => {
+            if (prev.cycle === semester) {
+              return { show: false, cycle: '', message: '' };
+            }
+            return prev;
+          });
+        }, 3000);
+
+        // Reset input to previous valid value
+        if (inputElement) {
+          inputElement.value = updatedSgpaValues[semester] || '';
+        }
+        return;
+      }
+
+      // Only update if value is within range
+      if (isValidRange) {
+        // Update module-level variable only
+        updatedSgpaValues[semester] = value;
+
+        // Save to localStorage
+        saveToStorage(STORAGE_KEYS.SGPA_VALUES, updatedSgpaValues);
+
+        // Hide validation message if it was showing for this semester
+        if (sgpaValidationMessage.show && sgpaValidationMessage.cycle === semester) {
+          setSgpaValidationMessage({ show: false, cycle: '', message: '' });
+        }
+      }
+    } else {
+      // Show validation message for invalid input
+      setSgpaValidationMessage({
+        show: true,
+        cycle: semester,
+        message: 'Enter numeric values only'
+      });
+
       // Auto-hide after 3 seconds
       setTimeout(() => {
         setSgpaValidationMessage(prev => {
@@ -1052,77 +1220,39 @@ const handleSgpaValueChange = (semester, value, inputElement) => {
           return prev;
         });
       }, 3000);
-      
-      // Reset input to previous valid value
+
+      // Reset to previous valid value
       if (inputElement) {
         inputElement.value = updatedSgpaValues[semester] || '';
       }
-      return;
     }
-    
-    // Only update if value is within range
-    if (isValidRange) {
-      // Update module-level variable only
-      updatedSgpaValues[semester] = value;
-      
-      // Save to localStorage
-      saveToStorage(STORAGE_KEYS.SGPA_VALUES, updatedSgpaValues);
-      
-      // Hide validation message if it was showing for this semester
-      if (sgpaValidationMessage.show && sgpaValidationMessage.cycle === semester) {
-        setSgpaValidationMessage({ show: false, cycle: '', message: '' });
-      }
-    }
-  } else {
-    // Show validation message for invalid input
-    setSgpaValidationMessage({ 
-      show: true, 
-      cycle: semester, 
-      message: 'Enter numeric values only' 
-    });
-    
-    // Auto-hide after 3 seconds
-    setTimeout(() => {
-      setSgpaValidationMessage(prev => {
-        if (prev.cycle === semester) {
-          return { show: false, cycle: '', message: '' };
-        }
-        return prev;
-      });
-    }, 3000);
-    
-    // Reset to previous valid value
-    if (inputElement) {
-      inputElement.value = updatedSgpaValues[semester] || '';
-    }
-  }
-};
+  };
 
-const calculateCycleSGPA = useCallback((semester) => {
-  // Get the correct subjects array based on branch
-  const subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML : 
-                   currentBranch === 'ise' ? sem3SubjectsCGPA_ISE : 
-                   sem3SubjectsCGPA_CSECore;
-  let totalGradePoints = 0;
-  let totalCredit = 0;
-  
-  console.log('calculateCycleSGPA - semester:', semester);
-  console.log('calculateCycleSGPA - currentBranch:', currentBranch);
-  console.log('calculateCycleSGPA - subjects:', subjects);
-  console.log('calculateCycleSGPA - finalCGPAGrades:', finalCGPAGrades);
-  
-  subjects.forEach(subject => {
-    const grade = finalCGPAGrades[semester] && finalCGPAGrades[semester][subject.id];
-    console.log(`Subject ${subject.id}: grade = ${grade}, credit = ${subject.Credit}`);
-    if (grade !== undefined && grade !== '') {
-      totalGradePoints += grade * subject.Credit;
-      totalCredit += subject.Credit;
-    }
-  });
-  
-  console.log('Total grade points:', totalGradePoints, 'Total credits:', totalCredit);
-  return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
-}, [currentBranch, finalCGPAGrades]);
+  const calculateCycleSGPA = useCallback((semester) => {
+    // Get the correct subjects array based on branch
+    const subjects = currentBranch === 'cse-aiml' ? sem3SubjectsCGPA_AIML :
+      currentBranch === 'ise' ? sem3SubjectsCGPA_ISE :
+        sem3SubjectsCGPA_CSECore;
+    let totalGradePoints = 0;
+    let totalCredit = 0;
+
+    console.log('calculateCycleSGPA - semester:', semester);
+    console.log('calculateCycleSGPA - currentBranch:', currentBranch);
+    console.log('calculateCycleSGPA - subjects:', subjects);
+    console.log('calculateCycleSGPA - finalCGPAGrades:', finalCGPAGrades);
+
+    subjects.forEach(subject => {
+      const grade = finalCGPAGrades[semester] && finalCGPAGrades[semester][subject.id];
+      console.log(`Subject ${subject.id}: grade = ${grade}, credit = ${subject.Credit}`);
+      if (grade !== undefined && grade !== '') {
+        totalGradePoints += grade * subject.Credit;
+        totalCredit += subject.Credit;
+      }
+    });
+
+    console.log('Total grade points:', totalGradePoints, 'Total credits:', totalCredit);
+    return totalCredit > 0 ? (totalGradePoints / totalCredit).toFixed(2) : '0.00';
+  }, [currentBranch, finalCGPAGrades]);
 
   // Initialize updatedFormData when component mounts or changes cycles
   useEffect(() => {
@@ -1130,9 +1260,9 @@ const calculateCycleSGPA = useCallback((semester) => {
     updatedSgpaValues = loadFromStorage(STORAGE_KEYS.SGPA_VALUES, { sem3: '' });
     setCurrentMode(loadFromStorage(STORAGE_KEYS.CURRENT_MODE, ''));
     setCurrentCycle(loadFromStorage(STORAGE_KEYS.CURRENT_CYCLE, ''));
-    const loadedGrades = loadFromStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { sem3: {} });
-    // Ensure sem3 property always exists
-    setFinalCGPAGrades({ sem3: {}, ...loadedGrades });
+    const loadedGrades = loadFromStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { physics: {}, chemistry: {}, sem3: {} });
+    // Ensure physics, chemistry, and sem3 properties always exist
+    setFinalCGPAGrades({ physics: {}, chemistry: {}, sem3: {}, ...loadedGrades });
     setSgpaInputValues(loadFromStorage(STORAGE_KEYS.SGPA_VALUES, { sem3: '' }));
     setFormData(loadFromStorage(STORAGE_KEYS.FORM_DATA, {}));
     setFirstYearCGPA(loadFromStorage(STORAGE_KEYS.FIRST_YEAR_CGPA, ''));
@@ -1162,18 +1292,18 @@ const calculateCycleSGPA = useCallback((semester) => {
   const handleResetMarks = useCallback(() => {
     // Clear all localStorage
     clearAllStorage();
-    
+
     // Reset all state
     setCurrentMode('');
     setCurrentCycle('');
     setSubjectGrades({});
     setFormData({});
-    setFinalCGPAGrades({ sem3: {} });
+    setFinalCGPAGrades({ physics: {}, chemistry: {}, sem3: {} });
     setSgpaToggle({ sem3: false });
     setSgpaInputValues({ sem3: '' });
     setSgpaValidationMessage({ show: false, cycle: '', message: '' });
     setFirstYearCGPA('');
-    
+
     // Reset module-level variables
     updatedFormData = {};
     updatedSgpaValues = { sem3: '' };
@@ -1188,10 +1318,10 @@ const calculateCycleSGPA = useCallback((semester) => {
   }, []);
 
   const handleResetFinalGPACalcMarks = useCallback(() => {
-    saveToStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { sem3: {} });
+    saveToStorage(STORAGE_KEYS.FINAL_CGPA_GRADES, { physics: {}, chemistry: {}, sem3: {} });
     saveToStorage(STORAGE_KEYS.SGPA_VALUES, { sem3: '' });
     saveToStorage(STORAGE_KEYS.FIRST_YEAR_CGPA, '');
-    setFinalCGPAGrades({ sem3: {} });
+    setFinalCGPAGrades({ physics: {}, chemistry: {}, sem3: {} });
     setSgpaToggle({ sem3: false });
     setSgpaInputValues({ sem3: '' });
     setFirstYearCGPA('');
@@ -1255,18 +1385,18 @@ const calculateCycleSGPA = useCallback((semester) => {
           <h1 className="text-5xl font-bold text-gray-900 mb-4">Academic Calculator</h1>
           <p className="text-xl text-gray-600">Select your Year</p>
         </div>
-        
+
         {/* RVCE Logo Button Bubble */}
         <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-          <a 
-            href="https://rvce.edu.in/" 
-            target="_blank" 
+          <a
+            href="https://rvce.edu.in/"
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-95 transition-all duration-150 rounded-2xl px-12 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 border border-gray-200"
           >
-            <img 
-              src="https://www.rvinstitutions.com/wp-content/uploads/2017/09/Logo-1-white-1024x1024-1.png" 
-              alt="RVCE Logo" 
+            <img
+              src="https://www.rvinstitutions.com/wp-content/uploads/2017/09/Logo-1-white-1024x1024-1.png"
+              alt="RVCE Logo"
               className="w-20 h-20 object-contain filter invert"
             />
           </a>
@@ -1359,117 +1489,114 @@ const calculateCycleSGPA = useCallback((semester) => {
   );
 
   const ModeSelection = () => (
-  <div className="space-y-8">
-    <div className="flex items-center justify-between mb-8">
-      <button
-        onClick={() => {
-          if (currentYear === 'year2') {
-            handleSetCurrentSemester('');
-          } else {
-            handleSetCurrentYear('');
-          }
-        }}
-        className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
-      >
-        ← Back to {currentYear === 'year2' ? 'Semesters' : 'Years'}
-      </button>
-      <div className="w-32"></div>
-    </div>
-
-    <div className="text-center mb-12 max-w-3xl mx-auto space-y-6">
-      {/* Header Bubble */}
-      <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-        <h1 className="text-5xl font-bold text-gray-900 mb-4">
-          {currentYear === 'year1' ? '1st Year' : `${currentSemester === 'sem3' ? '3rd' : '4th'} Sem`} Calculator
-        </h1>
-        <p className="text-xl text-gray-600">Choose your calculation mode</p>
-      </div>
-
-      {/* Branch Selection Dropdown - Only for Year 2 */}
-      {currentYear === 'year2' && (
-        <div className={`bg-white border rounded-3xl px-8 py-4 shadow-sm transition-all duration-300 ${
-          branchValidationError ? 'border-red-500 shadow-red-200 animate-pulse' : 'border-gray-200'
-        }`}>
-          <div className="flex items-center justify-center">
-            <div className="relative w-full max-w-md">
-              {branchValidationError && (
-                <div className="absolute -top-8 left-0 right-0 text-center">
-                  <p className="text-red-600 text-sm font-medium">⚠️ Please select a branch first</p>
-                </div>
-              )}
-              <select
-                value={currentBranch}
-                onChange={(e) => handleSetCurrentBranch(e.target.value)}
-                className={`w-full px-6 py-3 border-2 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-900 text-center font-medium text-lg cursor-pointer transition-colors ${
-                  branchValidationError ? 'border-red-500 ring-2 ring-red-200' : 'border-gray-300 hover:border-blue-400'
-                }`}
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                  backgroundPosition: 'right 1rem center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: '1.5em 1.5em',
-                  paddingRight: '3rem'
-                }}
-              >
-                <option value="" disabled>Select Branch</option>
-                <option value="cse-core">CSE (Core+CD+CY)</option>
-                <option value="cse-aiml">CSE(AIML)</option>
-                <option value="ise">ISE</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-             
-    <div className="grid gap-6 max-w-3xl mx-auto">
-      {modes.map((mode) => {
-        const isDisabled = currentYear === 'year2' && !currentBranch;
-        return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between mb-8">
         <button
-          key={mode.id}
-          onClick={() => handleSetCurrentMode(mode.id)}
-          disabled={isDisabled}
-          className={`group relative rounded-3xl p-8 transition-all duration-300 text-left ${
-            isDisabled 
-              ? 'bg-gray-100 border border-gray-300 opacity-60 cursor-not-allowed' 
-              : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl transform hover:-translate-y-1'
-          }`}
+          onClick={() => {
+            if (currentYear === 'year2') {
+              handleSetCurrentSemester('');
+            } else {
+              handleSetCurrentYear('');
+            }
+          }}
+          className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${mode.color} flex items-center justify-center text-white shadow-lg`}>
-                {mode.icon}
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{mode.title}</h3>
-                <p className="text-gray-600">{mode.description}</p>
+          ← Back to {currentYear === 'year2' ? 'Semesters' : 'Years'}
+        </button>
+        <div className="w-32"></div>
+      </div>
+
+      <div className="text-center mb-12 max-w-3xl mx-auto space-y-6">
+        {/* Header Bubble */}
+        <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            {currentYear === 'year1' ? '1st Year' : `${currentSemester === 'sem3' ? '3rd' : '4th'} Sem`} Calculator
+          </h1>
+          <p className="text-xl text-gray-600">Choose your calculation mode</p>
+        </div>
+
+        {/* Branch Selection Dropdown - Only for Year 2 */}
+        {currentYear === 'year2' && (
+          <div className={`bg-white border rounded-3xl px-8 py-4 shadow-sm transition-all duration-300 ${branchValidationError ? 'border-red-500 shadow-red-200 animate-pulse' : 'border-gray-200'
+            }`}>
+            <div className="flex items-center justify-center">
+              <div className="relative w-full max-w-md">
+                {branchValidationError && (
+                  <div className="absolute -top-8 left-0 right-0 text-center">
+                    <p className="text-red-600 text-sm font-medium">⚠️ Please select a branch first</p>
+                  </div>
+                )}
+                <select
+                  value={currentBranch}
+                  onChange={(e) => handleSetCurrentBranch(e.target.value)}
+                  className={`w-full px-6 py-3 border-2 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-900 text-center font-medium text-lg cursor-pointer transition-colors ${branchValidationError ? 'border-red-500 ring-2 ring-red-200' : 'border-gray-300 hover:border-blue-400'
+                    }`}
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                    backgroundPosition: 'right 1rem center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '3rem'
+                  }}
+                >
+                  <option value="" disabled>Select Branch</option>
+                  <option value="cse-core">CSE (Core+CD+CY)</option>
+                  <option value="cse-aiml">CSE(AIML)</option>
+                  <option value="ise">ISE</option>
+                </select>
               </div>
             </div>
-            {isDisabled ? (
-              <Lock className="w-6 h-6 text-gray-400" />
-            ) : (
-              <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
-            )}
           </div>
-        </button>
-        );
-      })}
-    </div>
+        )}
+      </div>
 
-    {/* Disclaimer Footer */}
-    <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-gray-200">
-      <div className="flex items-center justify-center gap-1.5">
-        <Info className="w-3.5 h-3.5 text-gray-500" />
-        <p className="text-xs text-gray-500">
-          <span className="font-medium">Disclaimer:</span>
-          {" "}This is not an official source. Creators are not responsible for any discrepancies.
-        </p>
+      <div className="grid gap-6 max-w-3xl mx-auto">
+        {modes.map((mode) => {
+          const isDisabled = currentYear === 'year2' && !currentBranch;
+          return (
+            <button
+              key={mode.id}
+              onClick={() => handleSetCurrentMode(mode.id)}
+              disabled={isDisabled}
+              className={`group relative rounded-3xl p-8 transition-all duration-300 text-left ${isDisabled
+                ? 'bg-gray-100 border border-gray-300 opacity-60 cursor-not-allowed'
+                : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl transform hover:-translate-y-1'
+                }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-6">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${mode.color} flex items-center justify-center text-white shadow-lg`}>
+                    {mode.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{mode.title}</h3>
+                    <p className="text-gray-600">{mode.description}</p>
+                  </div>
+                </div>
+                {isDisabled ? (
+                  <Lock className="w-6 h-6 text-gray-400" />
+                ) : (
+                  <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Disclaimer Footer */}
+      <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-gray-200">
+        <div className="flex items-center justify-center gap-1.5">
+          <Info className="w-3.5 h-3.5 text-gray-500" />
+          <p className="text-xs text-gray-500">
+            <span className="font-medium">Disclaimer:</span>
+            {" "}This is not an official source. Creators are not responsible for any discrepancies.
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-);
-  
+  );
+
   const ClusterSelection = () => (
     <div className="space-y-8">
       <div className="flex items-center justify-between mb-8">
@@ -1621,7 +1748,7 @@ const calculateCycleSGPA = useCallback((semester) => {
         </button>
         <div className="w-32"></div>
       </div>
-      
+
       <div className="grid gap-6 max-w-lg mx-auto">
         {cycles.map((cycle) => (
           <button
@@ -1666,7 +1793,7 @@ const calculateCycleSGPA = useCallback((semester) => {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
             </h2>
             <p className="text-gray-600 text-lg">
-              
+
             </p>
           </div>
           <div className="w-32"></div>
@@ -1674,9 +1801,9 @@ const calculateCycleSGPA = useCallback((semester) => {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {getSubjects.map((subject) => (
-            <SubjectForm 
-              key={subject.id} 
-              subject={subject} 
+            <SubjectForm
+              key={subject.id}
+              subject={subject}
               formData={formData}
               currentMode={currentMode}
               onCalculate={calculateSubject}
@@ -1724,7 +1851,7 @@ const calculateCycleSGPA = useCallback((semester) => {
       </div>
     );
   };
-  
+
   const BugReportButton = () => {
     const [showBugOptions, setShowBugOptions] = useState(false);
     let bugOptionsTimeout = null;
@@ -1761,15 +1888,14 @@ const calculateCycleSGPA = useCallback((semester) => {
           </button>
 
           {/* Hover Options Bubble */}
-          <div className={`absolute bottom-full right-0 mb-2 transition-all duration-300 ${
-            showBugOptions ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'
-          }`}>
+          <div className={`absolute bottom-full right-0 mb-2 transition-all duration-300 ${showBugOptions ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'
+            }`}>
             <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-3 min-w-[180px]">
               <div className="space-y-2">
                 {/* GitHub Button */}
-                <a 
-                  href="https://github.com/VivaanHooda/rvce-grade-calculator" 
-                  target="_blank" 
+                <a
+                  href="https://github.com/VivaanHooda/rvce-grade-calculator"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                 >
@@ -1777,7 +1903,7 @@ const calculateCycleSGPA = useCallback((semester) => {
                   <span className="text-gray-700 group-hover:text-black font-medium">GitHub</span>
                 </a>
                 {/* Gmail Button */}
-                <a 
+                <a
                   href="mailto:vivaan.hooda@gmail.com"
                   className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                 >
@@ -1810,7 +1936,7 @@ const calculateCycleSGPA = useCallback((semester) => {
         {currentYear === 'year2' && !currentCluster && <ClusterSelection />}
         {currentYear === 'year2' && currentCluster && !currentSemester && <SemesterSelection />}
         {currentYear === 'year2' && currentCluster && currentSemester && !currentMode && <ModeSelection />}
-        {currentYear === 'year1' && currentMode === 'final-cgpa' && <FinalCGPAView 
+        {currentYear === 'year1' && currentMode === 'final-cgpa' && <FinalCGPAView
           finalCGPAGrades={finalCGPAGrades}
           setFinalCGPAGrades={setFinalCGPAGrades}
           firstYearCGPA={firstYearCGPA}
@@ -1819,8 +1945,9 @@ const calculateCycleSGPA = useCallback((semester) => {
           handleSGPACompute={handleSGPACompute}
           handleFinalCGPACompute={handleFinalCGPACompute}
           currentBranch={currentBranch}
+          currentYear={currentYear}
         />}
-        {currentYear === 'year2' && currentCluster && currentSemester && currentMode === 'final-cgpa' && currentBranch && <FinalCGPAView 
+        {currentYear === 'year2' && currentCluster && currentSemester && currentMode === 'final-cgpa' && currentBranch && <FinalCGPAView
           finalCGPAGrades={finalCGPAGrades}
           setFinalCGPAGrades={setFinalCGPAGrades}
           firstYearCGPA={firstYearCGPA}
@@ -1829,12 +1956,13 @@ const calculateCycleSGPA = useCallback((semester) => {
           handleSGPACompute={handleSGPACompute}
           handleFinalCGPACompute={handleFinalCGPACompute}
           currentBranch={currentBranch}
+          currentYear={currentYear}
         />}
         {currentYear === 'year1' && currentMode && currentMode !== 'final-cgpa' && !currentCycle && <CycleSelection />}
         {currentYear === 'year1' && currentMode && currentMode !== 'final-cgpa' && currentCycle && <SubjectsView />}
         {currentYear === 'year2' && currentCluster && currentSemester && currentMode && currentMode !== 'final-cgpa' && currentBranch && <SubjectsView />}
       </div>
-      
+
       <SEERequirementsPopup
         isOpen={seePopup.isOpen}
         onClose={closeSEEPopup}
