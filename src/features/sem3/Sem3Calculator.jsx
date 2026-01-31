@@ -28,6 +28,11 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
     // UI State
     const [seePopup, setSeePopup] = useState({ isOpen: false, subject: null, cieTotal: 0 });
     const [sgpaPopup, setSgpaPopup] = useState({ isOpen: false, sgpa: 0, cycleName: '' });
+    const [expandedClusters, setExpandedClusters] = useState({ cs: false, ece: false });
+
+    const toggleCluster = (cluster) => {
+        setExpandedClusters(prev => ({ ...prev, [cluster]: !prev[cluster] }));
+    };
     const [cgpaPopup, setCgpaPopup] = useState({ isOpen: false, cgpa: 0 });
 
     // Persist
@@ -193,26 +198,87 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         ← Back to Semester Selection
                     </button>
                 </div>
-                <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-3xl p-8 shadow-sm text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6">Select Your Branch</h3>
+                <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Select Your Branch</h3>
                     <div className="grid gap-4">
-                        {[
-                            { id: 'cse-core', name: 'CSE (Core+CD+CY)' },
-                            { id: 'cse-aiml', name: 'CSE(AIML)' },
-                            { id: 'ise', name: 'ISE' },
-                            { id: 'ece', name: 'ECE' },
-                            { id: 'ete', name: 'ETE' },
-                            { id: 'eee', name: 'EEE' },
-                            { id: 'eie', name: 'EIE' }
-                        ].map(b => (
+                        {/* CS Cluster */}
+                        <div className="border border-gray-200 rounded-2xl overflow-hidden">
                             <button
-                                key={b.id}
-                                onClick={() => setBranch(b.id)}
-                                className="w-full py-4 px-6 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-lg text-gray-700 hover:text-blue-700"
+                                onClick={() => toggleCluster('cs')}
+                                className="w-full px-6 py-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
                             >
-                                {b.name}
+                                <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">CS Cluster</span>
+                                <svg
+                                    className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${expandedClusters.cs ? 'rotate-180' : ''}`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
                             </button>
-                        ))}
+                            <div
+                                className={`transition-all duration-300 ease-in-out ${
+                                    expandedClusters.cs ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                                } overflow-hidden`}
+                            >
+                                <div className="p-4 space-y-3 bg-white">
+                                    {[
+                                        { id: 'cse-core', name: 'CSE (Core+CD+CY)' },
+                                        { id: 'cse-aiml', name: 'CSE(AIML)' },
+                                        { id: 'ise', name: 'ISE' }
+                                    ].map(b => (
+                                        <button
+                                            key={b.id}
+                                            onClick={() => setBranch(b.id)}
+                                            className="w-full py-3 px-5 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-base text-gray-700 hover:text-blue-700"
+                                        >
+                                            {b.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* ECE Cluster */}
+                        <div className="border border-gray-200 rounded-2xl overflow-hidden">
+                            <button
+                                onClick={() => toggleCluster('ece')}
+                                className="w-full px-6 py-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
+                            >
+                                <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">ECE Cluster</span>
+                                <svg
+                                    className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${expandedClusters.ece ? 'rotate-180' : ''}`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div
+                                className={`transition-all duration-300 ease-in-out ${
+                                    expandedClusters.ece ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                                } overflow-hidden`}
+                            >
+                                <div className="p-4 space-y-3 bg-white">
+                                    {[
+                                        { id: 'ece', name: 'ECE' },
+                                        { id: 'ete', name: 'ETE' },
+                                        { id: 'eee', name: 'EEE' },
+                                        { id: 'eie', name: 'EIE' }
+                                    ].map(b => (
+                                        <button
+                                            key={b.id}
+                                            onClick={() => setBranch(b.id)}
+                                            className="w-full py-3 px-5 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-base text-gray-700 hover:text-blue-700"
+                                        >
+                                            {b.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
