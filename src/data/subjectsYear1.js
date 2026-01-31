@@ -1,3 +1,4 @@
+// For CGPA calculation - includes all subjects
 export const physicsSubjectsCGPA = [
     { id: 'math', name: 'Mathematics', Credit: 4, type: 'math' },
     { id: 'phy', name: 'Physics', Credit: 4, type: 'lab' },
@@ -18,4 +19,20 @@ export const chemistrySubjectsCGPA = [
     { id: 'comm-eng-c', name: 'Communicative English', Credit: 1, type: 'regular' },
     { id: 'constitution', name: 'Fundamentals of Indian Constitution', Credit: 1, type: 'regular' },
     { id: 'yoga', name: 'Yoga', Credit: 1, type: 'regular' }
+];
+
+// For CIE Finalization and Final Grade - excludes IDEA Lab, Communicative English, Kannada from Physics and CAEG from Chemistry
+export const physicsSubjects = [
+    { id: 'math', name: 'Mathematics', Credit: 4, type: 'math' },
+    { id: 'phy', name: 'Physics', Credit: 4, type: 'lab' },
+    { id: 'esc-p', name: 'ESC', Credit: 3, type: 'regular' },
+    { id: 'etc', name: 'ETC', Credit: 3, type: 'regular' },
+    { id: 'core', name: 'Core', Credit: 3, type: 'regular' }
+];
+
+export const chemistrySubjects = [
+    { id: 'math-c', name: 'Mathematics', Credit: 4, type: 'math' },
+    { id: 'chem', name: 'Chemistry', Credit: 4, type: 'lab' },
+    { id: 'esc-c', name: 'ESC', Credit: 3, type: 'regular' },
+    { id: 'plc', name: 'PLC', Credit: 3, type: 'lab' }
 ];

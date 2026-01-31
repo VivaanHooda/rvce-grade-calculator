@@ -32,16 +32,16 @@ const BugReportButton = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div className="flex justify-center z-40" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <div className="relative">
-        <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm font-medium">
+        <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-xs sm:text-sm font-medium">
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
           </svg>
-          Report Bugs / Contribute
+          <span>Report Bugs / Contribute</span>
         </button>
 
-        <div className={`absolute bottom-full right-0 mb-2 transition-all duration-300 ${showBugOptions ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'
+        <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 transition-all duration-300 ${showBugOptions ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'
           }`}>
           <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-3 min-w-[180px]">
             <div className="space-y-2">
@@ -65,7 +65,7 @@ const BugReportButton = () => {
                 <span className="text-gray-700 group-hover:text-black font-medium">Gmail</span>
               </a>
             </div>
-            <div className="absolute bottom-0 right-4 transform translate-y-full">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 transform translate-y-full">
               <div className="w-3 h-3 bg-white border-r border-b border-gray-200 transform rotate-45"></div>
             </div>
           </div>
@@ -104,7 +104,7 @@ const CGPACalculator = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col">
-      <div className="flex-grow container mx-auto px-6 py-12 max-w-7xl">
+      <div className="flex-grow container mx-auto px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 max-w-7xl">
         {!currentYear && <YearSelection onSelect={handleYearSelect} />}
 
         {currentYear === 'year1' && (
@@ -119,19 +119,23 @@ const CGPACalculator = () => {
           <Sem3Calculator onBack={handleBackToSemester} />
         )}
 
-        {/* Disclaimer Footer */}
-        <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-gray-200">
-          <div className="flex items-center justify-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-gray-500" />
-            <p className="text-xs text-gray-500">
-              <span className="font-medium">Disclaimer:</span>
-              {" "}This is not an official source. Creators are not responsible for any discrepancies.
-            </p>
-          </div>
-        </div>
+        {/* Disclaimer Footer and Bug Report - Only show on first page */}
+        {!currentYear && (
+          <>
+            <div className="fixed bottom-32 left-0 right-0 sm:relative sm:bottom-auto sm:max-w-3xl sm:mx-auto sm:mt-12 sm:pt-8 sm:border-t sm:border-gray-200 pointer-events-none">
+              <div className="flex items-center justify-center gap-1.5 px-3">
+                <Info className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                <p className="text-[10px] sm:text-xs text-gray-400 sm:text-gray-500 whitespace-nowrap sm:whitespace-normal">
+                  <span className="font-semibold">Disclaimer:</span> Not official. No responsibility for discrepancies.
+                </p>
+              </div>
+            </div>
+            <div className="fixed bottom-16 left-0 right-0 sm:relative sm:bottom-auto sm:max-w-3xl sm:mx-auto sm:mt-4">
+              <BugReportButton />
+            </div>
+          </>
+        )}
       </div>
-
-      <BugReportButton />
     </div>
   );
 };

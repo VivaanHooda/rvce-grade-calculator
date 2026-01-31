@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { STORAGE_KEYS, saveToStorage, loadFromStorage } from '../../utils/storage';
 import { calculateCIE, calculateGrade, getMaxValue, getGradeLetter } from '../../utils/calculations';
-import { physicsSubjectsCGPA, chemistrySubjectsCGPA } from '../../data/subjectsYear1';
+import { physicsSubjectsCGPA, chemistrySubjectsCGPA, physicsSubjects, chemistrySubjects } from '../../data/subjectsYear1';
 
 // Components
 import ModeSelection from '../../components/common/ModeSelection';
@@ -185,8 +185,14 @@ const Year1Calculator = ({ onBack }) => {
     const closeSEEPopup = () => setSeePopup({ isOpen: false, subject: null, cieTotal: 0 });
 
     const getSubjects = useMemo(() => {
-        return currentCycle === 'physics' ? physicsSubjectsCGPA : chemistrySubjectsCGPA;
-    }, [currentCycle]);
+        // For CGPA mode, use full subject lists. For CIE and Final Grade, use filtered lists
+        if (currentMode === 'cgpa') {
+            return currentCycle === 'physics' ? physicsSubjectsCGPA : chemistrySubjectsCGPA;
+        } else {
+            // CIE Finalization and Final Grade modes use filtered subject lists
+            return currentCycle === 'physics' ? physicsSubjects : chemistrySubjects;
+        }
+    }, [currentCycle, currentMode]);
 
     // Render Logic
     if (!currentMode) {
@@ -195,28 +201,28 @@ const Year1Calculator = ({ onBack }) => {
 
     if (currentMode === 'final-cgpa') {
         return (
-            <div className="space-y-8">
-                <div className="flex items-center justify-between mb-8">
+            <div className="space-y-6 sm:space-y-8">
+                <div className="flex items-center justify-between mb-6 sm:mb-8 px-4">
                     <button
                         onClick={() => handleSetCurrentMode('')}
-                        className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
+                        className="text-blue-600 hover:text-blue-700 font-medium text-base sm:text-lg transition-colors"
                     >
                         ← Back to Modes
                     </button>
                 </div>
 
-                <div className="grid gap-8 md:grid-cols-2">
+                <div className="grid gap-4 sm:gap-6 lg:grid-cols-2 px-4">
                     {/* Physics Cycle */}
-                    <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="bg-white border border-gray-200 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+                        <div className="grid grid-cols-[1fr_auto] gap-3 items-start mb-4 sm:mb-6">
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
                                 ⚡ Physics Cycle
                             </h3>
-                            <span className="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
                                 20 Credits
                             </span>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-2 sm:space-y-3">
                             {physicsSubjectsCGPA.map((subject) => (
                                 <SubjectCard
                                     key={subject.id}
@@ -228,23 +234,23 @@ const Year1Calculator = ({ onBack }) => {
                         </div>
                         <button
                             onClick={() => handleComputeSGPA('physics')}
-                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-98"
                         >
                             Compute SGPA
                         </button>
                     </div>
 
                     {/* Chemistry Cycle */}
-                    <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="bg-white border border-gray-200 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+                        <div className="grid grid-cols-[1fr_auto] gap-3 items-start mb-4 sm:mb-6">
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
                                 🧪 Chemistry Cycle
                             </h3>
-                            <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap">
                                 20 Credits
                             </span>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-2 sm:space-y-3">
                             {chemistrySubjectsCGPA.map((subject) => (
                                 <SubjectCard
                                     key={subject.id}
@@ -256,17 +262,17 @@ const Year1Calculator = ({ onBack }) => {
                         </div>
                         <button
                             onClick={() => handleComputeSGPA('chemistry')}
-                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-98"
                         >
                             Compute SGPA
                         </button>
                     </div>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center px-4">
                     <button
                         onClick={handleComputeCGPA}
-                        className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+                        className="bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-4 px-6 sm:px-8 rounded-xl font-medium text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all active:scale-98"
                     >
                         Compute CGPA
                     </button>
@@ -293,26 +299,26 @@ const Year1Calculator = ({ onBack }) => {
     }
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between mb-8">
+        <div className="space-y-6 sm:space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4 px-4">
                 <button
                     onClick={() => setCurrentCycle('')}
-                    className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
+                    className="text-blue-600 hover:text-blue-700 font-medium text-base sm:text-lg transition-colors text-left"
                 >
                     ← Back to Cycles
                 </button>
                 <div className="text-center">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                         {currentCycle === 'physics' ? 'Physics Cycle' : 'Chemistry Cycle'}
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-sm sm:text-base text-gray-600">
                         {currentMode === 'cie-final' ? 'CIE Finalization' : 'Final Grade Calculator'}
                     </p>
                 </div>
-                <div className="w-32"></div>
+                <div className="w-32 hidden sm:block"></div>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 px-4">
                 {getSubjects.map((subject) => (
                     <SubjectForm
                         key={subject.id}

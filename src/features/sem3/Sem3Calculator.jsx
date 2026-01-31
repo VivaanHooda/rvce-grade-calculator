@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { GraduationCap } from 'lucide-react';
 import { STORAGE_KEYS, saveToStorage, loadFromStorage } from '../../utils/storage';
 import { calculateCIE, calculateGrade, getMaxValue, getGradeLetter } from '../../utils/calculations';
 import {
@@ -218,9 +219,8 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                                 </svg>
                             </button>
                             <div
-                                className={`transition-all duration-300 ease-in-out ${
-                                    expandedClusters.cs ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                                } overflow-hidden`}
+                                className={`transition-all duration-300 ease-in-out ${expandedClusters.cs ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                                    } overflow-hidden`}
                             >
                                 <div className="p-4 space-y-3 bg-white">
                                     {[
@@ -257,9 +257,8 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                                 </svg>
                             </button>
                             <div
-                                className={`transition-all duration-300 ease-in-out ${
-                                    expandedClusters.ece ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                                } overflow-hidden`}
+                                className={`transition-all duration-300 ease-in-out ${expandedClusters.ece ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                                    } overflow-hidden`}
                             >
                                 <div className="p-4 space-y-3 bg-white">
                                     {[
@@ -303,11 +302,12 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
 
                 <div className="max-w-2xl mx-auto">
                     <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                                📚 3rd Sem SGPA ({branch.toUpperCase()})
+                        <div className="grid grid-cols-[1fr_auto] gap-3 items-start mb-6">
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 whitespace-nowrap flex items-center gap-2">
+                                <GraduationCap className="w-6 h-6 text-blue-600" />
+                                3rd Sem SGPA ({branch.toUpperCase()})
                             </h3>
-                            <span className="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
                                 {currentSubjects.reduce((sum, s) => sum + s.Credit, 0)} Credits
                             </span>
                         </div>
@@ -383,23 +383,22 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
     }
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between mb-8">
+        <div className="space-y-6 sm:space-y-8">
+            <div className="px-4">
                 <button
                     onClick={() => setCurrentMode('')}
-                    className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
+                    className="text-blue-600 hover:text-blue-700 font-medium text-base sm:text-lg transition-colors mb-4"
                 >
                     ← Back to Modes
                 </button>
                 <div className="text-center">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                         Sem 3 ({branch.toUpperCase()})
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-sm sm:text-base text-gray-600">
                         {currentMode === 'cie-final' ? 'CIE Finalization' : 'Final Grade Calculator'}
                     </p>
                 </div>
-                <div className="w-32"></div>
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
