@@ -14,6 +14,7 @@ import SubjectCard from '../../components/common/SubjectCard';
 import SEERequirementsPopup from '../../components/common/SEERequirementsPopup';
 import SGPAResultsPopup from '../../components/common/SGPAResultsPopup';
 import CGPAResultsPopup from '../../components/common/CGPAResultsPopup';
+import GradeScaleReference from '../../components/common/GradeScaleReference';
 
 const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
     // Navigation State
@@ -30,6 +31,9 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
     const [seePopup, setSeePopup] = useState({ isOpen: false, subject: null, cieTotal: 0 });
     const [sgpaPopup, setSgpaPopup] = useState({ isOpen: false, sgpa: 0, cycleName: '' });
     const [expandedClusters, setExpandedClusters] = useState({ cs: false, ece: false });
+    const [validationError, setValidationError] = useState({ sgpa: '', cgpa: '' });
+    const [showResetConfirm, setShowResetConfirm] = useState(false);
+    const [showCIEResetConfirm, setShowCIEResetConfirm] = useState(false);
 
     const toggleCluster = (cluster) => {
         setExpandedClusters(prev => ({ ...prev, [cluster]: !prev[cluster] }));
@@ -133,6 +137,14 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
     };
 
     const handleComputeSGPA = () => {
+        // Validate all subjects have grades
+        const missingSubjects = currentSubjects.filter(s => sem3Grades[s.id] === undefined || sem3Grades[s.id] === '');
+        if (missingSubjects.length > 0) {
+            setValidationError(prev => ({ ...prev, sgpa: 'Please enter grades for all subjects' }));
+            return;
+        }
+        setValidationError(prev => ({ ...prev, sgpa: '' }));
+
         let totalGradePoints = 0;
         let totalCredit = 0;
 
@@ -150,6 +162,20 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
     };
 
     const handleComputeCGPA = () => {
+        // Validate 1st year CGPA is entered
+        if (!firstYearCGPA || parseFloat(firstYearCGPA) <= 0) {
+            setValidationError(prev => ({ ...prev, cgpa: 'Please enter 1st Year CGPA first' }));
+            return;
+        }
+
+        // Validate all 3rd sem subjects have grades
+        const missingSubjects = currentSubjects.filter(s => sem3Grades[s.id] === undefined || sem3Grades[s.id] === '');
+        if (missingSubjects.length > 0) {
+            setValidationError(prev => ({ ...prev, cgpa: 'Please enter grades for all 3rd Sem subjects' }));
+            return;
+        }
+        setValidationError(prev => ({ ...prev, cgpa: '' }));
+
         let totalGradePoints = 0;
         let totalCredit = 0;
 
@@ -169,6 +195,19 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
         const cgpa = totalCredit > 0 ? (totalGradePoints / totalCredit) : 0;
         const roundedCGPA = (Math.ceil(cgpa * 100 - 0.00001) / 100).toFixed(2);
         setCgpaPopup({ isOpen: true, cgpa: roundedCGPA });
+    };
+
+    const handleResetGrades = () => {
+        setSem3Grades({});
+        setFirstYearCGPA('');
+        setValidationError({ sgpa: '', cgpa: '' });
+        setShowResetConfirm(false);
+    };
+
+    const handleResetCIE = () => {
+        setFormData({});
+        setSubjectGrades({});
+        setShowCIEResetConfirm(false);
     };
 
     const handleInputChange = useCallback((subjectId, field, value) => {
@@ -327,6 +366,11 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         >
                             Compute SGPA
                         </button>
+                        {validationError.sgpa && (
+                            <p className="mt-2 text-sm text-amber-600 flex items-center gap-1">
+                                <span>⚠</span> {validationError.sgpa}
+                            </p>
+                        )}
                     </div>
 
                     <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm mt-8">
@@ -340,6 +384,7 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                             <label className="text-purple-900 font-medium block mb-2">Enter your 1st Year CGPA</label>
                             <input
                                 type="text"
+                                inputMode="decimal"
                                 value={firstYearCGPA}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -364,7 +409,39 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         >
                             Compute CGPA
                         </button>
+                        {validationError.cgpa && (
+                            <p className="mt-2 text-sm text-amber-600 flex items-center justify-center gap-1">
+                                <span>⚠</span> {validationError.cgpa}
+                            </p>
+                        )}
                     </div>
+
+                    {!showResetConfirm ? (
+                        <button
+                            onClick={() => setShowResetConfirm(true)}
+                            className="w-full mt-6 py-2 px-4 rounded-xl font-medium transition-all border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                        >
+                            Reset All Grades
+                        </button>
+                    ) : (
+                        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                            <p className="text-sm text-red-700 mb-3">Are you sure you want to reset all grades and 1st Year CGPA?</p>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={handleResetGrades}
+                                    className="flex-1 py-2 px-3 rounded-lg font-medium bg-red-500 hover:bg-red-600 text-white text-sm"
+                                >
+                                    Yes, Reset
+                                </button>
+                                <button
+                                    onClick={() => setShowResetConfirm(false)}
+                                    className="flex-1 py-2 px-3 rounded-lg font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <SGPAResultsPopup
@@ -424,6 +501,40 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                 subjectName={seePopup.subject?.name}
                 subjectType={seePopup.subject?.type}
             />
+
+            {/* Reset Button */}
+            <div className="px-4">
+                {!showCIEResetConfirm ? (
+                    <button
+                        onClick={() => setShowCIEResetConfirm(true)}
+                        className="w-full py-2 px-4 rounded-xl font-medium transition-all border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                    >
+                        Reset All Marks
+                    </button>
+                ) : (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                        <p className="text-sm text-red-700 mb-3">Are you sure you want to reset all marks?</p>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={handleResetCIE}
+                                className="flex-1 py-2 px-3 rounded-lg font-medium bg-red-500 hover:bg-red-600 text-white text-sm"
+                            >
+                                Yes, Reset
+                            </button>
+                            <button
+                                onClick={() => setShowCIEResetConfirm(false)}
+                                className="flex-1 py-2 px-3 rounded-lg font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="px-4">
+                <GradeScaleReference />
+            </div>
         </div>
     );
 };

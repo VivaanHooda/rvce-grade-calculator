@@ -166,6 +166,7 @@ const SubjectForm = ({
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Quiz 1 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
           <input
             type="text"
+            inputMode="decimal"
             value={inputValues.q1}
             onChange={(e) => handleInputChange('q1', e.target.value)}
             className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-base sm:text-lg font-medium outline-none bg-white text-gray-900"
@@ -183,6 +184,7 @@ const SubjectForm = ({
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Quiz 2 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
           <input
             type="text"
+            inputMode="decimal"
             value={inputValues.q2}
             onChange={(e) => handleInputChange('q2', e.target.value)}
             className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-base sm:text-lg font-medium outline-none bg-white text-gray-900"
@@ -200,6 +202,7 @@ const SubjectForm = ({
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Test 1 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
           <input
             type="text"
+            inputMode="decimal"
             value={inputValues.t1}
             onChange={(e) => handleInputChange('t1', e.target.value)}
             className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-base sm:text-lg font-medium outline-none bg-white text-gray-900"
@@ -217,6 +220,7 @@ const SubjectForm = ({
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Test 2 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
           <input
             type="text"
+            inputMode="decimal"
             value={inputValues.t2}
             onChange={(e) => handleInputChange('t2', e.target.value)}
             className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-base sm:text-lg font-medium outline-none bg-white text-gray-900"
@@ -238,6 +242,7 @@ const SubjectForm = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">MATLAB (Max: 20)</label>
             <input
               type="text"
+              inputMode="decimal"
               value={inputValues.matlab}
               onChange={(e) => handleInputChange('matlab', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
@@ -254,6 +259,7 @@ const SubjectForm = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 20)</label>
             <input
               type="text"
+              inputMode="decimal"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
@@ -278,6 +284,7 @@ const SubjectForm = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">Lab Internals (Max: 30)</label>
             <input
               type="text"
+              inputMode="decimal"
               value={inputValues.lab}
               onChange={(e) => handleInputChange('lab', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
@@ -408,6 +415,7 @@ const SubjectForm = ({
           <label className="block text-sm font-medium text-gray-700 mb-2">SEE Marks (Max: 50)</label>
           <input
             type="text"
+            inputMode="decimal"
             value={inputValues.see}
             onChange={(e) => handleInputChange('see', e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
@@ -429,6 +437,7 @@ const SubjectForm = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">Lab SEE (Max: 50)</label>
             <input
               type="text"
+              inputMode="decimal"
               value={inputValues.labSee}
               onChange={(e) => handleInputChange('labSee', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"

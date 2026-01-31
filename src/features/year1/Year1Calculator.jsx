@@ -11,6 +11,7 @@ import SubjectCard from '../../components/common/SubjectCard';
 import SEERequirementsPopup from '../../components/common/SEERequirementsPopup';
 import SGPAResultsPopup from '../../components/common/SGPAResultsPopup';
 import CGPAResultsPopup from '../../components/common/CGPAResultsPopup';
+import GradeScaleReference from '../../components/common/GradeScaleReference';
 
 const Year1Calculator = ({ onBack }) => {
     // Navigation State
@@ -32,6 +33,9 @@ const Year1Calculator = ({ onBack }) => {
     const [seePopup, setSeePopup] = useState({ isOpen: false, subject: null, cieTotal: 0 });
     const [sgpaPopup, setSgpaPopup] = useState({ isOpen: false, sgpa: 0, cycleName: '' });
     const [cgpaPopup, setCgpaPopup] = useState({ isOpen: false, cgpa: 0 });
+    const [validationError, setValidationError] = useState({ physics: '', chemistry: '', cgpa: '' });
+    const [showResetConfirm, setShowResetConfirm] = useState({ physics: false, chemistry: false });
+    const [showCIEResetConfirm, setShowCIEResetConfirm] = useState(false);
 
     // Persist navigation
     useEffect(() => {
@@ -123,6 +127,17 @@ const Year1Calculator = ({ onBack }) => {
         const subjects = cycle === 'physics' ? physicsSubjectsCGPA : chemistrySubjectsCGPA;
         const cycleGrades = finalCGPAGrades[cycle] || {};
 
+        // Validate all subjects have grades
+        const missingSubjects = subjects.filter(s => cycleGrades[s.id] === undefined || cycleGrades[s.id] === '');
+        if (missingSubjects.length > 0) {
+            setValidationError(prev => ({
+                ...prev,
+                [cycle]: `Please enter grades for all ${cycle === 'physics' ? 'Physics' : 'Chemistry'} cycle subjects`
+            }));
+            return;
+        }
+        setValidationError(prev => ({ ...prev, [cycle]: '' }));
+
         let totalGradePoints = 0;
         let totalCredit = 0;
 
@@ -144,6 +159,26 @@ const Year1Calculator = ({ onBack }) => {
     };
 
     const handleComputeCGPA = () => {
+        // Validate both cycles are fully entered
+        const missingPhysics = physicsSubjectsCGPA.filter(s =>
+            finalCGPAGrades.physics?.[s.id] === undefined || finalCGPAGrades.physics?.[s.id] === ''
+        );
+        const missingChemistry = chemistrySubjectsCGPA.filter(s =>
+            finalCGPAGrades.chemistry?.[s.id] === undefined || finalCGPAGrades.chemistry?.[s.id] === ''
+        );
+
+        if (missingPhysics.length > 0 && missingChemistry.length > 0) {
+            setValidationError(prev => ({ ...prev, cgpa: 'Please enter grades for both Physics and Chemistry cycles' }));
+            return;
+        } else if (missingPhysics.length > 0) {
+            setValidationError(prev => ({ ...prev, cgpa: 'Please enter all Physics cycle grades first' }));
+            return;
+        } else if (missingChemistry.length > 0) {
+            setValidationError(prev => ({ ...prev, cgpa: 'Please enter all Chemistry cycle grades first' }));
+            return;
+        }
+        setValidationError(prev => ({ ...prev, cgpa: '' }));
+
         let totalGradePoints = 0;
         let totalCredit = 0;
 
@@ -166,6 +201,21 @@ const Year1Calculator = ({ onBack }) => {
         const cgpa = totalCredit > 0 ? (totalGradePoints / totalCredit) : 0;
         const roundedCGPA = (Math.ceil(cgpa * 100 - 0.00001) / 100).toFixed(2);
         setCgpaPopup({ isOpen: true, cgpa: roundedCGPA });
+    };
+
+    const handleResetCycle = (cycle) => {
+        setFinalCGPAGrades(prev => ({
+            ...prev,
+            [cycle]: {}
+        }));
+        setValidationError(prev => ({ ...prev, [cycle]: '' }));
+        setShowResetConfirm(prev => ({ ...prev, [cycle]: false }));
+    };
+
+    const handleResetCIE = () => {
+        setFormData({});
+        setSubjectGrades({});
+        setShowCIEResetConfirm(false);
     };
 
     const handleInputChange = useCallback((subjectId, field, value) => {
@@ -238,6 +288,37 @@ const Year1Calculator = ({ onBack }) => {
                         >
                             Compute SGPA
                         </button>
+                        {validationError.physics && (
+                            <p className="mt-2 text-sm text-amber-600 flex items-center gap-1">
+                                <span>⚠</span> {validationError.physics}
+                            </p>
+                        )}
+                        {!showResetConfirm.physics ? (
+                            <button
+                                onClick={() => setShowResetConfirm(prev => ({ ...prev, physics: true }))}
+                                className="w-full mt-3 py-2 px-4 rounded-xl font-medium transition-all border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                            >
+                                Reset Grades
+                            </button>
+                        ) : (
+                            <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl">
+                                <p className="text-sm text-red-700 mb-2">Are you sure you want to reset all Physics cycle grades?</p>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleResetCycle('physics')}
+                                        className="flex-1 py-2 px-3 rounded-lg font-medium bg-red-500 hover:bg-red-600 text-white text-sm"
+                                    >
+                                        Yes, Reset
+                                    </button>
+                                    <button
+                                        onClick={() => setShowResetConfirm(prev => ({ ...prev, physics: false }))}
+                                        className="flex-1 py-2 px-3 rounded-lg font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Chemistry Cycle */}
@@ -266,6 +347,37 @@ const Year1Calculator = ({ onBack }) => {
                         >
                             Compute SGPA
                         </button>
+                        {validationError.chemistry && (
+                            <p className="mt-2 text-sm text-amber-600 flex items-center gap-1">
+                                <span>⚠</span> {validationError.chemistry}
+                            </p>
+                        )}
+                        {!showResetConfirm.chemistry ? (
+                            <button
+                                onClick={() => setShowResetConfirm(prev => ({ ...prev, chemistry: true }))}
+                                className="w-full mt-3 py-2 px-4 rounded-xl font-medium transition-all border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                            >
+                                Reset Grades
+                            </button>
+                        ) : (
+                            <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl">
+                                <p className="text-sm text-red-700 mb-2">Are you sure you want to reset all Chemistry cycle grades?</p>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleResetCycle('chemistry')}
+                                        className="flex-1 py-2 px-3 rounded-lg font-medium bg-red-500 hover:bg-red-600 text-white text-sm"
+                                    >
+                                        Yes, Reset
+                                    </button>
+                                    <button
+                                        onClick={() => setShowResetConfirm(prev => ({ ...prev, chemistry: false }))}
+                                        className="flex-1 py-2 px-3 rounded-lg font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -276,6 +388,11 @@ const Year1Calculator = ({ onBack }) => {
                     >
                         Compute CGPA
                     </button>
+                    {validationError.cgpa && (
+                        <p className="mt-2 text-sm text-amber-600 flex items-center justify-center gap-1">
+                            <span>⚠</span> {validationError.cgpa}
+                        </p>
+                    )}
                 </div>
 
                 <SGPAResultsPopup
@@ -341,6 +458,40 @@ const Year1Calculator = ({ onBack }) => {
                 subjectName={seePopup.subject?.name}
                 subjectType={seePopup.subject?.type}
             />
+
+            {/* Reset Button */}
+            <div className="px-4">
+                {!showCIEResetConfirm ? (
+                    <button
+                        onClick={() => setShowCIEResetConfirm(true)}
+                        className="w-full py-2 px-4 rounded-xl font-medium transition-all border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                    >
+                        Reset All Marks
+                    </button>
+                ) : (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                        <p className="text-sm text-red-700 mb-3">Are you sure you want to reset all marks?</p>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={handleResetCIE}
+                                className="flex-1 py-2 px-3 rounded-lg font-medium bg-red-500 hover:bg-red-600 text-white text-sm"
+                            >
+                                Yes, Reset
+                            </button>
+                            <button
+                                onClick={() => setShowCIEResetConfirm(false)}
+                                className="flex-1 py-2 px-3 rounded-lg font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="px-4">
+                <GradeScaleReference />
+            </div>
         </div>
     );
 };

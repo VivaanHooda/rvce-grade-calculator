@@ -22,6 +22,22 @@ const YearSelection = ({ onSelect }) => {
                 </div>
             </div>
 
+            {/* RVCE Website Link */}
+            <div className="flex justify-center px-4">
+                <a
+                    href="https://rvce.edu.in/academics_and_examinations/rvce_scheme_syllabus/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white border border-gray-200 rounded-2xl sm:rounded-3xl p-4 sm:p-6 hover:border-blue-300 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-98 group"
+                >
+                    <img
+                        src="/rvce.png"
+                        alt="RVCE"
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                    />
+                </a>
+            </div>
+
             <div className="grid gap-4 sm:gap-6 md:gap-8 max-w-2xl mx-auto px-4">
                 {years.map((year) => (
                     <button
