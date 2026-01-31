@@ -57,7 +57,7 @@ export const calculateCIE = (data, subjectType) => {
 
 // Calculate final grade
 export const calculateGrade = (cie, see) => {
-  const total = (cie + see) / 2;
+  const total = Math.ceil(((cie + see) / 2) - 0.00001);
   const gradePoint = Math.min(10, Math.max(0, Math.floor(total / 10) + 1));
   return {
     gradePoint,
@@ -79,7 +79,9 @@ export const calculateSGPA = (subjects, grades) => {
     }
   });
 
-  return totalCredits > 0 ? (weightedSum / totalCredits).toFixed(2) : '0.00';
+  if (totalCredits === 0) return '0.00';
+  const sgpa = weightedSum / totalCredits;
+  return (Math.ceil(sgpa * 100 - 0.00001) / 100).toFixed(2);
 };
 
 // Calculate CGPA from SGPA values
@@ -98,14 +100,21 @@ export const calculateCGPA = (sgpaValues, credits) => {
     }
   });
 
-  return totalCredits > 0 ? (weightedSum / totalCredits).toFixed(2) : '0.00';
+  if (totalCredits === 0) return '0.00';
+  const cgpa = weightedSum / totalCredits;
+  return (Math.ceil(cgpa * 100 - 0.00001) / 100).toFixed(2);
 };
 
 // Calculate SEE required for target grade
 export const calculateSEERequired = (cieTotal, targetGrade) => {
-  // Formula: (targetGrade - 1) * 10 = (CIE + SEE) / 2
-  // So: SEE = (targetGrade - 1) * 20 - CIE
-  return (targetGrade - 1) * 20 - cieTotal;
+  // Formula: Math.ceil((CIE + SEE) / 2) >= (targetGrade - 1) * 10
+  // So: (CIE + SEE) / 2 > (targetGrade - 1) * 10 - 1
+  // SEE > (targetGrade - 1) * 20 - 2 - CIE
+  // Wait, no. If target is 90, we need (CIE+SEE)/2 > 89.0
+  // So CIE + SEE > 178. So CIE + SEE >= 179.
+  // SEE >= 179 - CIE.
+  // Normal was 180 - CIE. So it is (targetGrade - 1) * 20 - 1 - CIE.
+  return (targetGrade - 1) * 20 - 1 - cieTotal;
 };
 
 // Get max value for input field

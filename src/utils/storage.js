@@ -5,7 +5,13 @@ export const STORAGE_KEYS = {
   FINAL_CGPA_GRADES: 'rvce_calculator_final_cgpa_grades',
   CURRENT_MODE: 'rvce_calculator_current_mode',
   CURRENT_CYCLE: 'rvce_calculator_current_cycle',
-  FIRST_YEAR_CGPA: 'rvce_calculator_first_year_cgpa'
+  FIRST_YEAR_CGPA: 'rvce_calculator_first_year_cgpa',
+  CURRENT_YEAR: 'rvce_calculator_current_year',
+  CURRENT_SEMESTER: 'rvce_calculator_current_semester',
+  CURRENT_BRANCH: 'rvce_calculator_current_branch',
+  SUBJECT_GRADES: 'rvce_calculator_subject_grades',
+  YEAR1_GRADES: 'rvce_calculator_year1_grades',
+  SEM3_GRADES: 'rvce_calculator_sem3_grades'
 };
 
 // Helper functions for localStorage
