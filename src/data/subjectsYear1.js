@@ -4,7 +4,7 @@ export const physicsSubjectsCGPA = [
     { id: 'phy', name: 'Physics', Credit: 4, type: 'lab' },
     { id: 'esc-p', name: 'ESC', Credit: 3, type: 'regular' },
     { id: 'etc', name: 'ETC', Credit: 3, type: 'regular' },
-    { id: 'core', name: 'Core', Credit: 3, type: 'regular' },
+    { id: 'core', name: 'Core', Credit: 3, type: 'lab' },
     { id: 'idea-lab', name: 'IDEA Lab', Credit: 1, type: 'regular' },
     { id: 'comm-eng-p', name: 'Communicative English', Credit: 1, type: 'regular' },
     { id: 'kannada', name: 'Kannada', Credit: 1, type: 'regular' }
@@ -27,7 +27,7 @@ export const physicsSubjects = [
     { id: 'phy', name: 'Physics', Credit: 4, type: 'lab' },
     { id: 'esc-p', name: 'ESC', Credit: 3, type: 'regular' },
     { id: 'etc', name: 'ETC', Credit: 3, type: 'regular' },
-    { id: 'core', name: 'Core', Credit: 3, type: 'regular' }
+    { id: 'core', name: 'Core', Credit: 3, type: 'lab' }
 ];
 
 export const chemistrySubjects = [
