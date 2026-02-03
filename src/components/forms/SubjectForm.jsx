@@ -32,7 +32,8 @@ const SubjectForm = ({
     el: data.el || '',
     lab: data.lab || '',
     see: data.see || '',
-    labSee: data.labSee || ''
+    labSee: data.labSee || '',
+    basketEl: data.basketEl || ''
   }));
 
   // Refs for keyboard navigation
@@ -45,7 +46,8 @@ const SubjectForm = ({
     el: useRef(),
     lab: useRef(),
     see: useRef(),
-    labSee: useRef()
+    labSee: useRef(),
+    basketEl: useRef()
   };
 
   // Order for navigation
@@ -53,6 +55,7 @@ const SubjectForm = ({
   if (subject.type === 'math') navOrder.push('matlab', 'el');
   if (subject.type === 'lab' || subject.type === 'dsa-lab' || subject.type === 'ece-lab') navOrder.push('lab', 'el');
   if (subject.type === 'regular' || subject.type === '50-mark') navOrder.push('el');
+  if (subject.type === 'basket') navOrder.push('el', 'basketEl');
 
   if (currentMode === 'final-grade') {
     if (subject.type === 'dsa-lab' || subject.type === 'ece-lab') {
@@ -146,7 +149,8 @@ const SubjectForm = ({
       el: data.el || '',
       lab: data.lab || '',
       see: data.see || '',
-      labSee: data.labSee || ''
+      labSee: data.labSee || '',
+      basketEl: data.basketEl || ''
     });
   }, [subject.id, data]);
 
@@ -409,6 +413,65 @@ const SubjectForm = ({
         </div>
       )}
 
+      {subject.type === '50-mark' && (
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 20)</label>
+          <input
+            type="text"
+            inputMode="decimal"
+            value={inputValues.el}
+            onChange={(e) => handleInputChange('el', e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+            ref={refs.el}
+            onKeyDown={(e) => handleKeyDown(e, 'el')}
+          />
+          {validationMessage.show && validationMessage.field === 'el' && (
+            <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+              {validationMessage.message}
+            </div>
+          )}
+        </div>
+      )}
+
+      {subject.type === 'basket' && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">EL (Max: 20)</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={inputValues.el}
+              onChange={(e) => handleInputChange('el', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+              ref={refs.el}
+              onKeyDown={(e) => handleKeyDown(e, 'el')}
+            />
+            {validationMessage.show && validationMessage.field === 'el' && (
+              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Basket EL (Max: 20)</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={inputValues.basketEl}
+              onChange={(e) => handleInputChange('basketEl', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-center text-lg font-medium outline-none bg-white text-gray-900"
+              ref={refs.basketEl}
+              onKeyDown={(e) => handleKeyDown(e, 'basketEl')}
+            />
+            {validationMessage.show && validationMessage.field === 'basketEl' && (
+              <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* SEE Marks Input */}
       {currentMode === 'final-grade' && subject.type === '50-mark' && (
         <div className="relative">
@@ -452,7 +515,7 @@ const SubjectForm = ({
             )}
           </div>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Theory SEE (Max: 50)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Theory SEE (Max: 100)</label>
             <input
               type="text"
               value={inputValues.see}

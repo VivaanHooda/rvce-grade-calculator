@@ -101,13 +101,25 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
             const labSee = parseFloat(data.labSee) || 0;
 
             let totalMarks;
+            let normalizedTotal;
+
             if (subject.type === 'dsa-lab' || subject.type === 'ece-lab') {
-                totalMarks = cieTotal + labSee + see;
-            } else {
+                // CIE (150) + Lab SEE (50) + Theory SEE (100) = 300 max
+                // Then (CIE + SEE) / 2 = 150 max
+                // Then normalize 150 → 100 for grade calculation
+                totalMarks = cieTotal + labSee + see; // Max: 300
+                const average = totalMarks / 2; // Max: 150
+                normalizedTotal = Math.ceil((average / 150 * 100) - 0.00001); // Normalize to 100
+            } else if (subject.type === '50-mark') {
+                // CIE (50) + SEE (50) = 100 max - already normalized
                 totalMarks = cieTotal + see;
+                normalizedTotal = Math.ceil(totalMarks - 0.00001); // Already out of 100
+            } else {
+                // Regular, lab, math, basket: CIE (100) + SEE (100) = 200 max
+                totalMarks = cieTotal + see;
+                normalizedTotal = Math.ceil((totalMarks / 2) - 0.00001); // 200 / 2 = 100
             }
 
-            const normalizedTotal = Math.ceil((totalMarks / 2) - 0.00001);
             const gradePoint = Math.min(10, Math.max(0, Math.floor(normalizedTotal / 10) + 1));
 
             setSubjectGrades(prev => ({

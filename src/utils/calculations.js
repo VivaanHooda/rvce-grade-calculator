@@ -20,8 +20,8 @@ export const calculateCIE = (data, subjectType) => {
   const t1 = parseFloat(data.t1) || 0;
   const t2 = parseFloat(data.t2) || 0;
 
-  const quizMarks = Math.max(q1, q2);
-  const testMarks = Math.max(t1, t2);
+  const quizMarks = (q1 + q2) / 2;  // Average of two quizzes
+  const testMarks = (t1 + t2) / 2;  // Average of two tests
 
   switch (subjectType) {
     case 'math': {
@@ -30,16 +30,40 @@ export const calculateCIE = (data, subjectType) => {
       return quizMarks + testMarks + matlab + el;
     }
     case 'lab': {
+      // Year 1 lab subjects (Physics, Chemistry, PLC, Core): 
+      // Quiz 1 (10) + Quiz 2 (10) + Test 1 (50) + Test 2 (50) = 120, reduced to 40
+      // Lab (30) + EL (30) = 60
+      // Total CIE = 40 + 30 + 30 = 100
       const lab = parseFloat(data.lab) || 0;
       const el = parseFloat(data.el) || 0;
-      return quizMarks + testMarks + lab + el;
+      const q1 = parseFloat(data.q1) || 0;
+      const q2 = parseFloat(data.q2) || 0;
+      const t1 = parseFloat(data.t1) || 0;
+      const t2 = parseFloat(data.t2) || 0;
+      const quizTestTotal = q1 + q2 + t1 + t2; // Max: 120
+      const reducedMarks = (quizTestTotal / 120) * 40; // Reduce to 40
+      return reducedMarks + lab + el; // 40 + 30 + 30 = 100
     }
     case 'regular': {
       const el = parseFloat(data.el) || 0;
       return quizMarks + testMarks + el;
     }
-    case 'dsa-lab': {
-      // DSA/OS: Quiz 1, Quiz 2 (10 each), Test 1, Test 2 (50 each), Lab (50), EL (40)
+    case 'basket': {
+      // Basket Course: Quiz + Test → reduced to 60, EL (20) + Basket EL (20) = 40
+      // Total CIE = 60 + 20 + 20 = 100
+      const el = parseFloat(data.el) || 0;
+      const basketEl = parseFloat(data.basketEl) || 0;
+      const q1 = parseFloat(data.q1) || 0;
+      const q2 = parseFloat(data.q2) || 0;
+      const t1 = parseFloat(data.t1) || 0;
+      const t2 = parseFloat(data.t2) || 0;
+      const quizTestTotal = q1 + q2 + t1 + t2; // Max: 120
+      const reducedMarks = (quizTestTotal / 120) * 60; // Reduce to 60
+      return reducedMarks + el + basketEl; // 60 + 20 + 20 = 100
+    }
+    case 'dsa-lab':
+    case 'ece-lab': {
+      // DSA/OS/ECE Lab: Quiz 1, Quiz 2 (10 each), Test 1, Test 2 (50 each), Lab (50), EL (40)
       // CIE Total: 150 = (test1 + test2) * 0.4 + quiz1 + quiz2 + Lab + EL
       // = (50 + 50) * 0.4 + 10 + 10 + 50 + 40 = 40 + 20 + 50 + 40 = 150
       const lab = parseFloat(data.lab) || 0;
@@ -49,6 +73,17 @@ export const calculateCIE = (data, subjectType) => {
       const q1 = parseFloat(data.q1) || 0;
       const q2 = parseFloat(data.q2) || 0;
       return (t1 + t2) * 0.4 + q1 + q2 + lab + el;
+    }
+    case '50-mark': {
+      // 50-mark courses: Quiz 1, Quiz 2 (5 each = 10 total), Test 1, Test 2 (25 each = 50 total, reduced to 20), EL (20)
+      // CIE Total: 50 = quiz1 + quiz2 + (test1 + test2) / 50 * 20 + EL
+      // = 5 + 5 + (25 + 25) / 50 * 20 + 20 = 10 + 20 + 20 = 50
+      const el = parseFloat(data.el) || 0;
+      const t1 = parseFloat(data.t1) || 0;
+      const t2 = parseFloat(data.t2) || 0;
+      const q1 = parseFloat(data.q1) || 0;
+      const q2 = parseFloat(data.q2) || 0;
+      return q1 + q2 + ((t1 + t2) / 50 * 20) + el;
     }
     default:
       return 0;
@@ -141,7 +176,10 @@ export const getMaxValue = (field, subjectType) => {
       if (subjectType === 'math') return 20;
       if (subjectType === 'lab') return 30;
       if (subjectType === '50-mark') return 20; // 50-mark courses: 20 marks EL
+      if (subjectType === 'basket') return 20; // Basket courses: 20 marks EL
       return 40; // Regular subjects, dsa-lab, and ece-lab: 40 marks
+    case 'basketEl':
+      return 20; // Basket EL: 20 marks
     case 'labSee':
       return 50; // Lab SEE max: 50 marks (for dsa-lab and ece-lab subjects)
     case 'see':
