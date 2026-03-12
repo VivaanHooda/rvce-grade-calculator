@@ -32,6 +32,9 @@ const YearSelection = ({ onSelect }) => {
     return (
         <div className="space-y-8 sm:space-y-12">
             <div className="text-center px-4">
+                <div className="flex justify-center mb-4 sm:mb-5">
+                    <img src="/cclogo.png" alt="Coding Club Logo" className="h-16 sm:h-20 md:h-24 w-auto object-contain" />
+                </div>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight">
                     RVCE <span className="text-blue-600">Grade</span> Calculator
                 </h1>
