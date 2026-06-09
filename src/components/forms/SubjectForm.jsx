@@ -9,6 +9,7 @@ import { STORAGE_KEYS, saveToStorage } from '../../utils/storage';
 // Ideally, this should be in a Context or Redux, but to stick to the current pattern:
 // We will rely on props for formData updates.
 
+const EMPTY_OBJ = {};
 
 /**
  * 
@@ -29,7 +30,7 @@ const SubjectForm = ({
   onShowSEERequirements,
   onInputChange // New standard prop
 }) => {
-  const data = formData[subject.id] || {};
+  const data = formData[subject.id] || EMPTY_OBJ;
   const result = subjectGrades[subject.id];
   const [validationMessage, setValidationMessage] = useState({ show: false, field: '', message: '' });
 
@@ -61,10 +62,13 @@ const SubjectForm = ({
   };
 
   // Order for navigation
-  let navOrder = ['q1', 'q2', 't1', 't2'];
+  let navOrder = [];
+  if (subject.type !== 'project') {
+    navOrder = ['q1', 'q2', 't1', 't2'];
+  }
   if (subject.type === 'math') navOrder.push('matlab', 'el');
   if (subject.type === 'lab' || subject.type === 'dsa-lab' || subject.type === 'ece-lab') navOrder.push('lab', 'el');
-  if (subject.type === 'regular' || subject.type === '50-mark') navOrder.push('el');
+  if (subject.type === 'regular' || subject.type === '50-mark' || subject.type === 'project') navOrder.push('el');
   if (subject.type === 'basket') navOrder.push('el', 'basketEl');
 
   if (currentMode === 'final-grade') {
@@ -187,87 +191,110 @@ const SubjectForm = ({
           {subject.Credit} Credit
         </span>
       </div>
-      {/* Wrapped everything in form tags and added requried attribute to all input fields 
+      {/* Wrapped everything in form tags and added required attribute to all input fields 
           This prevents form submission if any required field is empty.*/}
       <form onSubmit={handleFormSubmit} className="space-y-4 sm:space-y-6">
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        {/* Quiz 1 */}
-        <div className="relative">
-          <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Quiz 1 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
-          <input
-            type="text"
-            inputMode="decimal"
-            value={inputValues.q1}
-            onChange={(e) => handleInputChange('q1', e.target.value)}
-            className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
-            ref={refs.q1}
-            onKeyDown={(e) => handleKeyDown(e, 'q1')}
-            required = {true}
-          />
-          {validationMessage.show && validationMessage.field === 'q1' && (
-            <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
+      {subject.type !== 'project' && (
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          {/* Quiz 1 */}
+          <div className="relative">
+            <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Quiz 1 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={inputValues.q1}
+              onChange={(e) => handleInputChange('q1', e.target.value)}
+              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              ref={refs.q1}
+              onKeyDown={(e) => handleKeyDown(e, 'q1')}
+              required={true}
+            />
+            {validationMessage.show && validationMessage.field === 'q1' && (
+              <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+          {/* Quiz 2 */}
+          <div className="relative">
+            <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Quiz 2 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={inputValues.q2}
+              onChange={(e) => handleInputChange('q2', e.target.value)}
+              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              ref={refs.q2}
+              onKeyDown={(e) => handleKeyDown(e, 'q2')}
+              required={true}
+            />
+            {validationMessage.show && validationMessage.field === 'q2' && (
+              <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+          {/* Test 1 */}
+          <div className="relative">
+            <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Test 1 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={inputValues.t1}
+              onChange={(e) => handleInputChange('t1', e.target.value)}
+              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              ref={refs.t1}
+              onKeyDown={(e) => handleKeyDown(e, 't1')}
+              required={true}
+            />
+            {validationMessage.show && validationMessage.field === 't1' && (
+              <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
+          {/* Test 2 */}
+          <div className="relative">
+            <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Test 2 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={inputValues.t2}
+              onChange={(e) => handleInputChange('t2', e.target.value)}
+              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              ref={refs.t2}
+              onKeyDown={(e) => handleKeyDown(e, 't2')}
+              required={true}
+            />
+            {validationMessage.show && validationMessage.field === 't2' && (
+              <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
+                {validationMessage.message}
+              </div>
+            )}
+          </div>
         </div>
-        {/* Quiz 2 */}
+      )}
+
+      {subject.type === 'project' && (
         <div className="relative">
-          <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Quiz 2 (Max: {subject.type === '50-mark' ? '5' : '10'})</label>
+          <label className="block mb-2 text-sm font-medium text-gray-700">Project CIE Marks (Max: 50)</label>
           <input
             type="text"
             inputMode="decimal"
-            value={inputValues.q2}
-            onChange={(e) => handleInputChange('q2', e.target.value)}
-            className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
-            ref={refs.q2}
-            onKeyDown={(e) => handleKeyDown(e, 'q2')}
-            required = {true}
-          />
-          {validationMessage.show && validationMessage.field === 'q2' && (
-            <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
-        </div>
-        {/* Test 1 */}
-        <div className="relative">
-          <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Test 1 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
-          <input
-            type="text"
-            inputMode="decimal"
-            value={inputValues.t1}
-            onChange={(e) => handleInputChange('t1', e.target.value)}
-            className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
-            ref={refs.t1}
-            onKeyDown={(e) => handleKeyDown(e, 't1')}
+            value={inputValues.el}
+            onChange={(e) => handleInputChange('el', e.target.value)}
+            className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            ref={refs.el}
+            onKeyDown={(e) => handleKeyDown(e, 'el')}
             required={true}
           />
-          {validationMessage.show && validationMessage.field === 't1' && (
-            <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
+          {validationMessage.show && validationMessage.field === 'el' && (
+            <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-sm text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full animate-fade-in">
               {validationMessage.message}
             </div>
           )}
         </div>
-        {/* Test 2 */}
-        <div className="relative">
-          <label className="block mb-2 text-xs font-medium text-gray-700 sm:text-sm">Test 2 (Max: {subject.type === '50-mark' ? '25' : '50'})</label>
-          <input
-            type="text"
-            inputMode="decimal"
-            value={inputValues.t2}
-            onChange={(e) => handleInputChange('t2', e.target.value)}
-            className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
-            ref={refs.t2}
-            onKeyDown={(e) => handleKeyDown(e, 't2')}
-            required={true}
-          />
-          {validationMessage.show && validationMessage.field === 't2' && (
-            <div className="absolute left-0 z-10 px-3 py-2 mt-1 text-xs text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-lg top-full sm:text-sm animate-fade-in">
-              {validationMessage.message}
-            </div>
-          )}
-        </div>
-      </div>
+      )}
 
       {/* Subject-specific fields */}
       {subject.type === 'math' && (
@@ -512,7 +539,7 @@ const SubjectForm = ({
       )}
 
       {/* SEE Marks Input */}
-      {currentMode === 'final-grade' && subject.type === '50-mark' && (
+      {currentMode === 'final-grade' && (subject.type === '50-mark' || subject.type === 'project') && (
         <div className="relative">
           <label className="block mb-2 text-sm font-medium text-gray-700">SEE Marks (Max: 50)</label>
           <input
@@ -576,7 +603,7 @@ const SubjectForm = ({
         </div>
       )}
 
-      {currentMode === 'final-grade' && subject.type !== 'dsa-lab' && subject.type !== 'ece-lab' && subject.type !== '50-mark' && (
+      {currentMode === 'final-grade' && subject.type !== 'dsa-lab' && subject.type !== 'ece-lab' && subject.type !== '50-mark' && subject.type !== 'project' && (
         <div className="relative">
           <label className="block mb-2 text-sm font-medium text-gray-700">SEE Marks (Max: 100)</label>
           <input
@@ -629,8 +656,8 @@ const SubjectForm = ({
               <div className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">
                 CIE: {result.cieTotal}
               </div>
-              <div className="text-sm text-gray-600 sm:text-base">
-                out of {subject.type === 'dsa-lab' || subject.type === 'ece-lab' ? '150' : subject.type === '50-mark' ? '50' : '100'}
+              <div className="text-sm sm:text-base text-gray-600">
+                out of {subject.type === 'dsa-lab' || subject.type === 'ece-lab' ? '150' : (subject.type === '50-mark' || subject.type === 'project') ? '50' : '100'}
               </div>
             </div>
           ) : (
@@ -643,8 +670,8 @@ const SubjectForm = ({
                 <div className="text-sm text-gray-600 sm:text-base">
                   CIE: {result.cieTotal} | Total: {(((result.cieTotal + (result.labSee || 0) + result.see)) / 2).toFixed(2)}/150
                 </div>
-              ) : subject.type === '50-mark' ? (
-                <div className="text-sm text-gray-600 sm:text-base">
+              ) : (subject.type === '50-mark' || subject.type === 'project') ? (
+                <div className="text-sm sm:text-base text-gray-600">
                   CIE: {result.cieTotal} | Total: {((result.cieTotal + result.see) / 2).toFixed(2)}/50
                 </div>
               ) : (
