@@ -273,6 +273,8 @@ const Year1Calculator = ({ onBack }) => {
                             </span>
                         </div>
                         <div className="space-y-2 sm:space-y-3">
+                            
+                            {/* Diplay the subjects present in physics cycle to enter final grade */}
                             {physicsSubjectsCGPA.map((subject) => (
                                 <SubjectCard
                                     key={subject.id}
@@ -281,6 +283,7 @@ const Year1Calculator = ({ onBack }) => {
                                     onGradeChange={(id, val) => handleGradeChange('physics', id, val)}
                                 />
                             ))}
+
                         </div>
                         <button
                             onClick={() => handleComputeSGPA('physics')}
@@ -460,6 +463,7 @@ const Year1Calculator = ({ onBack }) => {
             />
 
             {/* Reset Button */}
+            {/* TODO: Make it a common componenet */}
             <div className="px-4">
                 {!showCIEResetConfirm ? (
                     <button

@@ -15,6 +15,8 @@ export const getGradeLetter = (gradePoint) => {
 
 // Calculate CIE for different subject types
 export const calculateCIE = (data, subjectType) => {
+
+  
   const q1 = parseFloat(data.q1) || 0;
   const q2 = parseFloat(data.q2) || 0;
   const t1 = parseFloat(data.t1) || 0;
