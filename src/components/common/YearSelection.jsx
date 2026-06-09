@@ -25,7 +25,7 @@ const YearSelection = ({ onSelect }) => {
     const years = [
         { id: 'year1', title: '1st Year', description: 'Physics & Chemistry Cycles', number: '1' },
         { id: 'year2', title: '2nd Year', description: '3rd & 4th Semesters', number: '2' },
-        { id: 'year3', title: '3rd Year', description: 'Coming Soon', disabled: true },
+        { id: 'year3', title: '3rd Year', description: '5th & 6th Semesters', number: '3' },
         { id: 'year4', title: '4th Year', description: 'Coming Soon', disabled: true }
     ];
 

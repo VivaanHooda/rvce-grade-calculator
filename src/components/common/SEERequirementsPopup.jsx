@@ -9,7 +9,8 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
 
   // Check if this is a dsa-lab type subject (DSA, OS, ADLD)
   const isDsaLab = subjectType === 'dsa-lab';
-  const maxSEE = isDsaLab ? 150 : 100;
+  const isProjectOr50Mark = subjectType === 'project' || subjectType === '50-mark';
+  const maxSEE = isDsaLab ? 150 : isProjectOr50Mark ? 50 : 100;
   const labSEEValue = parseFloat(labSEEMarks) || 0;
   const hasLabSEE = isDsaLab && labSEEValue > 0;
 
@@ -31,6 +32,11 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
       const requiredSEE = (targetGrade - 1) * 30 - cieTotal;
       // If lab SEE marks are set, subtract them to get exam requirement
       return hasLabSEE ? requiredSEE - labSEEValue : requiredSEE;
+    } else if (isProjectOr50Mark) {
+      // For project/50-mark: Total = CIE (50) + SEE (50) = 100
+      // Formula: (targetGrade - 1) * 10 = CIE + SEE
+      // So: SEE = (targetGrade - 1) * 10 - cieTotal
+      return (targetGrade - 1) * 10 - cieTotal;
     } else {
       // For regular subjects: Total = CIE (100) + SEE (100) = 200
       // Formula: (targetGrade - 1) * 10 = (CIE + SEE) / 2
@@ -51,8 +57,8 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
     }
   };
 
-  // For DSA, OS, ADLD: no minimum SEE requirement. For others: 35 minimum
-  const minSEE = isDsaOsAdld ? 0 : 35;
+  // For DSA, OS, ADLD: no minimum SEE requirement. For others: 35% minimum (35 for 100 max, 18 for 50 max)
+  const minSEE = isDsaOsAdld ? 0 : isProjectOr50Mark ? 18 : 35;
   const effectiveMaxSEE = hasLabSEE ? 100 : maxSEE;
   const gradeRequirements = [
     { grade: 10, letter: 'O' },
@@ -70,15 +76,17 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
   // Find the highest achievable grade (first one in the filtered list)
   const highestAchievableGrade = gradeRequirements.length > 0 ? gradeRequirements[0] : null;
 
-  // Calculate grade achievable with SEE = 35
-  const totalAtMinSEE = cieTotal + minSEE;
-  const gradeAt35 = isDsaLab
+  // Calculate grade achievable with SEE = minSEE
+  const totalAtMinSEE = isProjectOr50Mark ? (cieTotal + minSEE) : (cieTotal + minSEE);
+  const gradeAtMin = isDsaLab
     ? Math.min(10, Math.max(0, Math.floor(totalAtMinSEE / 30) + 1))
+    : isProjectOr50Mark
+    ? Math.min(10, Math.max(0, Math.floor(totalAtMinSEE / 10) + 1))
     : Math.min(10, Math.max(0, Math.floor(totalAtMinSEE / 20) + 1));
-  const gradeAt35Item = {
-    grade: gradeAt35,
-    letter: ['F', 'F', 'F', 'F', 'P', 'C', 'B', 'B+', 'A', 'A+', 'O'][gradeAt35] || 'F',
-    seeRequired: 35
+  const gradeAtMinItem = {
+    grade: gradeAtMin,
+    letter: ['F', 'F', 'F', 'F', 'P', 'C', 'B', 'B+', 'A', 'A+', 'O'][gradeAtMin] || 'F',
+    seeRequired: minSEE
   };
 
   const copyToClipboard = (grade, seeRequired) => {
@@ -88,7 +96,7 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
     if (typeof grade === 'string' && grade.startsWith('min-')) {
       const actualGrade = grade.replace('min-', '');
       const gradeLetter = ['F', 'F', 'F', 'F', 'P', 'C', 'B', 'B+', 'A', 'A+', 'O'][actualGrade] || 'F';
-      text = `${subjectName}: Minimum SEE (35 marks) gives Grade ${actualGrade} (${gradeLetter})`;
+      text = `${subjectName}: Minimum SEE (${minSEE} marks) gives Grade ${actualGrade} (${gradeLetter})`;
     } else {
       const gradeLetter = gradeRequirements.find(g => g.grade === grade)?.letter;
       const examNote = hasLabSEE ? ` in SEE Exam (Lab SEE: ${labSEEValue})` : ' in SEE';
@@ -102,7 +110,7 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
 
   const copyAllRequirements = () => {
     const labNote = hasLabSEE ? ` | Lab SEE: ${labSEEValue}` : '';
-    let allText = `SEE Requirements for ${subjectName} (CIE: ${cieTotal}${isDsaLab ? '/150' : '/100'}${labNote}):\n`;
+    let allText = `SEE Requirements for ${subjectName} (CIE: ${cieTotal}${isDsaLab ? '/150' : isProjectOr50Mark ? '/50' : '/100'}${labNote}):\n`;
 
     allText += gradeRequirements.map(item => {
       const seeText = item.seeRequired > effectiveMaxSEE ? 'Unachievable' : `${item.seeRequired.toFixed(1)} marks`;
@@ -130,7 +138,7 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
 
         <div className="mb-4 sm:mb-6">
           <p className="text-sm sm:text-base text-gray-600 mb-2">Subject: <span className="font-semibold">{subjectName}</span></p>
-          <p className="text-sm sm:text-base text-gray-600">CIE Score: <span className="font-semibold">{cieTotal}{isDsaLab ? '/150' : '/100'}</span></p>
+          <p className="text-sm sm:text-base text-gray-600">CIE Score: <span className="font-semibold">{cieTotal}{isDsaLab ? '/150' : isProjectOr50Mark ? '/50' : '/100'}</span></p>
           {isDsaLab && !hasLabSEE && <p className="text-xs sm:text-sm text-blue-600 mt-1">SEE marks out of 150</p>}
           {isDsaLab && hasLabSEE && <p className="text-xs sm:text-sm text-green-600 mt-1">SEE Exam marks out of 100 (Lab SEE: {labSEEValue})</p>}
         </div>
@@ -186,22 +194,22 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
             <div className="flex items-center justify-between p-3 sm:p-4 bg-orange-50 rounded-xl border border-orange-200">
               <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base flex-shrink-0">
-                  {gradeAt35Item.grade}
+                  {gradeAtMinItem.grade}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-gray-900 text-sm sm:text-base">Grade {gradeAt35Item.letter}</div>
+                  <div className="font-semibold text-gray-900 text-sm sm:text-base">Grade {gradeAtMinItem.letter}</div>
                   <div className="text-xs sm:text-sm text-gray-600">
-                    SEE: 35.0
+                    SEE: {minSEE.toFixed(1)}
                   </div>
                 </div>
               </div>
 
               <button
-                onClick={() => copyToClipboard(`min-${gradeAt35Item.grade}`, gradeAt35Item.seeRequired)}
+                onClick={() => copyToClipboard(`min-${gradeAtMinItem.grade}`, gradeAtMinItem.seeRequired)}
                 className="p-2 hover:bg-white rounded-lg transition-colors group flex-shrink-0"
                 title="Copy requirement"
               >
-                <Copy className={`w-4 h-4 ${copiedGrade === `min-${gradeAt35Item.grade}` ? 'text-orange-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                <Copy className={`w-4 h-4 ${copiedGrade === `min-${gradeAtMinItem.grade}` ? 'text-orange-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
               </button>
             </div>
           </div>

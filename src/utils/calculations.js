@@ -87,6 +87,10 @@ export const calculateCIE = (data, subjectType) => {
       const q2 = parseFloat(data.q2) || 0;
       return q1 + q2 + ((t1 + t2) / 50 * 20) + el;
     }
+    case 'project': {
+      // Project course has direct CIE out of 50 marks (entered in el)
+      return parseFloat(data.el) || 0;
+    }
     default:
       return 0;
   }
@@ -179,6 +183,7 @@ export const getMaxValue = (field, subjectType) => {
       if (subjectType === 'lab') return 30;
       if (subjectType === '50-mark') return 20; // 50-mark courses: 20 marks EL
       if (subjectType === 'basket') return 20; // Basket courses: 20 marks EL
+      if (subjectType === 'project') return 50; // Project CIE is directly entered as el (Max 50)
       return 40; // Regular subjects, dsa-lab, and ece-lab: 40 marks
     case 'basketEl':
       return 20; // Basket EL: 20 marks
@@ -186,7 +191,7 @@ export const getMaxValue = (field, subjectType) => {
       return 50; // Lab SEE max: 50 marks (for dsa-lab and ece-lab subjects)
     case 'see':
       // SEE max depends on subject type
-      if (subjectType === '50-mark') return 50; // 50-mark courses: 50 marks SEE
+      if (subjectType === '50-mark' || subjectType === 'project') return 50; // 50-mark and project courses: 50 marks SEE
       return 100; // Regular subjects: 100 marks SEE
     default:
       return 100; // Default max
