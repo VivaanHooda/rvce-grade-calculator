@@ -1,27 +1,27 @@
 import React from 'react';
-import { GraduationCap, Lock } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 
 const SemesterSelection = ({ onSelect, onBack }) => {
     const semesters = [
         { id: 'sem3', name: '3rd Semester', icon: GraduationCap },
-        { id: 'sem4', name: '4th Semester', icon: Lock, disabled: true }
+        { id: 'sem4', name: '4th Semester', icon: GraduationCap }
     ];
 
     return (
         <div className="space-y-6 sm:space-y-8">
-            <div className="flex items-center justify-between mb-6 sm:mb-8 px-4">
+            <div className="flex items-center justify-between px-4 mb-6 sm:mb-8">
                 <button
                     onClick={onBack}
-                    className="text-blue-600 hover:text-blue-700 font-medium text-base sm:text-lg transition-colors"
+                    className="text-base font-medium text-blue-600 transition-colors hover:text-blue-700 sm:text-lg"
                 >
                     ← Back to Year Selection
                 </button>
             </div>
 
-            <div className="grid gap-4 sm:gap-6 max-w-lg mx-auto px-4">
-                <div className="text-center mb-4 sm:mb-6">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Select Semester</h2>
-                    <p className="text-sm sm:text-base text-gray-600">Choose your current semester</p>
+            <div className="grid max-w-lg gap-4 px-4 mx-auto sm:gap-6">
+                <div className="mb-4 text-center sm:mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Select Semester</h2>
+                    <p className="text-sm text-gray-600 sm:text-base">Choose your current semester</p>
                 </div>
                 {semesters.map((sem) => {
                     const Icon = sem.icon;
@@ -42,7 +42,7 @@ const SemesterSelection = ({ onSelect, onBack }) => {
                                 <h3 className={`text-lg sm:text-xl font-semibold transition-colors ${sem.disabled ? 'text-gray-400' : 'text-gray-900 group-hover:text-blue-600'}`}>
                                     {sem.name}
                                 </h3>
-                                {sem.disabled && <p className="text-xs sm:text-sm text-gray-500 mt-1">Coming Soon</p>}
+                                {sem.disabled && <p className="mt-1 text-xs text-gray-500 sm:text-sm">Coming Soon</p>}
                             </div>
                         </button>
                     );

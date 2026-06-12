@@ -9,6 +9,7 @@ import YearSelection from './components/common/YearSelection';
 import SemesterSelection from './components/common/SemesterSelection';
 import Year1Calculator from './features/year1/Year1Calculator';
 import Sem3Calculator from './features/sem3/Sem3Calculator';
+import Sem4Calculator from './features/sem4/Sem4Calculator';
 import Squares from './components/common/Squares';
 
 const CGPACalculator = () => {
@@ -64,6 +65,10 @@ const CGPACalculator = () => {
 
         {currentYear === 'year2' && currentSemester === 'sem3' && (
           <Sem3Calculator onBack={handleBackToSemester} />
+        )}
+
+        {currentYear === 'year2' && currentSemester === 'sem4' && (
+          <Sem4Calculator onBack={handleBackToSemester} />
         )}
 
         {/* Disclaimer Footer - Only show on first page */}

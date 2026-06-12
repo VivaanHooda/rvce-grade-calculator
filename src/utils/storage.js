@@ -11,7 +11,9 @@ export const STORAGE_KEYS = {
   CURRENT_BRANCH: 'rvce_calculator_current_branch',
   SUBJECT_GRADES: 'rvce_calculator_subject_grades',
   YEAR1_GRADES: 'rvce_calculator_year1_grades',
-  SEM3_GRADES: 'rvce_calculator_sem3_grades'
+  SEM3_GRADES: 'rvce_calculator_sem3_grades',
+  SEM3_SGPA: 'rvce_calculator_sem3_sgpa',
+  SEM4_GRADES: 'rvce_calculator_sem4_grades'
 };
 
 // Helper functions for localStorage
