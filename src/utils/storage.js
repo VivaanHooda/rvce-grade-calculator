@@ -12,6 +12,8 @@ export const STORAGE_KEYS = {
   SUBJECT_GRADES: 'rvce_calculator_subject_grades',
   YEAR1_GRADES: 'rvce_calculator_year1_grades',
   SEM3_GRADES: 'rvce_calculator_sem3_grades',
+  SEM3_SGPA: 'rvce_calculator_sem3_sgpa',
+  SEM4_GRADES: 'rvce_calculator_sem4_grades',
   FORM_DATA_SEM6: 'rvce_calculator_form_data_sem6',
   SUBJECT_GRADES_SEM6: 'rvce_calculator_subject_grades_sem6',
   SEM6_GRADES: 'rvce_calculator_sem6_grades'
