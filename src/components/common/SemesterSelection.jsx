@@ -1,8 +1,11 @@
 import React from 'react';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, Lock } from 'lucide-react';
 
-const SemesterSelection = ({ onSelect, onBack }) => {
-    const semesters = [
+const SemesterSelection = ({ year, onSelect, onBack }) => {
+    const semesters = year === 'year3' ? [
+        { id: 'sem5', name: '5th Semester', icon: Lock, disabled: true },
+        { id: 'sem6', name: '6th Semester', icon: GraduationCap }
+    ] : [
         { id: 'sem3', name: '3rd Semester', icon: GraduationCap },
         { id: 'sem4', name: '4th Semester', icon: GraduationCap }
     ];
