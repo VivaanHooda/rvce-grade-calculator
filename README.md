@@ -1,15 +1,11 @@
-# Academic-Calculator
+# RVCE Grade Calculator
 
 ![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-6.0.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-A React-based academic calculator designed to help RVCE students compute CIE scores, SEE requirements, final grades, SGPA, and CGPA with ease.
-
-# Academic Calculator (React + Vite)
-
-A clean and responsive React app built with Vite to compute CIE, SEE requirements, grades, SGPA, and CGPA for Physics and Chemistry cycles, tailored for RVCE's academic system.
+A React-based academic calculator built with Vite for calculating CIE, SEE requirements, grades, SGPA, and CGPA, tailored for RVCE's academic system.
 
 ## Table of Contents
 - [Description](#description)
