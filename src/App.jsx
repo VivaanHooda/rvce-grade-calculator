@@ -74,10 +74,10 @@ const CGPACalculator = () => {
 
         {/* Disclaimer Footer - Only show on first page */}
         {!currentYear && (
-          <div className="fixed left-0 right-0 z-50 pointer-events-none bottom-4 sm:relative sm:bottom-auto sm:max-w-3xl sm:mx-auto sm:mt-12 sm:pt-8 sm:border-t sm:border-hairline">
-            <div className="flex items-center justify-center gap-1.5 px-3 bg-white/90 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none py-2 sm:py-0">
+          <div className="max-w-3xl pt-6 mx-auto mt-8 border-t border-hairline sm:mt-12 sm:pt-8">
+            <div className="flex items-center justify-center gap-1.5 px-2">
               <Info className="flex-shrink-0 w-3 h-3 text-gray-400" />
-              <p className="text-[10px] sm:text-xs text-gray-400 sm:text-gray-500 whitespace-nowrap sm:whitespace-normal">
+              <p className="text-[10px] sm:text-xs text-gray-500 whitespace-nowrap">
                 <span className="font-semibold">Disclaimer:</span> Not official. No responsibility for discrepancies.
               </p>
             </div>
