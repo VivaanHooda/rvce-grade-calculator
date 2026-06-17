@@ -11,7 +11,7 @@ const SGPAInput = ({ cycle, onChange, isPhysics, defaultValue, validationMessage
         defaultValue={defaultValue}
         onChange={(e) => onChange(cycle, e.target.value, e.target)}
         placeholder="Enter SGPA (0-10)"
-        className={`w-full px-3 py-2 border ${borderColor} rounded-lg focus:ring-2 ${focusRing} outline-none bg-white text-gray-900`}
+        className={`w-full px-3 py-2 border ${borderColor} rounded-lg focus:ring-2 ${focusRing} outline-none bg-white text-ink`}
       />
       {validationMessage.show && validationMessage.cycle === cycle && (
         <div className="absolute top-full left-0 mt-1 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm shadow-lg z-10 animate-fade-in">

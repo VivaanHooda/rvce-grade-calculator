@@ -123,30 +123,30 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
   };
 
   return (
-    <div className="glass-dark flex items-center justify-center z-[9999] p-4 animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, width: '100vw', height: '100vh', margin: 'calc(-1 * env(safe-area-inset-top)) calc(-1 * env(safe-area-inset-right)) calc(-1 * env(safe-area-inset-bottom)) calc(-1 * env(safe-area-inset-left))' }} onClick={onClose}>
-      <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 max-w-md w-full max-h-[85vh] overflow-y-auto shadow-apple-xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
+    <div className="flex items-center justify-center p-4 modal-backdrop glass-dark z-modal animate-fade-in" onClick={onClose}>
+      <div className="bg-white rounded-panel p-6 sm:p-8 max-w-md w-full max-h-[85vh] overflow-y-auto shadow-modal animate-slide-up" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">SEE Requirements</h3>
+          <h3 className="text-xl font-bold sm:text-2xl text-ink">SEE Requirements</h3>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95 flex-shrink-0"
+            className="flex-shrink-0 p-2 transition-colors rounded-full hover:bg-gray-100 active:scale-[0.98]"
             aria-label="Close"
           >
-            <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-ink-muted" />
           </button>
         </div>
 
         <div className="mb-4 sm:mb-6">
           <p className="text-sm sm:text-base text-gray-600 mb-2">Subject: <span className="font-semibold">{subjectName}</span></p>
           <p className="text-sm sm:text-base text-gray-600">CIE Score: <span className="font-semibold">{cieTotal}{isDsaLab ? '/150' : isProjectOr50Mark ? '/50' : '/100'}</span></p>
-          {isDsaLab && !hasLabSEE && <p className="text-xs sm:text-sm text-blue-600 mt-1">SEE marks out of 150</p>}
+          {isDsaLab && !hasLabSEE && <p className="text-xs sm:text-sm text-brand mt-1">SEE marks out of 150</p>}
           {isDsaLab && hasLabSEE && <p className="text-xs sm:text-sm text-green-600 mt-1">SEE Exam marks out of 100 (Lab SEE: {labSEEValue})</p>}
         </div>
 
         {/* Lab SEE Marks Input - Only for dsa-lab subjects */}
         {isDsaLab && (
-          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 rounded-xl border border-blue-200">
-            <label className="block text-xs sm:text-sm font-medium text-blue-900 mb-2">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-brand-soft rounded-xl border border-brand/30">
+            <label className="block text-xs sm:text-sm font-medium text-ink mb-2">
               Set Lab SEE Marks (Optional)
             </label>
             <input
@@ -154,15 +154,15 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
               value={labSEEMarks}
               onChange={(e) => handleLabSEEChange(e.target.value)}
               placeholder="0"
-              className="w-full px-3 sm:px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-center font-medium bg-white text-sm sm:text-base"
+              className="w-full px-3 sm:px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-brand-ring focus:border-brand outline-none text-center font-medium bg-white text-sm sm:text-base"
             />
-            <p className="text-xs text-blue-700 mt-1">Max: 50 marks. Enter to see adjusted SEE Exam requirements.</p>
+            <p className="text-xs text-brand-hover mt-1">Max: 50 marks. Enter to see adjusted SEE Exam requirements.</p>
           </div>
         )}
 
         <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
           {gradeRequirements.map((item, index) => (
-            <div key={item.grade} className={`flex items-center justify-between p-3 sm:p-4 rounded-xl border ${index === 0 ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
+            <div key={item.grade} className={`flex items-center justify-between p-3 sm:p-4 rounded-xl border ${index === 0 ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-hairline'
               }`}>
               <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
                 <div className={`w-8 h-8 sm:w-10 sm:h-10 text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base flex-shrink-0 ${index === 0 ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-blue-500 to-blue-600'
@@ -170,7 +170,7 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
                   {item.grade}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-gray-900 text-sm sm:text-base">Grade {item.letter}</div>
+                  <div className="font-semibold text-ink text-sm sm:text-base">Grade {item.letter}</div>
                   <div className="text-xs sm:text-sm text-gray-600 truncate">
                     {hasLabSEE ? 'SEE Exam: ' : 'SEE: '}{item.seeRequired > effectiveMaxSEE ? 'Unachievable' : `${item.seeRequired.toFixed(1)}/${effectiveMaxSEE} marks`}
                   </div>
@@ -197,7 +197,7 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
                   {gradeAtMinItem.grade}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-gray-900 text-sm sm:text-base">Grade {gradeAtMinItem.letter}</div>
+                  <div className="font-semibold text-ink text-sm sm:text-base">Grade {gradeAtMinItem.letter}</div>
                   <div className="text-xs sm:text-sm text-gray-600">
                     SEE: {minSEE.toFixed(1)}
                   </div>
@@ -217,9 +217,9 @@ const SEERequirementsPopup = ({ isOpen, onClose, cieTotal, subjectName, subjectT
 
         <button
           onClick={copyAllRequirements}
-          className={`w-full py-3 px-4 rounded-xl font-medium transition-all active:scale-98 ${copiedGrade === 'all'
+          className={`w-full py-3 px-4 rounded-control font-medium transition-all active:scale-[0.98] ${copiedGrade === 'all'
             ? 'bg-green-100 text-green-800 border border-green-200'
-            : 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg hover:shadow-xl'
+            : 'bg-gray-900 text-white hover:bg-gray-800 shadow-float hover:shadow-card-hover'
             }`}
         >
           {copiedGrade === 'all' ? 'Copied!' : 'Copy All Requirements'}

@@ -226,6 +226,189 @@ input::placeholder {
   -webkit-backdrop-filter: blur(10px);
 }
 
+/* Shared full-viewport modal backdrop (DRY: was duplicated inline in 3 popups).
+   Negative safe-area margins cancel the inset padding applied on :root. */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: calc(-1 * env(safe-area-inset-top)) calc(-1 * env(safe-area-inset-right)) calc(-1 * env(safe-area-inset-bottom)) calc(-1 * env(safe-area-inset-left));
+}
+
+/* Faint static grid texture for the ambient background, masked so it fades
+   out behind the content column and only whispers at the edges. */
+.ambient-grid {
+  background-image:
+    linear-gradient(to right, rgba(17, 24, 39, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(17, 24, 39, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 38%, transparent 38%, #000 92%);
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 38%, transparent 38%, #000 92%);
+}
+
+/* ===================== Liquid Glass card ===================== */
+.liquid-glass {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 25px 50px -12px rgba(15, 23, 42, 0.28),
+    0 8px 24px -12px rgba(15, 23, 42, 0.18);
+  /* CSS-var defaults so the static (non-interactive) card still looks right */
+  --mx: 30%;
+  --my: 18%;
+  --lx: 50%;
+  --ly: 50%;
+  --rx: 0deg;
+  --ry: 0deg;
+}
+
+/* Hide the native cursor only while actively hovering an interactive card */
+.lg-interactive.lg-active {
+  cursor: none;
+}
+
+/* Clickable card: pointer affordance for non-hover (touch / no liquid lens) */
+.lg-link:not(.lg-interactive) {
+  cursor: pointer;
+}
+
+.lg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Refraction lives OUTSIDE the tilt wrapper so backdrop-filter can sample the
+   page behind the card (transform would otherwise create a backdrop root). */
+.lg-refraction {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  backdrop-filter: blur(4px) saturate(180%);
+  -webkit-backdrop-filter: blur(4px) saturate(180%);
+}
+
+@supports (backdrop-filter: url("#liquid-displacement")) {
+  .lg-refraction {
+    backdrop-filter: blur(2px) saturate(185%) url("#liquid-displacement");
+  }
+}
+
+/* No backdrop-filter at all -> fall back to a more opaque frosted tint */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lg-refraction {
+    background: rgba(255, 255, 255, 0.55);
+  }
+}
+
+/* 3D parallax wrapper. Nothing inside uses backdrop-filter, so the backdrop
+   root it creates is harmless. */
+.lg-tilt {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition: transform 0.12s ease-out;
+  will-change: transform;
+}
+
+.lg-tint,
+.lg-specular,
+.lg-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.lg-tint {
+  z-index: 1;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.30),
+    rgba(255, 255, 255, 0.12) 45%,
+    rgba(255, 255, 255, 0.20)
+  );
+}
+
+.lg-specular {
+  z-index: 2;
+  background: radial-gradient(
+    circle 16rem at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.65),
+    rgba(255, 255, 255, 0.16) 32%,
+    transparent 60%
+  );
+  opacity: 0.9;
+}
+
+.lg-edge {
+  z-index: 3;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.75),
+    inset 1px 0 1px rgba(255, 255, 255, 0.4),
+    inset 0 -12px 28px rgba(255, 255, 255, 0.14),
+    inset 0 -1px 2px rgba(15, 23, 42, 0.2);
+}
+
+.lg-content {
+  position: relative;
+  z-index: 4;
+}
+
+/* The "liquid" cursor — trails the pointer with damping (set in JS via --lx/--ly) */
+.lg-lens {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate3d(var(--lx), var(--ly), 0) translate(-50%, -50%);
+  background: radial-gradient(
+    circle at 38% 30%,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.10) 46%,
+    transparent 64%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+    inset 0 2px 10px rgba(255, 255, 255, 0.45),
+    0 8px 22px rgba(15, 23, 42, 0.18);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  will-change: transform, opacity;
+}
+
+.lg-active .lg-lens {
+  opacity: 1;
+}
+
+/* Calm everything for reduced-motion: static frosted glass, no lens, no tilt */
+@media (prefers-reduced-motion: reduce) {
+  .lg-tilt {
+    transform: none;
+    transition: none;
+  }
+  .lg-lens {
+    display: none;
+  }
+}
+
 /* Smooth transitions */
 * {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -250,18 +433,16 @@ input::placeholder {
   background: #9ca3af;
 }
 
-/* Mobile-specific optimizations */
-@media (max-width: 640px) {
-  /* Reduce motion for better performance on mobile */
-  @media (prefers-reduced-motion: reduce) {
+/* Respect reduced-motion on all devices (previously trapped inside a
+   max-width:640px query, so it never fired on desktop). */
+@media (prefers-reduced-motion: reduce) {
 
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

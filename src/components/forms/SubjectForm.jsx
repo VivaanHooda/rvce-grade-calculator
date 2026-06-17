@@ -182,18 +182,18 @@ const SubjectForm = ({
   }, [subject.id, data]);
 
   return (
-    <div className="p-4 space-y-4 transition-shadow bg-white border border-gray-200 shadow-sm rounded-2xl sm:rounded-3xl sm:p-5 md:p-6 sm:space-y-6 hover:shadow-md">
+    <div className="flex flex-col h-full p-4 space-y-4 transition-shadow bg-white border border-hairline shadow-card rounded-card sm:p-5 md:p-6 sm:space-y-6 hover:shadow-card-hover">
       <div className="grid grid-cols-[1fr_auto] gap-3 items-start">
-        <h3 className="text-base font-semibold text-gray-900 sm:text-lg md:text-xl">
+        <h3 className="text-base font-semibold leading-snug text-ink sm:text-lg md:text-xl line-clamp-2 text-balance min-h-[2.75em]" title={subject.name}>
           {subject.name}
         </h3>
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-brand-soft text-brand whitespace-nowrap">
           {subject.Credit} Credit
         </span>
       </div>
       {/* Wrapped everything in form tags and added required attribute to all input fields 
           This prevents form submission if any required field is empty.*/}
-      <form onSubmit={handleFormSubmit} className="space-y-4 sm:space-y-6">
+      <form onSubmit={handleFormSubmit} className="flex flex-col flex-1 space-y-4 sm:space-y-6">
       {subject.type !== 'project' && (
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {/* Quiz 1 */}
@@ -204,7 +204,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.q1}
               onChange={(e) => handleInputChange('q1', e.target.value)}
-              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              className="w-full px-3 py-2 text-base font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand sm:text-lg"
               ref={refs.q1}
               onKeyDown={(e) => handleKeyDown(e, 'q1')}
               required={true}
@@ -223,7 +223,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.q2}
               onChange={(e) => handleInputChange('q2', e.target.value)}
-              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              className="w-full px-3 py-2 text-base font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand sm:text-lg"
               ref={refs.q2}
               onKeyDown={(e) => handleKeyDown(e, 'q2')}
               required={true}
@@ -242,7 +242,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.t1}
               onChange={(e) => handleInputChange('t1', e.target.value)}
-              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              className="w-full px-3 py-2 text-base font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand sm:text-lg"
               ref={refs.t1}
               onKeyDown={(e) => handleKeyDown(e, 't1')}
               required={true}
@@ -261,7 +261,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.t2}
               onChange={(e) => handleInputChange('t2', e.target.value)}
-              className="w-full px-3 py-2 text-base font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+              className="w-full px-3 py-2 text-base font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none sm:px-4 sm:py-3 rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand sm:text-lg"
               ref={refs.t2}
               onKeyDown={(e) => handleKeyDown(e, 't2')}
               required={true}
@@ -283,7 +283,7 @@ const SubjectForm = ({
             inputMode="decimal"
             value={inputValues.el}
             onChange={(e) => handleInputChange('el', e.target.value)}
-            className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
             ref={refs.el}
             onKeyDown={(e) => handleKeyDown(e, 'el')}
             required={true}
@@ -306,7 +306,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.matlab}
               onChange={(e) => handleInputChange('matlab', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.matlab}
               onKeyDown={(e) => handleKeyDown(e, 'matlab')}
               required={true}
@@ -324,7 +324,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.el}
               onKeyDown={(e) => handleKeyDown(e, 'el')}
               required={true}
@@ -350,7 +350,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.lab}
               onChange={(e) => handleInputChange('lab', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.lab}
               onKeyDown={(e) => handleKeyDown(e, 'lab')}
               required={true}
@@ -367,7 +367,7 @@ const SubjectForm = ({
               type="text"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.el}
               onKeyDown={(e) => handleKeyDown(e, 'el')}
               required={true}
@@ -388,7 +388,7 @@ const SubjectForm = ({
             type="text"
             value={inputValues.el}
             onChange={(e) => handleInputChange('el', e.target.value)}
-            className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
             ref={refs.el}
             onKeyDown={(e) => handleKeyDown(e, 'el')}
             required={true}
@@ -409,7 +409,7 @@ const SubjectForm = ({
               type="text"
               value={inputValues.lab}
               onChange={(e) => handleInputChange('lab', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.lab}
               onKeyDown={(e) => handleKeyDown(e, 'lab')}
               required={true}
@@ -426,7 +426,7 @@ const SubjectForm = ({
               type="text"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.el}
               onKeyDown={(e) => handleKeyDown(e, 'el')}
             />
@@ -447,7 +447,7 @@ const SubjectForm = ({
               type="text"
               value={inputValues.lab}
               onChange={(e) => handleInputChange('lab', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.lab}
               onKeyDown={(e) => handleKeyDown(e, 'lab')}
               required={true}
@@ -464,7 +464,7 @@ const SubjectForm = ({
               type="text"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.el}
               onKeyDown={(e) => handleKeyDown(e, 'el')}
               required={true}
@@ -486,7 +486,7 @@ const SubjectForm = ({
             inputMode="decimal"
             value={inputValues.el}
             onChange={(e) => handleInputChange('el', e.target.value)}
-            className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
             ref={refs.el}
             onKeyDown={(e) => handleKeyDown(e, 'el')}
           />
@@ -507,7 +507,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.el}
               onChange={(e) => handleInputChange('el', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.el}
               onKeyDown={(e) => handleKeyDown(e, 'el')}
             />
@@ -524,7 +524,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.basketEl}
               onChange={(e) => handleInputChange('basketEl', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               ref={refs.basketEl}
               onKeyDown={(e) => handleKeyDown(e, 'basketEl')}
               required={true}
@@ -547,7 +547,7 @@ const SubjectForm = ({
             inputMode="decimal"
             value={inputValues.see}
             onChange={(e) => handleInputChange('see', e.target.value)}
-            className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
             placeholder="0"
             ref={refs.see}
             onKeyDown={(e) => handleKeyDown(e, 'see')}
@@ -570,7 +570,7 @@ const SubjectForm = ({
               inputMode="decimal"
               value={inputValues.labSee}
               onChange={(e) => handleInputChange('labSee', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               placeholder="0"
               ref={refs.labSee}
               onKeyDown={(e) => handleKeyDown(e, 'labSee')}
@@ -588,7 +588,7 @@ const SubjectForm = ({
               type="text"
               value={inputValues.see}
               onChange={(e) => handleInputChange('see', e.target.value)}
-              className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
               placeholder="0"
               ref={refs.see}
               onKeyDown={(e) => handleKeyDown(e, 'see')}
@@ -610,7 +610,7 @@ const SubjectForm = ({
             type="text"
             value={inputValues.see}
             onChange={(e) => handleInputChange('see', e.target.value)}
-            className="w-full px-4 py-3 text-lg font-medium text-center text-gray-900 transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 text-lg font-medium text-center text-ink transition-all bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-brand-ring focus:border-brand"
             placeholder="0"
             ref={refs.see}
             onKeyDown={(e) => handleKeyDown(e, 'see')}
@@ -624,12 +624,12 @@ const SubjectForm = ({
         </div>
       )}
 
-      <div className="space-y-3 sm:space-y-4">
+      <div className="mt-auto space-y-3 sm:space-y-4">
         {/* Change button to type="submit" to trigger form validation */}
         {/* HTML5 will validate all required fields before submitting */}
         <button
           type="submit"
-          className="w-full bg-black text-white py-3 sm:py-4 rounded-xl hover:bg-gray-900 transition-all font-medium text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-98"
+          className="w-full bg-black text-white py-3 sm:py-4 rounded-xl hover:bg-gray-900 transition-all font-medium text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
           Calculate {currentMode === 'cie-final' ? 'CIE' : 'Grade'}
         </button>
@@ -639,8 +639,8 @@ const SubjectForm = ({
             onClick={() => onShowSEERequirements(subject, result?.cieTotal)}
             disabled={!hasCIEResult}
             className={`w-full py-2.5 sm:py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 text-sm sm:text-base ${hasCIEResult
-              ? 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 active:scale-98'
-              : 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed'
+              ? 'bg-brand-soft text-brand-hover border border-brand/30 hover:bg-brand-soft active:scale-[0.98]'
+              : 'bg-gray-50 text-gray-400 border border-hairline cursor-not-allowed'
               }`}
           >
             {hasCIEResult ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
@@ -650,10 +650,10 @@ const SubjectForm = ({
       </div>
 
       {result && (
-        <div className="p-4 mt-4 border border-gray-200 sm:mt-6 sm:p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
+        <div className="p-4 mt-4 border border-hairline sm:mt-6 sm:p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-card">
           {currentMode === 'cie-final' ? (
             <div className="text-center">
-              <div className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">
+              <div className="mb-2 text-2xl font-bold text-ink sm:text-3xl">
                 CIE: {result.cieTotal}
               </div>
               <div className="text-sm sm:text-base text-gray-600">
@@ -662,7 +662,7 @@ const SubjectForm = ({
             </div>
           ) : (
             <div className="text-center">
-              <div className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">
+              <div className="mb-2 text-2xl font-bold text-ink sm:text-3xl">
                 Grade: {result.gradePoint} ({getGradeLetter(result.gradePoint)})
               </div>
               {/* Logic for display total */}

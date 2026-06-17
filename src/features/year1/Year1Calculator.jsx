@@ -255,7 +255,7 @@ const Year1Calculator = ({ onBack }) => {
                 <div className="flex items-center justify-between mb-6 sm:mb-8 px-4">
                     <button
                         onClick={() => handleSetCurrentMode('')}
-                        className="text-blue-600 hover:text-blue-700 font-medium text-base sm:text-lg transition-colors"
+                        className="text-brand hover:text-brand-hover font-medium text-base sm:text-lg transition-colors"
                     >
                         ← Back to Modes
                     </button>
@@ -263,9 +263,9 @@ const Year1Calculator = ({ onBack }) => {
 
                 <div className="grid gap-4 sm:gap-6 lg:grid-cols-2 px-4">
                     {/* Physics Cycle */}
-                    <div className="bg-white border border-gray-200 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+                    <div className="bg-white border border-hairline rounded-card p-6 sm:p-8 shadow-card">
                         <div className="grid grid-cols-[1fr_auto] gap-3 items-start mb-4 sm:mb-6">
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                            <h3 className="text-xl sm:text-2xl font-bold text-ink">
                                 ⚡ Physics Cycle
                             </h3>
                             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
@@ -287,7 +287,7 @@ const Year1Calculator = ({ onBack }) => {
                         </div>
                         <button
                             onClick={() => handleComputeSGPA('physics')}
-                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-98"
+                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-brand hover:bg-brand-hover text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-[0.98]"
                         >
                             Compute SGPA
                         </button>
@@ -325,9 +325,9 @@ const Year1Calculator = ({ onBack }) => {
                     </div>
 
                     {/* Chemistry Cycle */}
-                    <div className="bg-white border border-gray-200 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+                    <div className="bg-white border border-hairline rounded-card p-6 sm:p-8 shadow-card">
                         <div className="grid grid-cols-[1fr_auto] gap-3 items-start mb-4 sm:mb-6">
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                            <h3 className="text-xl sm:text-2xl font-bold text-ink">
                                 🧪 Chemistry Cycle
                             </h3>
                             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap">
@@ -346,7 +346,7 @@ const Year1Calculator = ({ onBack }) => {
                         </div>
                         <button
                             onClick={() => handleComputeSGPA('chemistry')}
-                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-98"
+                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:scale-[0.98]"
                         >
                             Compute SGPA
                         </button>
@@ -387,7 +387,7 @@ const Year1Calculator = ({ onBack }) => {
                 <div className="text-center px-4">
                     <button
                         onClick={handleComputeCGPA}
-                        className="bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-4 px-6 sm:px-8 rounded-xl font-medium text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all active:scale-98"
+                        className="bg-brand hover:bg-brand-hover text-white py-3 sm:py-4 px-6 sm:px-8 rounded-xl font-medium text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all active:scale-[0.98]"
                     >
                         Compute CGPA
                     </button>
@@ -423,12 +423,12 @@ const Year1Calculator = ({ onBack }) => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4 px-4">
                 <button
                     onClick={() => setCurrentCycle('')}
-                    className="text-blue-600 hover:text-blue-700 font-medium text-base sm:text-lg transition-colors text-left"
+                    className="text-brand hover:text-brand-hover font-medium text-base sm:text-lg transition-colors text-left"
                 >
                     ← Back to Cycles
                 </button>
                 <div className="text-center">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-ink mb-2">
                         {currentCycle === 'physics' ? 'Physics Cycle' : 'Chemistry Cycle'}
                     </h2>
                     <p className="text-sm sm:text-base text-gray-600">

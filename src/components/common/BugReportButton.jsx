@@ -38,7 +38,7 @@ const BugReportButton = () => {
 
                 <div className={`absolute bottom-full right-0 mb-3 transition-all duration-300 ${showBugOptions ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'
                     }`}>
-                    <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-3 min-w-[200px]">
+                    <div className="bg-white rounded-xl shadow-2xl border border-hairline p-3 min-w-[200px]">
                         <div className="space-y-2">
                             <a
                                 href="https://github.com/VivaanHooda/rvce-grade-calculator"
@@ -62,7 +62,7 @@ const BugReportButton = () => {
                         </div>
                         {/* Triangle arrow */}
                         <div className="absolute bottom-0 right-5 transform translate-y-1/2">
-                            <div className="w-3 h-3 bg-white border-r border-b border-gray-200 transform rotate-45"></div>
+                            <div className="w-3 h-3 bg-white border-r border-b border-hairline transform rotate-45"></div>
                         </div>
                     </div>
                 </div>

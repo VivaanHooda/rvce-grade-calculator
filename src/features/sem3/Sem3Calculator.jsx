@@ -245,16 +245,16 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                 <div className="flex items-center justify-between mb-8">
                     <button
                         onClick={onBack}
-                        className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
+                        className="text-brand hover:text-brand-hover font-medium text-lg transition-colors"
                     >
                         ← Back to Semester Selection
                     </button>
                 </div>
-                <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Select Your Branch</h3>
+                <div className="max-w-md mx-auto bg-white border border-hairline rounded-panel p-8 shadow-card">
+                    <h3 className="text-2xl font-bold text-ink mb-6 text-center">Select Your Branch</h3>
                     <div className="grid gap-4">
                         {/* CS Cluster */}
-                        <div className="border border-gray-200 rounded-2xl overflow-hidden">
+                        <div className="border border-hairline rounded-card overflow-hidden">
                             <button
                                 onClick={() => toggleCluster('cs')}
                                 className="w-full px-6 py-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
@@ -282,7 +282,7 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                                         <button
                                             key={b.id}
                                             onClick={() => setBranch(b.id)}
-                                            className="w-full py-3 px-5 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-base text-gray-700 hover:text-blue-700"
+                                            className="w-full py-3 px-5 border border-hairline rounded-xl hover:border-blue-500 hover:bg-brand-soft transition-all font-medium text-base text-gray-700 hover:text-brand-hover"
                                         >
                                             {b.name}
                                         </button>
@@ -292,7 +292,7 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         </div>
 
                         {/* ECE Cluster */}
-                        <div className="border border-gray-200 rounded-2xl overflow-hidden">
+                        <div className="border border-hairline rounded-card overflow-hidden">
                             <button
                                 onClick={() => toggleCluster('ece')}
                                 className="w-full px-6 py-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
@@ -321,7 +321,7 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                                         <button
                                             key={b.id}
                                             onClick={() => setBranch(b.id)}
-                                            className="w-full py-3 px-5 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-base text-gray-700 hover:text-blue-700"
+                                            className="w-full py-3 px-5 border border-hairline rounded-xl hover:border-blue-500 hover:bg-brand-soft transition-all font-medium text-base text-gray-700 hover:text-brand-hover"
                                         >
                                             {b.name}
                                         </button>
@@ -345,20 +345,20 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                 <div className="flex items-center justify-between mb-8">
                     <button
                         onClick={() => setCurrentMode('')}
-                        className="text-blue-600 hover:text-blue-700 font-medium text-lg transition-colors"
+                        className="text-brand hover:text-brand-hover font-medium text-lg transition-colors"
                     >
                         ← Back to Modes
                     </button>
                 </div>
 
                 <div className="max-w-2xl mx-auto">
-                    <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                    <div className="bg-white border border-hairline rounded-panel p-8 shadow-card">
                         <div className="grid grid-cols-[1fr_auto] gap-3 items-start mb-6">
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 whitespace-nowrap flex items-center gap-2">
-                                <GraduationCap className="w-6 h-6 text-blue-600" />
+                            <h3 className="text-xl sm:text-2xl font-bold text-ink whitespace-nowrap flex items-center gap-2">
+                                <GraduationCap className="w-6 h-6 text-brand" />
                                 3rd Sem SGPA ({branch.toUpperCase()})
                             </h3>
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-brand-soft text-brand whitespace-nowrap">
                                 {currentSubjects.reduce((sum, s) => sum + s.Credit, 0)} Credits
                             </span>
                         </div>
@@ -374,7 +374,7 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         </div>
                         <button
                             onClick={handleComputeSGPA}
-                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-brand hover:bg-brand-hover text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
                             Compute SGPA
                         </button>
@@ -385,15 +385,15 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         )}
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm mt-8">
+                    <div className="bg-white border border-hairline rounded-panel p-8 shadow-card mt-8">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-bold text-gray-900">1st Year CGPA</h3>
-                            <span className="inline-block bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full">
+                            <h3 className="text-xl font-bold text-ink">1st Year CGPA</h3>
+                            <span className="inline-block bg-brand-soft text-brand text-sm font-medium px-3 py-1 rounded-full">
                                 40 Credits
                             </span>
                         </div>
-                        <div className="bg-purple-50 rounded-xl p-4 border border-purple-200">
-                            <label className="text-purple-900 font-medium block mb-2">Enter your 1st Year CGPA</label>
+                        <div className="bg-gray-50 rounded-xl p-4 border border-hairline">
+                            <label className="text-ink font-medium block mb-2">Enter your 1st Year CGPA</label>
                             <input
                                 type="text"
                                 inputMode="decimal"
@@ -409,7 +409,7 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                                     }
                                 }}
                                 placeholder="Enter CGPA (0-10)"
-                                className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none bg-white text-gray-900"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-ring focus:border-brand outline-none bg-white text-ink"
                             />
                         </div>
                     </div>
@@ -417,7 +417,7 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
                     <div className="mt-8 text-center">
                         <button
                             onClick={handleComputeCGPA}
-                            className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+                            className="bg-brand hover:bg-brand-hover text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
                         >
                             Compute CGPA
                         </button>
@@ -476,12 +476,12 @@ const Sem3Calculator = ({ onBack, currentBranch: initialBranch }) => {
             <div className="px-4">
                 <button
                     onClick={() => setCurrentMode('')}
-                    className="text-blue-600 hover:text-blue-700 font-medium text-base sm:text-lg transition-colors mb-4"
+                    className="text-brand hover:text-brand-hover font-medium text-base sm:text-lg transition-colors mb-4"
                 >
                     ← Back to Modes
                 </button>
                 <div className="text-center">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-ink mb-2">
                         Sem 3 ({branch.toUpperCase()})
                     </h2>
                     <p className="text-sm sm:text-base text-gray-600">

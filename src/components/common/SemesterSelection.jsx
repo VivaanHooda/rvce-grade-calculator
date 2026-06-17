@@ -15,7 +15,7 @@ const SemesterSelection = ({ year, onSelect, onBack }) => {
             <div className="flex items-center justify-between px-4 mb-6 sm:mb-8">
                 <button
                     onClick={onBack}
-                    className="text-base font-medium text-blue-600 transition-colors hover:text-blue-700 sm:text-lg"
+                    className="text-base font-medium transition-all duration-200 text-brand hover:text-brand-hover hover:-translate-x-1 sm:text-lg"
                 >
                     ← Back to Year Selection
                 </button>
@@ -23,8 +23,8 @@ const SemesterSelection = ({ year, onSelect, onBack }) => {
 
             <div className="grid max-w-lg gap-4 px-4 mx-auto sm:gap-6">
                 <div className="mb-4 text-center sm:mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Select Semester</h2>
-                    <p className="text-sm text-gray-600 sm:text-base">Choose your current semester</p>
+                    <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">Select Semester</h2>
+                    <p className="text-sm text-ink-muted sm:text-base">Choose your current semester</p>
                 </div>
                 {semesters.map((sem) => {
                     const Icon = sem.icon;
@@ -33,19 +33,19 @@ const SemesterSelection = ({ year, onSelect, onBack }) => {
                             key={sem.id}
                             onClick={() => !sem.disabled && onSelect(sem.id)}
                             disabled={sem.disabled}
-                            className={`bg-white border border-gray-200 rounded-2xl sm:rounded-3xl p-6 sm:p-8 transition-all duration-300 text-center group flex flex-col items-center gap-3 sm:gap-4 ${sem.disabled
-                                ? 'opacity-60 cursor-not-allowed border-gray-100 grayscale'
-                                : 'hover:border-blue-300 hover:shadow-xl transform hover:-translate-y-1 active:scale-98'
+                            className={`bg-white border rounded-card p-6 sm:p-8 transition-all duration-300 text-center group flex flex-col items-center gap-3 sm:gap-4 ${sem.disabled
+                                ? 'opacity-60 cursor-not-allowed border-gray-100 grayscale shadow-card'
+                                : 'border-hairline shadow-card hover:border-brand/40 hover:shadow-card-hover transform hover:-translate-y-1 active:scale-[0.98]'
                                 }`}
                         >
-                            <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center ${sem.disabled ? 'bg-gray-100' : 'bg-blue-100 group-hover:bg-blue-600 transition-colors'}`}>
-                                <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${sem.disabled ? 'text-gray-400' : 'text-blue-600 group-hover:text-white transition-colors'}`} />
+                            <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-card flex items-center justify-center transition-colors duration-300 ${sem.disabled ? 'bg-gray-100' : 'bg-brand-soft group-hover:bg-brand'}`}>
+                                <Icon className={`w-8 h-8 sm:w-10 sm:h-10 transition-colors duration-300 ${sem.disabled ? 'text-ink-subtle' : 'text-brand group-hover:text-white'}`} />
                             </div>
                             <div>
-                                <h3 className={`text-lg sm:text-xl font-semibold transition-colors ${sem.disabled ? 'text-gray-400' : 'text-gray-900 group-hover:text-blue-600'}`}>
+                                <h3 className={`text-lg sm:text-xl font-semibold transition-colors duration-200 ${sem.disabled ? 'text-ink-subtle' : 'text-ink group-hover:text-brand'}`}>
                                     {sem.name}
                                 </h3>
-                                {sem.disabled && <p className="mt-1 text-xs text-gray-500 sm:text-sm">Coming Soon</p>}
+                                {sem.disabled && <p className="mt-1 text-xs text-ink-muted sm:text-sm">Coming Soon</p>}
                             </div>
                         </button>
                     );

@@ -14,29 +14,29 @@ const CGPAResultsPopup = ({ isOpen, onClose, cgpa }) => {
   };
 
   return (
-    <div className="glass-dark flex items-center justify-center z-[9999] p-4 animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, width: '100vw', height: '100vh', margin: 'calc(-1 * env(safe-area-inset-top)) calc(-1 * env(safe-area-inset-right)) calc(-1 * env(safe-area-inset-bottom)) calc(-1 * env(safe-area-inset-left))' }} onClick={onClose}>
-      <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-apple-xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
+    <div className="flex items-center justify-center p-4 modal-backdrop glass-dark z-modal animate-fade-in" onClick={onClose}>
+      <div className="w-full max-w-md p-6 bg-white rounded-panel sm:p-8 shadow-modal animate-slide-up" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">CGPA Results</h3>
+          <h3 className="text-xl font-bold sm:text-2xl text-ink">CGPA Results</h3>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors active:scale-95"
+            className="p-2 transition-colors rounded-full hover:bg-gray-100 active:scale-[0.98]"
             aria-label="Close"
           >
-            <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-ink-muted" />
           </button>
         </div>
 
-        <div className="text-center mb-6 sm:mb-8">
-          <div className="text-4xl sm:text-5xl font-bold text-gray-900 mb-2">{cgpa}</div>
-          <div className="text-gray-600 text-base sm:text-lg">Final CGPA out of 10</div>
+        <div className="mb-6 text-center sm:mb-8">
+          <div className="mb-2 text-4xl font-bold tracking-tight sm:text-5xl text-ink">{cgpa}</div>
+          <div className="text-base text-ink-muted sm:text-lg">Final CGPA out of 10</div>
         </div>
 
         <button
           onClick={copyToClipboard}
-          className={`w-full py-3 px-4 rounded-xl font-medium transition-all active:scale-98 ${copied
+          className={`w-full py-3 px-4 rounded-control font-medium transition-all active:scale-[0.98] ${copied
             ? 'bg-green-100 text-green-800 border border-green-200'
-            : 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg hover:shadow-xl'
+            : 'bg-gray-900 text-white hover:bg-gray-800 shadow-float hover:shadow-card-hover'
             }`}
         >
           {copied ? 'Copied!' : 'Copy to Clipboard'}

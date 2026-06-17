@@ -24,8 +24,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
     const [subjectGrades, setSubjectGrades] = useState(() => loadFromStorage(STORAGE_KEYS.SUBJECT_GRADES, {}));
     const [formData, setFormData] = useState(() => loadFromStorage(STORAGE_KEYS.FORM_DATA, {}));
     const [sem4Grades, setSem4Grades] = useState(() => loadFromStorage(STORAGE_KEYS.SEM4_GRADES, {}));
-    const [firstYearCGPA, setFirstYearCGPA] = useState(() => loadFromStorage(STORAGE_KEYS.FIRST_YEAR_CGPA, ''));
-    const [sem3SGPA, setSem3SGPA] = useState(() => loadFromStorage(STORAGE_KEYS.SEM3_SGPA, ''));
+    const [cgpaUpto3, setCgpaUpto3] = useState(() => loadFromStorage(STORAGE_KEYS.CGPA_UPTO_SEM3, ''));
 
     // UI State
     const [seePopup, setSeePopup] = useState({ isOpen: false, subject: null, cieTotal: 0 });
@@ -62,12 +61,8 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
     }, [sem4Grades]);
 
     useEffect(() => {
-        saveToStorage(STORAGE_KEYS.FIRST_YEAR_CGPA, firstYearCGPA);
-    }, [firstYearCGPA]);
-
-    useEffect(() => {
-        saveToStorage(STORAGE_KEYS.SEM3_SGPA, sem3SGPA);
-    }, [sem3SGPA]);
+        saveToStorage(STORAGE_KEYS.CGPA_UPTO_SEM3, cgpaUpto3);
+    }, [cgpaUpto3]);
 
     // Handlers
     const getSubjects = useCallback(() => {
@@ -171,15 +166,9 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
     };
 
     const handleComputeCGPA = () => {
-        // Validate 1st year CGPA is entered
-        if (!firstYearCGPA || parseFloat(firstYearCGPA) <= 0) {
-            setValidationError(prev => ({ ...prev, cgpa: 'Please enter 1st Year CGPA first' }));
-            return;
-        }
-
-        // Validate 3rd semester SGPA is entered
-        if (!sem3SGPA || parseFloat(sem3SGPA) <= 0) {
-            setValidationError(prev => ({ ...prev, cgpa: 'Please enter 3rd Sem SGPA first' }));
+        // Validate cumulative CGPA up to 3rd Sem is entered
+        if (!cgpaUpto3 || parseFloat(cgpaUpto3) <= 0) {
+            setValidationError(prev => ({ ...prev, cgpa: 'Please enter your CGPA up to 3rd Sem first' }));
             return;
         }
 
@@ -194,17 +183,9 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
         let totalGradePoints = 0;
         let totalCredit = 0;
 
-        // 1st Year: 40 credits
-        if (firstYearCGPA && parseFloat(firstYearCGPA) > 0) {
-            totalGradePoints += parseFloat(firstYearCGPA) * 40;
-            totalCredit += 40;
-        }
-
-        // 3rd Semester: 21 credits
-        if (sem3SGPA && parseFloat(sem3SGPA) > 0) {
-            totalGradePoints += parseFloat(sem3SGPA) * 21;
-            totalCredit += 21;
-        }
+        // Up to 3rd Semester: 61 credits (1st Year 40 + 3rd Sem 21)
+        totalGradePoints += parseFloat(cgpaUpto3) * 61;
+        totalCredit += 61;
 
         // 4th Semester: 23 credits
         currentSubjects.forEach(subject => {
@@ -222,7 +203,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
 
     const handleResetGrades = () => {
         setSem4Grades({});
-        setFirstYearCGPA('');
+        setCgpaUpto3('');
         setValidationError({ sgpa: '', cgpa: '' });
         setShowResetConfirm(false);
     };
@@ -256,16 +237,16 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                 <div className="flex items-center justify-between mb-8">
                     <button
                         onClick={onBack}
-                        className="text-lg font-medium text-blue-600 transition-colors hover:text-blue-700"
+                        className="text-lg font-medium text-brand transition-colors hover:text-brand-hover"
                     >
                         ← Back to Semester Selection
                     </button>
                 </div>
-                <div className="max-w-md p-8 mx-auto bg-white border border-gray-200 shadow-sm rounded-3xl">
-                    <h3 className="mb-6 text-2xl font-bold text-center text-gray-900">Select Your Branch</h3>
+                <div className="max-w-md p-8 mx-auto bg-white border border-hairline shadow-card rounded-panel">
+                    <h3 className="mb-6 text-2xl font-bold text-center text-ink">Select Your Branch</h3>
                     <div className="grid gap-4">
                         {/* CS Cluster */}
-                        <div className="overflow-hidden border border-gray-200 rounded-2xl">
+                        <div className="overflow-hidden border border-hairline rounded-card">
                             <button
                                 onClick={() => toggleCluster('cs')}
                                 className="flex items-center justify-between w-full px-6 py-4 transition-colors bg-gray-50 hover:bg-gray-100"
@@ -293,7 +274,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                                         <button
                                             key={b.id}
                                             onClick={() => setBranch(b.id)}
-                                            className="w-full px-5 py-3 text-base font-medium text-gray-700 transition-all border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
+                                            className="w-full px-5 py-3 text-base font-medium text-gray-700 transition-all border border-hairline rounded-xl hover:border-blue-500 hover:bg-brand-soft hover:text-brand-hover"
                                         >
                                             {b.name}
                                         </button>
@@ -302,7 +283,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                             </div>
                         </div>
                         {/* ECE Cluster */}
-                        <div className="overflow-hidden border border-gray-200 rounded-2xl">
+                        <div className="overflow-hidden border border-hairline rounded-card">
                             <button
                                 onClick={() => toggleCluster('ece')}
                                 className="flex items-center justify-between w-full px-6 py-4 transition-colors bg-gray-50 hover:bg-gray-100"
@@ -330,7 +311,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                                         <button
                                             key={b.id}
                                             onClick={() => setBranch(b.id)}
-                                            className="w-full px-5 py-3 text-base font-medium text-gray-700 transition-all border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
+                                            className="w-full px-5 py-3 text-base font-medium text-gray-700 transition-all border border-hairline rounded-xl hover:border-blue-500 hover:bg-brand-soft hover:text-brand-hover"
                                         >
                                             {b.name}
                                         </button>
@@ -355,20 +336,20 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                 <div className="flex items-center justify-between mb-8">
                     <button
                         onClick={() => setCurrentMode('')}
-                        className="text-lg font-medium text-blue-600 transition-colors hover:text-blue-700"
+                        className="text-lg font-medium text-brand transition-colors hover:text-brand-hover"
                     >
                         ← Back to Modes
                     </button>
                 </div>
 
                 <div className="max-w-2xl mx-auto">
-                    <div className="p-8 bg-white border border-gray-200 shadow-sm rounded-3xl">
+                    <div className="p-8 bg-white border border-hairline shadow-card rounded-panel">
                         <div className="grid grid-cols-[1fr_auto] gap-3 items-start mb-6">
-                            <h3 className="flex items-center gap-2 text-xl font-bold text-gray-900 sm:text-2xl whitespace-nowrap">
-                                <GraduationCap className="w-6 h-6 text-blue-600" />
-                                4th Sem SGPA {branch.toUpperCase()}
+                            <h3 className="flex items-center gap-2 text-xl font-bold text-ink sm:text-2xl whitespace-nowrap">
+                                <GraduationCap className="w-6 h-6 text-brand" />
+                                4th Sem SGPA ({branch.toUpperCase()})
                             </h3>
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-brand-soft text-brand whitespace-nowrap">
                                 {currentSubjects.reduce((sum, s) => sum + s.Credit, 0)} Credits
                             </span>
                         </div>
@@ -384,7 +365,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         </div>
                         <button
                             onClick={handleComputeSGPA}
-                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            className="w-full mt-4 py-3 px-4 rounded-xl font-medium transition-all bg-brand hover:bg-brand-hover text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
                             Compute SGPA
                         </button>
@@ -395,60 +376,31 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         )}
                     </div>
 
-                    <div className="p-8 mt-8 bg-white border border-gray-200 shadow-sm rounded-3xl">
+                    <div className="p-8 mt-8 bg-white border border-hairline shadow-card rounded-card">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-bold text-gray-900">1st Year CGPA</h3>
-                            <span className="inline-block px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">
-                                40 Credits
+                            <h3 className="text-xl font-bold text-ink">CGPA up to 3rd Semester</h3>
+                            <span className="inline-block px-3 py-1 text-sm font-medium rounded-full text-brand bg-brand-soft">
+                                61 Credits
                             </span>
                         </div>
-                        <div className="p-4 border border-purple-200 bg-purple-50 rounded-xl">
-                            <label className="block mb-2 font-medium text-purple-900">Enter your 1st Year CGPA</label>
+                        <div className="p-4 border border-hairline bg-gray-50 rounded-xl">
+                            <label className="block mb-2 font-medium text-ink">Enter your CGPA up to 3rd Sem</label>
                             <input
                                 type="text"
                                 inputMode="decimal"
-                                value={firstYearCGPA}
+                                value={cgpaUpto3}
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     const numericRegex = /^[0-9]*\.?[0-9]*$/;
                                     if (value === '' || numericRegex.test(value)) {
                                         const numValue = parseFloat(value) || 0;
                                         if (value === '' || (numValue >= 0 && numValue <= 10)) {
-                                            setFirstYearCGPA(value);
+                                            setCgpaUpto3(value);
                                         }
                                     }
                                 }}
                                 placeholder="Enter CGPA (0-10)"
-                                className="w-full px-4 py-3 text-gray-900 bg-white border border-purple-300 rounded-lg outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="p-8 mt-8 bg-white border border-gray-200 shadow-sm rounded-3xl">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-bold text-gray-900">3rd Sem SGPA</h3>
-                            <span className="inline-block px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">
-                                21 Credits
-                            </span>
-                        </div>
-                        <div className="p-4 border border-green-200 bg-green-50 rounded-xl">
-                            <label className="block mb-2 font-medium text-green-900">Enter your 3rd Sem SGPA</label>
-                            <input
-                                type="text"
-                                inputMode="decimal"
-                                value={sem3SGPA}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const numericRegex = /^[0-9]*\.?[0-9]*$/;
-                                    if (value === '' || numericRegex.test(value)) {
-                                        const numValue = parseFloat(value) || 0;
-                                        if (value === '' || (numValue >= 0 && numValue <= 10)) {
-                                            setSem3SGPA(value);
-                                        }
-                                    }
-                                }}
-                                placeholder="Enter SGPA (0-10)"
-                                className="w-full px-4 py-3 text-gray-900 bg-white border border-green-300 rounded-lg outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                className="w-full px-4 py-3 text-ink bg-white border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-ring focus:border-brand"
                             />
                         </div>
                     </div>
@@ -456,7 +408,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                     <div className="mt-8 text-center">
                         <button
                             onClick={handleComputeCGPA}
-                            className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+                            className="bg-brand hover:bg-brand-hover text-white py-4 px-8 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
                         >
                             Compute CGPA
                         </button>
@@ -476,7 +428,7 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
                         </button>
                     ) : (
                         <div className="p-4 mt-6 border border-red-200 bg-red-50 rounded-xl">
-                            <p className="mb-3 text-sm text-red-700">Are you sure you want to reset all grades and 1st Year CGPA?</p>
+                            <p className="mb-3 text-sm text-red-700">Are you sure you want to reset all grades and your CGPA up to 3rd Sem?</p>
                             <div className="flex gap-2">
                                 <button
                                     onClick={handleResetGrades}
@@ -515,13 +467,13 @@ const Sem4Calculator = ({ onBack, currentBranch: initialBranch }) => {
             <div className="px-4">
                 <button
                     onClick={() => setCurrentMode('')}
-                    className="mb-4 text-base font-medium text-blue-600 transition-colors hover:text-blue-700 sm:text-lg"
+                    className="mb-4 text-base font-medium text-brand transition-colors hover:text-brand-hover sm:text-lg"
                 >
                     ← Back to Modes
                 </button>
                 <div className="text-center">
-                    <h2 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">
-                        Sem 4 {branch.toUpperCase()}
+                    <h2 className="mb-2 text-2xl font-bold text-ink sm:text-3xl">
+                        Sem 4 ({branch.toUpperCase()})
                     </h2>
                     <p className="text-sm text-gray-600 sm:text-base">
                         {currentMode === 'cie-final' ? 'CIE Finalization' : 'Final Grade Calculator'}
