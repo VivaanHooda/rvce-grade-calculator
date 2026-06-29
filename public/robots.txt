@@ -1,0 +1,5 @@
+# RVCE Grade Calculator - robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://rvgradecalc.codingclubrvce.com/sitemap.xml
